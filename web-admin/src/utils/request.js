@@ -9,7 +9,7 @@ const service = axios.create({
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
-
+service.defaults.headers.common['Authorization'] = 'bearer '+getToken()
 // request interceptor
 service.interceptors.request.use(
   config => {
@@ -19,7 +19,10 @@ service.interceptors.request.use(
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+      console.log('2',getToken())
+
+
+      // config.headers['Authorization'] = 'bearer '+getToken()
     }
     return config
   },

@@ -20,7 +20,8 @@ router.beforeEach(async(to, from, next) => {
   }
   if (!getRouter) {
     if (!getObjArr('router')) {
-      axios.get('https://www.easy-mock.com/mock/5a5da330d9b48c260cb42ca8/example/antrouter').then(res => {
+      axios.get('http://106.75.178.9:8080/admin/menu/tree/current').then(res => {
+        console.log(res.data.data)
         console.log(res)
         getRouter = [{
           "path": "/",
