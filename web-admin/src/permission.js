@@ -23,27 +23,7 @@ router.beforeEach(async(to, from, next) => {
       axios.get('http://106.75.178.9:8080/admin/menu/tree/current').then(res => {
         console.log(res.data.data)
         console.log(res)
-        getRouter = [{
-          "path": "/",
-          "component": "Layout",
-          "redirect":"/index",
-          "alwaysShow": true,
-          "meta": {
-            "title": "表单",
-            "icon": "form"
-          },
-          "children": [
-            {
-              "path": "index",
-              "name": "Form",
-              "component": "form/index",
-              "meta": {
-                "title": "表单",
-                "icon": "form"
-              }
-            }
-          ]
-        }],
+        getRouter = res.data.data
         saveObjArr('router', getRouter)
         routerGo(to, next)
       })
