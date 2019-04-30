@@ -27,6 +27,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         console.log(response)
+        localStorage.setItem('token',response.data.access_token)
         commit('SET_TOKEN', response.data.access_token)
         setToken(response.data.access_token)
         resolve()

@@ -37,9 +37,9 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/nested',
+    path: '/',
     component: Layout,
-    redirect: '/nested/menu1',
+    redirect: '/menu1',
     name: 'Nested',
     meta: {
       title: 'Nested',
@@ -56,7 +56,7 @@ export const constantRoutes = [
             path: 'menu1-1',
             component: () => import('@/views/nested/menu1/menu1-1'),
             name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
+            meta: { title: '菜单' }
           },
           {
             path: 'menu1-2',
@@ -127,3 +127,4 @@ export function resetRouter() {
 }
 
 export default router
+

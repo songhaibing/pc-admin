@@ -10,6 +10,7 @@ const service = axios.create({
   timeout: 5000 // request timeout
 })
 service.defaults.headers.common['Authorization'] = 'bearer '+getToken()
+console.log('token',getToken())
 // request interceptor
 service.interceptors.request.use(
   config => {

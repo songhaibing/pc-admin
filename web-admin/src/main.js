@@ -7,7 +7,8 @@ import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
 import '@/styles/index.scss' // global css
-
+import HTTP from './libs/httpRequest'
+import API from './libs/api'
 import App from './App'
 import store from './store'
 import router from './router'
@@ -28,7 +29,8 @@ import '@/permission' // permission control
 Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false
-
+Vue.prototype.$_HTTP = HTTP
+Vue.prototype.$_API = API
 new Vue({
   el: '#app',
   router,

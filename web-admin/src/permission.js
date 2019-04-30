@@ -7,6 +7,8 @@ import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 import axios from 'axios'
+import HTTP from './libs/httpRequest'
+import API from './libs/api'
 const _import = require('./router/_import_' + process.env.NODE_ENV)
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -20,10 +22,8 @@ router.beforeEach(async(to, from, next) => {
   }
   if (!getRouter) {
     if (!getObjArr('router')) {
-      axios.get('http://106.75.178.9:8080/admin/menu/tree/current').then(res => {
-        console.log(res.data.data)
-        console.log(res)
-        getRouter = res.data.data
+      HTTP.get(API.menu,{},function (res) {
+        getRouter = res
         saveObjArr('router', getRouter)
         routerGo(to, next)
       })
