@@ -6,6 +6,12 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
+/* Router Modules */
+import componentsRouter from './modules/components'
+import chartsRouter from './modules/charts'
+import tableRouter from './modules/table'
+import nestedRouter from './modules/nested'
+
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -20,6 +26,8 @@ import Layout from '@/layout'
     roles: ['admin','editor']    control the page roles (you can set multiple roles)
     title: 'title'               the name show in sidebar and breadcrumb (recommend set)
     icon: 'svg-name'             the icon show in the sidebar
+    noCache: true                if set true, the page will no be cached(default is false)
+    affix: true                  if set true, the tag will affix in the tags-view
     breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
     activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
   }
@@ -32,85 +40,95 @@ import Layout from '@/layout'
  */
 export const constantRoutes = [
   {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path*',
+        component: () => import('@/views/redirect/index')
+      }
+    ]
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
   {
-    path: '/',
-    component: Layout,
-    redirect: '/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: '菜单' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
-      },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
-      }
-    ]
-  },
-
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
-  // 404 page must be placed at the end !!!
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
+    path: '/auth-redirect',
+    component: () => import('@/views/login/auth-redirect'),
     hidden: true
   },
+  {
+    path: '/404',
+    component: () => import('@/views/error-page/404'),
+    hidden: true
+  },
+  {
+    path: '/401',
+    component: () => import('@/views/error-page/401'),
+    hidden: true
+  },
+  {
+    path: '',
+    component: Layout,
+    redirect: 'dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        name: 'Dashboard',
+        meta: { title: 'dashboard', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/documentation',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/documentation/index'),
+        name: 'Documentation',
+        meta: { title: 'documentation', icon: 'documentation', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/guide',
+    component: Layout,
+    redirect: '/guide/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/guide/index'),
+        name: 'Guide',
+        meta: { title: 'guide', icon: 'guide', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/profile',
+    component: Layout,
+    redirect: '/profile/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/profile/index'),
+        name: 'Profile',
+        meta: { title: 'profile', icon: 'user', noCache: true }
+      }
+    ]
+  }
 ]
+
+/**
+ * asyncRoutes
+ * the routes that need to be dynamically loaded based on user roles
+ */
+
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
@@ -127,4 +145,3 @@ export function resetRouter() {
 }
 
 export default router
-

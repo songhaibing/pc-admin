@@ -24,13 +24,12 @@ HTTP.post = function (url, data, callback) {
   instance.post(ip + url, params)
     .then(function (res) {
       // 响应成功回调
-
       if (res.data.code == '1') {
         callback(res)
       }
     })
     .catch(function (err) {
-      console.log('网络异常，请重新刷新！')
+
     })
 }
 
@@ -49,10 +48,16 @@ HTTP.get = function (url, data, callback) {
       console.log('res',res)
       if (res.data.code === 1) {
         callback(res.data.data)
+      }else {
+
+
       }
     })
     .catch(function (err) {
-      console.log(err)
+      if(err){
+
+      }
+
     });
 }
 export default HTTP
