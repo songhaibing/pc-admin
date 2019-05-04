@@ -85,13 +85,13 @@ const actions = {
                   meta: { title: '部门管理', icon: 'table' },
                 },
                 {
-                  path: '/role',
+                  path: 'role',
                   name: 'Role',
                   component: 'management/authority/role',
                   meta: { title: '角色管理', icon: 'table' },
                 },
                 {
-                  path: '/jurisdiction',
+                  path: 'jurisdiction',
                   name: 'Jurisdiction',
                   component: 'management/authority/jurisdiction',
                   meta: { title: '权限管理', icon: 'table' },
