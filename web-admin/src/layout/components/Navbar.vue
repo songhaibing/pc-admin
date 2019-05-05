@@ -86,6 +86,7 @@ export default {
     },
     async logout() {
       localStorage.removeItem('router')
+      localStorage.removeItem('token')
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
 

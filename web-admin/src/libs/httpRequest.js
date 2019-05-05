@@ -1,7 +1,7 @@
 'use strict'
 import axios from 'axios'
 import ip from './address'
-import qs from 'qs'
+
 
 
 
@@ -25,7 +25,7 @@ HTTP.post = function (url, data, callback) {
     .then(function (res) {
       // 响应成功回调
       if (res.data.code == '1') {
-        callback(res)
+        callback(res.data)
       }
     })
     .catch(function (err) {
@@ -45,9 +45,34 @@ HTTP.get = function (url, data, callback) {
   instance.get(ip + url, params)
     .then(function (res) {
       // 响应成功回调
-      console.log('res',res)
       if (res.data.code === 1) {
         callback(res.data.data)
+      }else {
+
+
+      }
+    })
+    .catch(function (err) {
+      if(err){
+
+      }
+
+    });
+}
+/**
+ * 发送delete请求
+ *
+ * @param url 接口url
+ * @param data 传递给后端的数据
+ * @param callback
+ */
+HTTP.delete = function (url, data, callback) {
+  let params = {params: data}
+  instance.delete(ip + url, params)
+    .then(function (res) {
+      // 响应成功回调
+      if (res.data.code === 1) {
+        callback(res.data)
       }else {
 
 

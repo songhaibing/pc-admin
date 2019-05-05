@@ -4,33 +4,28 @@
       <div slot="header" class="clearfix">
         <i class="el-icon-menu"></i>
         <span>用户列表</span>
-        <el-button style="float: right;padding: 6px;"  type="danger" icon="el-icon-delete">删除</el-button>
-        <el-button style="float: right;padding: 6px;margin-right: 6px"  type="primary" icon="el-icon-plus" @click="dialogFormVisible = true">添加</el-button>
+        <el-button style="float: right;padding: 6px;margin-right: 6px" type="primary" icon="el-icon-plus"
+                   @click="dialogFormVisible = true">添加
+        </el-button>
       </div>
       <el-table
-        ref="multipleTable"
         :data="tableData"
         v-loading="loading"
-        tooltip-effect="dark"
         stripe
         border
         style="width: 100%"
       >
         <el-table-column
-          type="selection"
-          width="55">
-        </el-table-column>
-        <el-table-column
           align='center'
           label="序号"
           type="index"
-          width="50">
+          width="100">
         </el-table-column>
         <el-table-column
           prop="avatar"
           label="头像"
           align='center'
-          width="220">
+          width="200">
         </el-table-column>
         <el-table-column
           align='center'
@@ -73,6 +68,24 @@
           prop="username"
           label="用户名"
         >
+        </el-table-column>
+        <el-table-column align='center' label="操作">
+          <template slot-scope="scope">
+            <el-tooltip content="Top center" placement="top">
+              <el-button
+                size="mini"
+                type="success"
+                icon="el-icon-edit"
+                @click="handleEdit(scope.$index, scope.row)"></el-button>
+            </el-tooltip>
+            <el-tooltip content="Top center" placement="top">
+              <el-button
+                size="mini"
+                type="danger"
+                icon="el-icon-delete"
+                @click="deleteUser(scope.$index, scope.row)"></el-button>
+            </el-tooltip>
+          </template>
         </el-table-column>
       </el-table>
       <div class="block">
@@ -119,17 +132,18 @@
 </template>
 
 <script>
-  import {checkPhone,checkEmail} from '@/libs/regular.js'
+  import {checkPhone, checkEmail} from '@/libs/regular.js'
+
   export default {
     name: "index",
-    data(){
+    data() {
       const checkUserName = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('请输入用户名'));
         }
         setTimeout(() => {
           //检测用户名是否重复
-          this.$_HTTP.get(this.$_API.userExits+this.form.username,{},res=> {
+          this.$_HTTP.get(this.$_API.userExits + this.form.username, {}, res => {
             if (res) {
               callback(new Error('用户名重复'));
             } else {
@@ -138,14 +152,15 @@
           })
         }, 1000);
       };
-      return{
-        loading:true,
+      return {
+        loading: true,
         tableData: [],
         currentPage: 1,//当前多少页
-        size:10,//每页多少条数据
-        total:0,//总共多少数据
+        size: 10,//每页多少条数据
+        total: 0,//总共多少数据
         dialogFormVisible: false,
-        isNameRepeat:true,
+        isNameRepeat: true,
+        idArr: [],
         form: {
           username: '',
           realname: '',
@@ -157,60 +172,94 @@
         formLabelWidth: '80px',
         rules: {
           username: [
-            { required: true,validator: checkUserName, trigger: 'blur' }
+            {required: true, validator: checkUserName, trigger: 'blur'}
           ],
           realname: [
-            { required: true, message: '请输入真实姓名', trigger: 'blur' }
+            {required: true, message: '请输入真实姓名', trigger: 'blur'}
           ],
           phone: [
-            { required: true, validator: checkPhone, trigger: 'blur' }
+            {required: true, validator: checkPhone, trigger: 'blur'}
           ],
           password: [
-            { required: true, message: '请输入密码', trigger: 'blur' },
-            { min: 6,  message: '密码必须大于6位', trigger: 'blur' }
+            {required: true, message: '请输入密码', trigger: 'blur'},
+            {min: 6, message: '密码必须大于6位', trigger: 'blur'}
           ],
           email: [
-            { required: true, validator: checkEmail, trigger: 'blur' }
+            {required: true, validator: checkEmail, trigger: 'blur'}
           ],
           nickname: [
-            { required: true, message: '请输入昵称', trigger: 'blur' }
+            {required: true, message: '请输入昵称', trigger: 'blur'}
           ],
         }
       }
     },
     methods: {
       //初始化分页
-      init(){
-        this.loading=true
-        this.$_HTTP.get(this.$_API.userList,{size:this.size,current:this.currentPage},res=> {
-          this.tableData=res.records
-          this.total=res.total
-          this.loading=false
+      init() {
+        this.loading = true
+        this.$_HTTP.get(this.$_API.userList, {size: this.size, current: this.currentPage}, res => {
+          this.tableData = res.records
+          this.total = res.total
+          this.loading = false
         })
       },
+      deleteUser() {
+        this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let data = [];
+          let params = data.concat(this.idArr)
+          console.log(this.idArr)
+          this.$_HTTP.delete(this.$_API.deleteUser, {ids: params}, res => {
+            console.log('1', res)
+            if (res.code === 1) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              this.init()
+            }
+          })
+        }).catch(() => {
+
+        });
+      },
       handleSizeChange(val) {
-        this.size=val
+        this.size = val
         this.init()
       },
-      addUser(form){
+      handleEdit() {
+
+      },
+      addUser(form) {
         this.$refs[form].validate((valid) => {
           if (valid) {
-            let params={
-              username:this.form.username,
-              realname:this.form.realname,
-              phone:this.form.phone,
-              password:this.form.password,
-              email:this.form.email,
-              nickname:this.form.nickname
+            let params = {
+              username: this.form.username,
+              realname: this.form.realname,
+              phone: this.form.phone,
+              password: this.form.password,
+              email: this.form.email,
+              nickname: this.form.nickname
             }
-            this.$_HTTP.post(this.$_API.addUser,params,res=>{
-
+            this.$_HTTP.post(this.$_API.addUser, params, res => {
+              console.log(res.code)
+              if (res.code === 1) {
+                this.dialogFormVisible = false
+                this.$message({
+                  message: '添加用户成功',
+                  type: 'success'
+                });
+                this.init()
+              }
             })
           }
         });
       },
       handleCurrentChange(val) {
-        this.currentPage=val
+        this.currentPage = val
         this.init()
       },
     },
@@ -221,9 +270,10 @@
 </script>
 
 <style scoped>
-  .dialog-footer{
+  .dialog-footer {
     text-align: center;
   }
+
   .box-card {
     width: 100%;
   }
