@@ -20,7 +20,7 @@ let instance = axios.create()
  * @returns {{resData}} 成功就返回具体数据
  */
 HTTP.post = function (url, data, callback) {
-  let params = qs.stringify(data)
+  let params = data
   instance.post(ip + url, params)
     .then(function (res) {
       // 响应成功回调

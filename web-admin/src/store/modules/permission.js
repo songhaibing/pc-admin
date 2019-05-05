@@ -99,7 +99,7 @@ const actions = {
               ]
             },
             {
-              path: '/Settings',
+              path: 'Settings',
               name: 'Settings',
               meta: { title: '共用设置', icon: 'tree' },
               children:[
@@ -118,7 +118,7 @@ const actions = {
               ]
             },
             {
-              path: '/SystemQuery',
+              path: 'SystemQuery',
               name: 'SystemQuery',
               component: 'management/SystemQuery/SystemQuery',
               meta: { title: '系统日志', icon: 'tree' }
