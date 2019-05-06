@@ -5,7 +5,7 @@
         <i class="el-icon-menu"></i>
         <span>用户列表</span>
         <el-button style="float: right;padding: 6px;margin-right: 6px" type="primary" icon="el-icon-plus"
-                   @click="dialogFormVisible = true">添加
+                   @click="addButton">添加
         </el-button>
       </div>
       <el-table
@@ -112,6 +112,20 @@
     </el-card>
     <el-dialog :title="title" width="500px" :visible.sync="dialogFormVisible">
       <el-form :model="form" status-icon :rules="rules" ref="form" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="头像上传" :label-width="formLabelWidth" >
+          <el-upload
+            class="upload-demo"
+            drag
+            :on-success="updateSuccess"
+            :on-error="updateErr"
+            action="http://106.75.178.9:8080/file/upload/file/avatar"
+            :headers="token"
+            multiple>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+        </el-form-item>
         <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
           <el-input v-model="form.username" autocomplete="off"></el-input>
         </el-form-item>
@@ -188,6 +202,7 @@
         }
       };
       return {
+        token:localStorage.getItem('token'),
         loading: true,
         tableData: [],
         currentPage: 1,//当前多少页
@@ -254,6 +269,12 @@
           this.loading = false
         })
       },
+      updateSuccess(response, file, fileList){
+        console.log(response,file,fileList)
+      },
+      updateErr(err,file, fileList){
+      console.log(err,file,fileList)
+      },
       //编辑
       handleEdit(index,row){
        this.title='编辑用户'
@@ -284,6 +305,10 @@
         console.log(row)
           this.dialogPwVisible=true
           this.userName=row.username
+      },
+      addButton(){
+        this.title='添加用户'
+        this.dialogFormVisible = true
       },
       handleSizeChange(val) {
         this.size = val
