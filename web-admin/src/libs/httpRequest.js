@@ -1,9 +1,9 @@
 'use strict'
 import axios from 'axios'
 import ip from './address'
+import Vue from 'vue'
 
-
-
+let $Vue = new Vue();
 
 
 let HTTP = {}
@@ -26,10 +26,12 @@ HTTP.post = function (url, data, callback) {
       // 响应成功回调
       if (res.data.code == '1') {
         callback(res.data)
+      }else{
+        $Vue.$message.error('网络异常请刷新');
       }
     })
     .catch(function (err) {
-
+      $Vue.$message.error('网络异常请刷新');
     })
 }
 
@@ -48,15 +50,12 @@ HTTP.get = function (url, data, callback) {
       if (res.data.code === 1) {
         callback(res.data.data)
       }else {
-
+        $Vue.$message.error('网络异常请刷新');
 
       }
     })
     .catch(function (err) {
-      if(err){
-
-      }
-
+      $Vue.$message.error('网络异常请刷新');
     });
 }
 /**
@@ -74,14 +73,35 @@ HTTP.delete = function (url, data, callback) {
       if (res.data.code === 1) {
         callback(res.data)
       }else {
-
+        $Vue.$message.error('网络异常请刷新');
 
       }
     })
     .catch(function (err) {
-      if(err){
+      $Vue.$message.error('网络异常请刷新');
+
+    });
+}
+/**
+ * 发送put请求
+ *
+ * @param url 接口url
+ * @param data 传递给后端的数据
+ * @param callback
+ */
+HTTP.put = function (url, data, callback) {
+  instance.put(ip + url, data)
+    .then(function (res) {
+      // 响应成功回调
+      if (res.data.code === 1) {
+        callback(res.data)
+      }else {
+        $Vue.$message.error('网络异常请刷新');
 
       }
+    })
+    .catch(function (err) {
+      $Vue.$message.error('网络异常请刷新');
 
     });
 }

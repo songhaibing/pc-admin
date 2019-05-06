@@ -6,6 +6,7 @@ let API = {
   userExits:'/user/exits/',//检测用户名是否存在
   addUser:'/user/add',//添加用户
   deleteUser:'/user/delete/',//删除用户
+  editUser:'/user/edit/',//编辑用户
 };
 
 export default API;

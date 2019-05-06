@@ -19,13 +19,13 @@
           align='center'
           label="序号"
           type="index"
-          width="100">
+          width="50">
         </el-table-column>
         <el-table-column
           prop="avatar"
           label="头像"
           align='center'
-          width="200">
+          width="150">
         </el-table-column>
         <el-table-column
           align='center'
@@ -42,14 +42,14 @@
         <el-table-column
           align='center'
           label="是否禁止登陆"
-          width="150">
+          width="100">
           <template slot-scope="scope">{{ scope.row.lockFlag?'是':'否' }}</template>
         </el-table-column>
         <el-table-column
           align='center'
           prop="nickname"
           label="昵称"
-          width="150">
+          width="100">
         </el-table-column>
         <el-table-column
           align='center'
@@ -61,29 +61,37 @@
           align='center'
           prop="realname"
           label="真实姓名"
-          width="150">
+          width="100">
         </el-table-column>
         <el-table-column
           align='center'
           prop="username"
+          width="150"
           label="用户名"
         >
         </el-table-column>
         <el-table-column align='center' label="操作">
           <template slot-scope="scope">
-            <el-tooltip content="Top center" placement="top">
+            <el-tooltip content="编辑" placement="top">
               <el-button
                 size="mini"
                 type="success"
                 icon="el-icon-edit"
                 @click="handleEdit(scope.$index, scope.row)"></el-button>
             </el-tooltip>
-            <el-tooltip content="Top center" placement="top">
+            <el-tooltip content="删除" placement="top">
               <el-button
                 size="mini"
                 type="danger"
                 icon="el-icon-delete"
                 @click="deleteUser(scope.$index, scope.row)"></el-button>
+            </el-tooltip>
+            <el-tooltip content="修改密码" placement="top">
+              <el-button
+                size="mini"
+                type="warning"
+                icon="el-icon-edit"
+                @click="changePassword(scope.$index, scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -102,7 +110,7 @@
         </el-pagination>
       </div>
     </el-card>
-    <el-dialog title="添加用户" width="500px" :visible.sync="dialogFormVisible">
+    <el-dialog :title="title" width="500px" :visible.sync="dialogFormVisible">
       <el-form :model="form" status-icon :rules="rules" ref="form" label-width="100px" class="demo-ruleForm">
         <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
           <el-input v-model="form.username" autocomplete="off"></el-input>
@@ -119,12 +127,26 @@
         <el-form-item label="手机号" :label-width="formLabelWidth" prop="phone">
           <el-input v-model="form.phone" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
+        <el-form-item label="密码" :label-width="formLabelWidth" prop="password" v-if="title==='添加用户'">
           <el-input v-model="form.password" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="addUser('form')">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <el-dialog title="修改密码" width="500px" :visible.sync="dialogPwVisible">
+      <el-form :model="formPw" status-icon :rules="rulesPw" ref="formPw" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
+          <el-input v-model="formPw.password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" :label-width="formLabelWidth" prop="newPassword" >
+          <el-input v-model="formPw.newPassword" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item class="dialog-footer">
+          <el-button @click="dialogPwVisible = false">取 消</el-button>
+          <el-button type="primary" @click="sure('formPw')">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -141,16 +163,29 @@
         if (!value) {
           return callback(new Error('请输入用户名'));
         }
-        setTimeout(() => {
-          //检测用户名是否重复
-          this.$_HTTP.get(this.$_API.userExits + this.form.username, {}, res => {
-            if (res) {
-              callback(new Error('用户名重复'));
-            } else {
-              callback();
-            }
-          })
-        }, 1000);
+        if (this.title === '编辑用户') {
+          callback();
+        }
+          setTimeout(() => {
+            //检测用户名是否重复
+            this.$_HTTP.get(this.$_API.userExits + this.form.username, {}, res => {
+              if (res) {
+                callback(new Error('用户名重复'));
+              } else {
+                callback();
+              }
+            })
+          }, 1000);
+      };
+      const checkPw = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请输入确认密码'));
+        }
+        if(this.formPw.password===this.formPw.newPassword){
+          callback();
+        }else {
+          callback(new Error('密码不一致'));
+        }
       };
       return {
         loading: true,
@@ -159,8 +194,11 @@
         size: 10,//每页多少条数据
         total: 0,//总共多少数据
         dialogFormVisible: false,
+        dialogPwVisible:false,
         isNameRepeat: true,
         idArr: [],
+        userName:'',
+        title:'添加用户',
         form: {
           username: '',
           realname: '',
@@ -169,7 +207,20 @@
           email: '',
           nickname: '',
         },
+        formPw:{
+          password:'',
+          newPassword:''
+        },
         formLabelWidth: '80px',
+        rulesPw:{
+          password: [
+            {required: true, message: '请输入密码', trigger: 'blur'},
+            {min: 6, message: '密码必须大于6位', trigger: 'blur'}
+          ],
+          newpassword: [
+            {required: true, validator: checkPw, trigger: 'blur'}
+          ],
+        },
         rules: {
           username: [
             {required: true, validator: checkUserName, trigger: 'blur'}
@@ -203,17 +254,20 @@
           this.loading = false
         })
       },
-      deleteUser() {
+      //编辑
+      handleEdit(index,row){
+       this.title='编辑用户'
+        this.dialogFormVisible=true
+        this.form=row
+      },
+      //删除
+      deleteUser(index,row) {
         this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let data = [];
-          let params = data.concat(this.idArr)
-          console.log(this.idArr)
-          this.$_HTTP.delete(this.$_API.deleteUser, {ids: params}, res => {
-            console.log('1', res)
+          this.$_HTTP.delete(this.$_API.deleteUser+row.id, {}, res => {
             if (res.code === 1) {
               this.$message({
                 type: 'success',
@@ -226,12 +280,25 @@
 
         });
       },
+      changePassword(index,row){
+        console.log(row)
+          this.dialogPwVisible=true
+          this.userName=row.username
+      },
       handleSizeChange(val) {
         this.size = val
         this.init()
       },
-      handleEdit() {
-
+      sure(){
+        this.$_HTTP.put(this.$_API.editUser+this.userName,this.formPw, res => {
+          if (res.code === 1) {
+            this.dialogPwVisible = false
+            this.$message({
+              message: '修改密码成功',
+              type: 'success'
+            });
+          }
+        })
       },
       addUser(form) {
         this.$refs[form].validate((valid) => {
@@ -244,17 +311,30 @@
               email: this.form.email,
               nickname: this.form.nickname
             }
-            this.$_HTTP.post(this.$_API.addUser, params, res => {
-              console.log(res.code)
-              if (res.code === 1) {
-                this.dialogFormVisible = false
-                this.$message({
-                  message: '添加用户成功',
-                  type: 'success'
-                });
-                this.init()
-              }
-            })
+            if(this.title==='添加用户'){
+              this.$_HTTP.post(this.$_API.addUser, params, res => {
+                console.log(res.code)
+                if (res.code === 1) {
+                  this.dialogFormVisible = false
+                  this.$message({
+                    message: '添加用户成功',
+                    type: 'success'
+                  });
+                  this.init()
+                }
+              })
+            }else {
+              this.$_HTTP.put(this.$_API.editUser+this.form.username, params, res => {
+                if (res.code === 1) {
+                  this.dialogFormVisible = false
+                  this.$message({
+                    message: '修改用户成功',
+                    type: 'success'
+                  });
+                  this.init()
+                }
+              })
+            }
           }
         });
       },
@@ -273,7 +353,10 @@
   .dialog-footer {
     text-align: center;
   }
-
+.el-icon-unlock{
+  width: 12px;
+  height: 13px;
+}
   .box-card {
     width: 100%;
   }
