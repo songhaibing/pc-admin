@@ -14,7 +14,7 @@ const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
-  if(!localStorage.getItem('router')){
+  if(!localStorage.getItem('router')&&from.path==='/login'){
     HTTP.get(API.menu,{},function (res) {
       localStorage.setItem('router',JSON.stringify(res))
     })

@@ -9,9 +9,9 @@ const service = axios.create({
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
-if(localStorage.getItem('token')){
-  service.defaults.headers.common['Authorization'] = 'bearer '+localStorage.getItem('token')
-}
+// if(localStorage.getItem('token')){
+//   service.defaults.headers.common['Authorization'] = 'bearer '+localStorage.getItem('token')
+// }
 
 
 // request interceptor

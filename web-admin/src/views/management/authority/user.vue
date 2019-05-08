@@ -22,10 +22,13 @@
           width="50">
         </el-table-column>
         <el-table-column
-          prop="avatar"
           label="头像"
           align='center'
           width="150">
+          <template scope="scope">
+            <img v-if="scope.row.avatar" :src="'http://106.75.178.9:8080/resource/'+scope.row.avatar"  class="head_pic"/>
+            <img v-else src="@/assets/avatar/mieba.png"  class="head_pic"/>
+          </template>
         </el-table-column>
         <el-table-column
           align='center'
@@ -42,7 +45,7 @@
         <el-table-column
           align='center'
           label="是否禁止登陆"
-          width="100">
+          width="120">
           <template slot-scope="scope">{{ scope.row.lockFlag?'是':'否' }}</template>
         </el-table-column>
         <el-table-column
@@ -114,16 +117,14 @@
       <el-form :model="form" status-icon :rules="rules" ref="form" label-width="100px" class="demo-ruleForm">
         <el-form-item label="头像上传" :label-width="formLabelWidth" >
           <el-upload
-            class="upload-demo"
-            drag
-            :on-success="updateSuccess"
-            :on-error="updateErr"
+            class="avatar-uploader"
             action="http://106.75.178.9:8080/file/upload/file/avatar"
-            :headers="token"
-            multiple>
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+            :headers="{token}"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
         <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
@@ -169,9 +170,10 @@
 
 <script>
   import {checkPhone, checkEmail} from '@/libs/regular.js'
-
+  import mixins from '@/mixins/user'
   export default {
     name: "index",
+    mixins:[mixins],
     data() {
       const checkUserName = (rule, value, callback) => {
         if (!value) {
@@ -214,6 +216,9 @@
         idArr: [],
         userName:'',
         title:'添加用户',
+        imageUrl: '',
+        base64:'',
+        avatar:require('@/assets/avatar/mieba.png'),
         form: {
           username: '',
           realname: '',
@@ -232,7 +237,7 @@
             {required: true, message: '请输入密码', trigger: 'blur'},
             {min: 6, message: '密码必须大于6位', trigger: 'blur'}
           ],
-          newpassword: [
+          newPassword: [
             {required: true, validator: checkPw, trigger: 'blur'}
           ],
         },
@@ -269,15 +274,19 @@
           this.loading = false
         })
       },
-      updateSuccess(response, file, fileList){
-        console.log(response,file,fileList)
-      },
-      updateErr(err,file, fileList){
-      console.log(err,file,fileList)
+      //上传头像
+      uploadAvatar(){
+        this.$_HTTP.put(this.$_API.editAvatar+this.form.username+'/avatar', {content:this.base64},res=>{})
       },
       //编辑
       handleEdit(index,row){
-       this.title='编辑用户'
+        console.log(row)
+        if(row.avatar){
+          this.imageUrl='http://106.75.178.9:8080/resource/'+row.avatar
+        }else{
+          this.imageUrl=this.avatar
+        }
+        this.title='编辑用户'
         this.dialogFormVisible=true
         this.form=row
       },
@@ -309,6 +318,8 @@
       addButton(){
         this.title='添加用户'
         this.dialogFormVisible = true
+        this.form=''
+        this.imageUrl=''
       },
       handleSizeChange(val) {
         this.size = val
@@ -325,6 +336,24 @@
           }
         })
       },
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+        this.getBase64(file.raw).then(res => {
+         this.base64=res
+        });
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
       addUser(form) {
         this.$refs[form].validate((valid) => {
           if (valid) {
@@ -337,8 +366,10 @@
               nickname: this.form.nickname
             }
             if(this.title==='添加用户'){
+              if(this.base64){
+                this.uploadAvatar()
+              }
               this.$_HTTP.post(this.$_API.addUser, params, res => {
-                console.log(res.code)
                 if (res.code === 1) {
                   this.dialogFormVisible = false
                   this.$message({
@@ -349,6 +380,9 @@
                 }
               })
             }else {
+              if(this.base64){
+                this.uploadAvatar()
+              }
               this.$_HTTP.put(this.$_API.editUser+this.form.username, params, res => {
                 if (res.code === 1) {
                   this.dialogFormVisible = false
@@ -378,11 +412,37 @@
   .dialog-footer {
     text-align: center;
   }
-.el-icon-unlock{
-  width: 12px;
-  height: 13px;
-}
   .box-card {
     width: 100%;
+  }
+  .avatar-uploader {
+    width: 178px;
+    height: 178px;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+  .head_pic{
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
   }
 </style>

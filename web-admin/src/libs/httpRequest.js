@@ -10,6 +10,19 @@ let HTTP = {}
 // 使用由axios库提供的配置的默认值来创建axios实例
 let instance = axios.create()
 
+// 添加请求拦截器
+let beforeRequest = instance.interceptors.request.use(function (config) {
+  // alert(localStorage.getItem('token'))
+  const token = localStorage.getItem('token')
+  if(token){
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  // 在发送请求之前做些什么
+  return config
+}, function (error) {
+  // 对请求错误做些什么
+  return Promise.reject(error)
+})
 
 /**
  * 发送post请求
@@ -21,7 +34,7 @@ let instance = axios.create()
  */
 HTTP.post = function (url, data, callback) {
   let params = data
-  instance.post(ip + url, params)
+  instance.post(ip.address + url, params)
     .then(function (res) {
       // 响应成功回调
       if (res.data.code == '1') {
@@ -44,7 +57,7 @@ HTTP.post = function (url, data, callback) {
  */
 HTTP.get = function (url, data, callback) {
   let params = {params: data}
-  instance.get(ip + url, params)
+  instance.get(ip.address + url, params)
     .then(function (res) {
       // 响应成功回调
       if (res.data.code === 1) {
@@ -67,7 +80,7 @@ HTTP.get = function (url, data, callback) {
  */
 HTTP.delete = function (url, data, callback) {
   let params = {params: data}
-  instance.delete(ip + url, params)
+  instance.delete(ip.address + url, params)
     .then(function (res) {
       // 响应成功回调
       if (res.data.code === 1) {
@@ -90,7 +103,7 @@ HTTP.delete = function (url, data, callback) {
  * @param callback
  */
 HTTP.put = function (url, data, callback) {
-  instance.put(ip + url, data)
+  instance.put(ip.address + url, data)
     .then(function (res) {
       // 响应成功回调
       if (res.data.code === 1) {
