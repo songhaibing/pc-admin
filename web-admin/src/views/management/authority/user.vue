@@ -11,15 +11,13 @@
       <el-table
         :data="tableData"
         v-loading="loading"
-        stripe
-        border
         style="width: 100%"
       >
         <el-table-column
           align='center'
           label="序号"
           type="index"
-          width="50">
+          width="60">
         </el-table-column>
         <el-table-column
           label="头像"
@@ -29,6 +27,31 @@
             <img v-if="scope.row.avatar" :src="'http://106.75.178.9:8080/resource/'+scope.row.avatar"  class="head_pic"/>
             <img v-else src="@/assets/avatar/mieba.png"  class="head_pic"/>
           </template>
+        </el-table-column>
+        <el-table-column
+          align='center'
+          prop="username"
+          width="150"
+          label="用户名"
+        >
+        </el-table-column>
+        <el-table-column
+          align='center'
+          prop="realname"
+          label="真实姓名"
+          width="100">
+        </el-table-column>
+        <el-table-column
+          align='center'
+          prop="nickname"
+          label="昵称"
+          width="100">
+        </el-table-column>
+        <el-table-column
+          align='center'
+          prop="phone"
+          label="手机号码"
+          width="150">
         </el-table-column>
         <el-table-column
           align='center'
@@ -47,31 +70,6 @@
           label="是否禁止登陆"
           width="120">
           <template slot-scope="scope">{{ scope.row.lockFlag?'是':'否' }}</template>
-        </el-table-column>
-        <el-table-column
-          align='center'
-          prop="nickname"
-          label="昵称"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          align='center'
-          prop="phone"
-          label="手机号码"
-          width="150">
-        </el-table-column>
-        <el-table-column
-          align='center'
-          prop="realname"
-          label="真实姓名"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          align='center'
-          prop="username"
-          width="150"
-          label="用户名"
-        >
         </el-table-column>
         <el-table-column align='center' label="操作">
           <template slot-scope="scope">
@@ -127,20 +125,20 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
-          <el-input v-model="form.username" autocomplete="off"></el-input>
+        <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
+          <el-input v-model="form.userName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realname">
-          <el-input v-model="form.realname" autocomplete="off"></el-input>
+        <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realName">
+          <el-input v-model="form.realName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="昵称" :label-width="formLabelWidth" prop="nickname">
-          <el-input v-model="form.nickname" autocomplete="off"></el-input>
+        <el-form-item label="昵称" :label-width="formLabelWidth" prop="nickName">
+          <el-input v-model="form.nickName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
-          <el-input v-model="form.email" autocomplete="off"></el-input>
+          <el-input v-model="form.Email" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" :label-width="formLabelWidth" prop="phone">
-          <el-input v-model="form.phone" autocomplete="off"></el-input>
+        <el-form-item label="手机号" :label-width="formLabelWidth" prop="mobile">
+          <el-input v-model="form.mobile" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth" prop="password" v-if="title==='添加用户'">
           <el-input v-model="form.password" autocomplete="off"></el-input>
@@ -184,7 +182,7 @@
         }
           setTimeout(() => {
             //检测用户名是否重复
-            this.$_HTTP.get(this.$_API.userExits + this.form.username, {}, res => {
+            this.$_HTTP.get(this.$_API.userExits + this.form.userName, {}, res => {
               if (res) {
                 callback(new Error('用户名重复'));
               } else {
@@ -220,12 +218,12 @@
         base64:'',
         avatar:require('@/assets/avatar/mieba.png'),
         form: {
-          username: '',
-          realname: '',
-          phone: '',
+          userName: '',
+          realName: '',
+          mobile: '',
           password: '',
-          email: '',
-          nickname: '',
+          Email: '',
+          nickName: '',
         },
         formPw:{
           password:'',
@@ -242,23 +240,23 @@
           ],
         },
         rules: {
-          username: [
+          userName: [
             {required: true, validator: checkUserName, trigger: 'blur'}
           ],
-          realname: [
+          realName: [
             {required: true, message: '请输入真实姓名', trigger: 'blur'}
           ],
-          phone: [
+          mobile: [
             {required: true, validator: checkPhone, trigger: 'blur'}
           ],
           password: [
             {required: true, message: '请输入密码', trigger: 'blur'},
             {min: 6, message: '密码必须大于6位', trigger: 'blur'}
           ],
-          email: [
+          Email: [
             {required: true, validator: checkEmail, trigger: 'blur'}
           ],
-          nickname: [
+          nickName: [
             {required: true, message: '请输入昵称', trigger: 'blur'}
           ],
         }
@@ -276,11 +274,10 @@
       },
       //上传头像
       uploadAvatar(){
-        this.$_HTTP.put(this.$_API.editAvatar+this.form.username+'/avatar', {content:this.base64},res=>{})
+        this.$_HTTP.put(this.$_API.editAvatar+this.form.userName+'/avatar', {content:this.base64},res=>{})
       },
       //编辑
       handleEdit(index,row){
-        console.log(row)
         if(row.avatar){
           this.imageUrl='http://106.75.178.9:8080/resource/'+row.avatar
         }else{
@@ -288,7 +285,11 @@
         }
         this.title='编辑用户'
         this.dialogFormVisible=true
-        this.form=row
+        this.form.userName=row.username
+        this.form.realName=row.realname
+        this.form.mobile=row.phone
+        this.form.Email=row.email
+        this.form.nickName=row.nickname
       },
       //删除
       deleteUser(index,row) {
@@ -311,28 +312,35 @@
         });
       },
       changePassword(index,row){
-        console.log(row)
           this.dialogPwVisible=true
           this.userName=row.username
       },
       addButton(){
+        this.form.userName=''
+        this.form.realName=''
+        this.form.mobile=''
+        this.form.Email=''
+        this.form.nickName=''
+        this.imageUrl=''
         this.title='添加用户'
         this.dialogFormVisible = true
-        this.form=''
-        this.imageUrl=''
       },
       handleSizeChange(val) {
         this.size = val
         this.init()
       },
-      sure(){
-        this.$_HTTP.put(this.$_API.editUser+this.userName,this.formPw, res => {
-          if (res.code === 1) {
-            this.dialogPwVisible = false
-            this.$message({
-              message: '修改密码成功',
-              type: 'success'
-            });
+      sure(formPw){
+        this.$refs[formPw].validate((valid) => {
+          if (valid) {
+            this.$_HTTP.put(this.$_API.editUser + this.userName, this.formPw, res => {
+              if (res.code === 1) {
+                this.dialogPwVisible = false
+                this.$message({
+                  message: '修改密码成功',
+                  type: 'success'
+                });
+              }
+            })
           }
         })
       },
@@ -358,12 +366,12 @@
         this.$refs[form].validate((valid) => {
           if (valid) {
             let params = {
-              username: this.form.username,
-              realname: this.form.realname,
-              phone: this.form.phone,
+              username: this.form.userName,
+              realname: this.form.realName,
+              phone: this.form.mobile,
               password: this.form.password,
-              email: this.form.email,
-              nickname: this.form.nickname
+              email: this.form.Email,
+              nickname: this.form.nickName
             }
             if(this.title==='添加用户'){
               if(this.base64){
@@ -383,7 +391,7 @@
               if(this.base64){
                 this.uploadAvatar()
               }
-              this.$_HTTP.put(this.$_API.editUser+this.form.username, params, res => {
+              this.$_HTTP.put(this.$_API.editUser+this.form.userName, params, res => {
                 if (res.code === 1) {
                   this.dialogFormVisible = false
                   this.$message({
