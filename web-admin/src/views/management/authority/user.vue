@@ -24,8 +24,8 @@
           align='center'
           width="150">
           <template scope="scope">
-            <img v-if="scope.row.avatar" :src="'http://106.75.178.9:8080/resource/'+scope.row.avatar"  class="head_pic"/>
-            <img v-else src="@/assets/avatar/mieba.png"  class="head_pic"/>
+            <img v-if="scope.row.avatar" :src="'http://106.75.178.9:8080/resource/'+scope.row.avatar" class="head_pic"/>
+            <img v-else src="@/assets/avatar/mieba.png" class="head_pic"/>
           </template>
         </el-table-column>
         <el-table-column
@@ -73,27 +73,21 @@
         </el-table-column>
         <el-table-column align='center' label="操作">
           <template slot-scope="scope">
-            <el-tooltip content="编辑" placement="top">
-              <el-button
-                size="mini"
-                type="success"
-                icon="el-icon-edit"
-                @click="handleEdit(scope.$index, scope.row)"></el-button>
-            </el-tooltip>
-            <el-tooltip content="删除" placement="top">
-              <el-button
-                size="mini"
-                type="danger"
-                icon="el-icon-delete"
-                @click="deleteUser(scope.$index, scope.row)"></el-button>
-            </el-tooltip>
-            <el-tooltip content="修改密码" placement="top">
-              <el-button
-                size="mini"
-                type="warning"
-                icon="el-icon-edit"
-                @click="changePassword(scope.$index, scope.row)"></el-button>
-            </el-tooltip>
+            <el-button
+              size="mini"
+              type="text"
+              @click="handleEdit(scope.$index, scope.row)">编辑
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              @click="deleteUser(scope.$index, scope.row)">删除
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              @click="changePassword(scope.$index, scope.row)">修改密码
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -113,7 +107,7 @@
     </el-card>
     <el-dialog :title="title" width="500px" :visible.sync="dialogFormVisible">
       <el-form :model="form" status-icon :rules="rules" ref="form" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="头像上传" :label-width="formLabelWidth" >
+        <el-form-item label="头像上传" :label-width="formLabelWidth">
           <el-upload
             class="avatar-uploader"
             action="http://106.75.178.9:8080/file/upload/file/avatar"
@@ -134,7 +128,7 @@
         <el-form-item label="昵称" :label-width="formLabelWidth" prop="nickName">
           <el-input v-model="form.nickName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
+        <el-form-item label="邮箱" :label-width="formLabelWidth" prop="Email">
           <el-input v-model="form.Email" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号" :label-width="formLabelWidth" prop="mobile">
@@ -154,7 +148,7 @@
         <el-form-item label="密码" :label-width="formLabelWidth" prop="password">
           <el-input v-model="formPw.password" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="确认密码" :label-width="formLabelWidth" prop="newPassword" >
+        <el-form-item label="确认密码" :label-width="formLabelWidth" prop="newPassword">
           <el-input v-model="formPw.newPassword" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item class="dialog-footer">
@@ -167,11 +161,12 @@
 </template>
 
 <script>
-  import {checkPhone, checkEmail} from '@/libs/regular.js'
+  import {checkPhone, checkEmail,checkPw,checkRenewPw} from '@/libs/regular.js'
   import mixins from '@/mixins/user'
+
   export default {
     name: "index",
-    mixins:[mixins],
+    mixins: [mixins],
     data() {
       const checkUserName = (rule, value, callback) => {
         if (!value) {
@@ -180,43 +175,43 @@
         if (this.title === '编辑用户') {
           callback();
         }
-          setTimeout(() => {
-            //检测用户名是否重复
-            this.$_HTTP.get(this.$_API.userExits + this.form.userName, {}, res => {
-              if (res) {
-                callback(new Error('用户名重复'));
-              } else {
-                callback();
-              }
-            })
-          }, 1000);
+        setTimeout(() => {
+          //检测用户名是否重复
+          this.$_HTTP.get(this.$_API.userExits + this.form.userName, {}, res => {
+            if (res) {
+              callback(new Error('用户名重复'));
+            } else {
+              callback();
+            }
+          })
+        }, 1000);
       };
-      const checkPw = (rule, value, callback) => {
+      const checkRenewPw= (rule, value, callback) => {
         if (!value) {
           return callback(new Error('请输入确认密码'));
         }
-        if(this.formPw.password===this.formPw.newPassword){
-          callback();
+        if (this.formPw.password !== this.formPw.newPassword) {
+          return callback(new Error('密码不一致'));
         }else {
-          callback(new Error('密码不一致'));
+          callback()
         }
       };
       return {
-        token:localStorage.getItem('token'),
+        token: localStorage.getItem('token'),
         loading: true,
         tableData: [],
         currentPage: 1,//当前多少页
         size: 10,//每页多少条数据
         total: 0,//总共多少数据
         dialogFormVisible: false,
-        dialogPwVisible:false,
+        dialogPwVisible: false,
         isNameRepeat: true,
         idArr: [],
-        userName:'',
-        title:'添加用户',
+        userName: '',
+        title: '添加用户',
         imageUrl: '',
-        base64:'',
-        avatar:require('@/assets/avatar/mieba.png'),
+        base64: '',
+        avatar: require('@/assets/avatar/mieba.png'),
         form: {
           userName: '',
           realName: '',
@@ -225,18 +220,17 @@
           Email: '',
           nickName: '',
         },
-        formPw:{
-          password:'',
-          newPassword:''
+        formPw: {
+          password: '',
+          newPassword: ''
         },
         formLabelWidth: '80px',
-        rulesPw:{
+        rulesPw: {
           password: [
-            {required: true, message: '请输入密码', trigger: 'blur'},
-            {min: 6, message: '密码必须大于6位', trigger: 'blur'}
+            {required: true, validator: checkPw, trigger: 'blur'}
           ],
           newPassword: [
-            {required: true, validator: checkPw, trigger: 'blur'}
+            {required: true, validator: checkRenewPw, trigger: 'blur'}
           ],
         },
         rules: {
@@ -250,8 +244,7 @@
             {required: true, validator: checkPhone, trigger: 'blur'}
           ],
           password: [
-            {required: true, message: '请输入密码', trigger: 'blur'},
-            {min: 6, message: '密码必须大于6位', trigger: 'blur'}
+            {required: true, validator: checkPw, trigger: 'blur'}
           ],
           Email: [
             {required: true, validator: checkEmail, trigger: 'blur'}
@@ -273,32 +266,33 @@
         })
       },
       //上传头像
-      uploadAvatar(){
-        this.$_HTTP.put(this.$_API.editAvatar+this.form.userName+'/avatar', {content:this.base64},res=>{})
+      uploadAvatar() {
+        this.$_HTTP.put(this.$_API.editAvatar + this.form.userName + '/avatar', {content: this.base64}, res => {
+        })
       },
       //编辑
-      handleEdit(index,row){
-        if(row.avatar){
-          this.imageUrl='http://106.75.178.9:8080/resource/'+row.avatar
-        }else{
-          this.imageUrl=this.avatar
+      handleEdit(index, row) {
+        if (row.avatar) {
+          this.imageUrl = 'http://106.75.178.9:8080/resource/' + row.avatar
+        } else {
+          this.imageUrl = this.avatar
         }
-        this.title='编辑用户'
-        this.dialogFormVisible=true
-        this.form.userName=row.username
-        this.form.realName=row.realname
-        this.form.mobile=row.phone
-        this.form.Email=row.email
-        this.form.nickName=row.nickname
+        this.title = '编辑用户'
+        this.dialogFormVisible = true
+        this.form.userName = row.username
+        this.form.realName = row.realname
+        this.form.mobile = row.phone
+        this.form.Email = row.email
+        this.form.nickName = row.nickname
       },
       //删除
-      deleteUser(index,row) {
+      deleteUser(index, row) {
         this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$_HTTP.delete(this.$_API.deleteUser+row.id, {}, res => {
+          this.$_HTTP.delete(this.$_API.deleteUser + row.id, {}, res => {
             if (res.code === 1) {
               this.$message({
                 type: 'success',
@@ -311,25 +305,25 @@
 
         });
       },
-      changePassword(index,row){
-          this.dialogPwVisible=true
-          this.userName=row.username
+      changePassword(index, row) {
+        this.dialogPwVisible = true
+        this.userName = row.username
       },
-      addButton(){
-        this.form.userName=''
-        this.form.realName=''
-        this.form.mobile=''
-        this.form.Email=''
-        this.form.nickName=''
-        this.imageUrl=''
-        this.title='添加用户'
+      addButton() {
+        this.form.userName = ''
+        this.form.realName = ''
+        this.form.mobile = ''
+        this.form.Email = ''
+        this.form.nickName = ''
+        this.imageUrl = ''
+        this.title = '添加用户'
         this.dialogFormVisible = true
       },
       handleSizeChange(val) {
         this.size = val
         this.init()
       },
-      sure(formPw){
+      sure(formPw) {
         this.$refs[formPw].validate((valid) => {
           if (valid) {
             this.$_HTTP.put(this.$_API.editUser + this.userName, this.formPw, res => {
@@ -347,7 +341,7 @@
       handleAvatarSuccess(res, file) {
         this.imageUrl = URL.createObjectURL(file.raw);
         this.getBase64(file.raw).then(res => {
-         this.base64=res
+          this.base64 = res
         });
       },
       beforeAvatarUpload(file) {
@@ -373,8 +367,8 @@
               email: this.form.Email,
               nickname: this.form.nickName
             }
-            if(this.title==='添加用户'){
-              if(this.base64){
+            if (this.title === '添加用户') {
+              if (this.base64) {
                 this.uploadAvatar()
               }
               this.$_HTTP.post(this.$_API.addUser, params, res => {
@@ -387,11 +381,11 @@
                   this.init()
                 }
               })
-            }else {
-              if(this.base64){
+            } else {
+              if (this.base64) {
                 this.uploadAvatar()
               }
-              this.$_HTTP.put(this.$_API.editUser+this.form.userName, params, res => {
+              this.$_HTTP.put(this.$_API.editUser + this.form.userName, params, res => {
                 if (res.code === 1) {
                   this.dialogFormVisible = false
                   this.$message({
@@ -420,9 +414,11 @@
   .dialog-footer {
     text-align: center;
   }
+
   .box-card {
     width: 100%;
   }
+
   .avatar-uploader {
     width: 178px;
     height: 178px;
@@ -432,9 +428,11 @@
     position: relative;
     overflow: hidden;
   }
+
   .avatar-uploader:hover {
     border-color: #409EFF;
   }
+
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
@@ -443,12 +441,14 @@
     line-height: 178px;
     text-align: center;
   }
+
   .avatar {
     width: 178px;
     height: 178px;
     display: block;
   }
-  .head_pic{
+
+  .head_pic {
     border-radius: 50%;
     width: 70px;
     height: 70px;

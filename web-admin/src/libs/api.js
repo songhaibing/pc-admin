@@ -7,7 +7,8 @@ let API = {
   addUser:'/user/add',//添加用户
   deleteUser:'/user/delete/',//删除用户
   editUser:'/user/edit/',//编辑用户
-  editAvatar: '/user/edit/'//用户头像修改
+  editAvatar:'/user/edit/',//用户头像修改
+    deptTree:'dept/tree'//获取树状部门结构数据
 
 };
 
