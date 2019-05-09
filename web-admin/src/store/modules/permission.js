@@ -20,22 +20,20 @@ function hasPermission(roles, route) {
  * @param roles
  */
 export function filterAsyncRouter(asyncRouterMap) {
- const accessedRouters=asyncRouterMap.filter(route=>{
-   if(route.component){
-     if(route.component === 'Layout'){
-       route.component=Layout
-     }else{
-       let componentPath=`${route.component}`
-       route.component=(resolve)=>require(["@/views/"+componentPath+".vue"],resolve)
-     }
-   }
-   if(route.children){
-     route.children=filterAsyncRouter(route.children)
-   }
-   return true
- })
-
-
+  const accessedRouters = asyncRouterMap.filter(route => {
+    if (route.component) {
+      if (route.component === 'Layout') {
+        route.component = Layout
+      } else {
+        const componentPath = `${route.component}`
+        route.component = (resolve) => require(['@/views/' + componentPath + '.vue'], resolve)
+      }
+    }
+    if (route.children) {
+      route.children = filterAsyncRouter(route.children)
+    }
+    return true
+  })
 
   return accessedRouters
 }
@@ -57,7 +55,7 @@ const actions = {
     return new Promise(resolve => {
       let accessedRoutes
       if (roles.includes('admin')) {
-        let router=JSON.parse(localStorage.getItem('router'))
+        const router = JSON.parse(localStorage.getItem('router'))
         accessedRoutes = filterAsyncRouter([{
           path: '/management',
           component: 'Layout',
@@ -69,32 +67,32 @@ const actions = {
             {
               path: 'authority',
               name: 'Authority',
-              component:'management/index',
+              component: 'management/index',
               meta: { title: '权限管理', icon: 'table' },
-              children:[
+              children: [
                 {
                   path: 'user',
                   name: 'User',
                   component: 'management/authority/user',
-                  meta: { title: '用户管理', icon: 'table' },
+                  meta: { title: '用户管理', icon: 'table' }
                 },
                 {
                   path: 'department',
                   name: 'Department',
                   component: 'management/authority/department',
-                  meta: { title: '部门管理', icon: 'table' },
+                  meta: { title: '部门管理', icon: 'table' }
                 },
                 {
                   path: 'role',
                   name: 'Role',
                   component: 'management/authority/role',
-                  meta: { title: '角色管理', icon: 'table' },
+                  meta: { title: '角色管理', icon: 'table' }
                 },
                 {
                   path: 'jurisdiction',
                   name: 'Jurisdiction',
                   component: 'management/authority/jurisdiction',
-                  meta: { title: '权限管理', icon: 'table' },
+                  meta: { title: '权限管理', icon: 'table' }
                 }
               ]
             },
@@ -102,19 +100,19 @@ const actions = {
               path: 'Settings',
               name: 'Settings',
               meta: { title: '共用设置', icon: 'tree' },
-              children:[
+              children: [
                 {
                   path: 'homepage',
                   name: 'Homepage',
                   component: 'management/Settings/homepage',
-                  meta: { title: '主页设置', icon: 'table' },
+                  meta: { title: '主页设置', icon: 'table' }
                 },
                 {
                   path: 'parameter',
                   name: 'Parameter',
                   component: 'management/Settings/parameter',
-                  meta: { title: '参数设置', icon: 'table' },
-                },
+                  meta: { title: '参数设置', icon: 'table' }
+                }
               ]
             },
             {
@@ -126,6 +124,7 @@ const actions = {
           ]
         }
         ])
+        accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
         commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)
       }

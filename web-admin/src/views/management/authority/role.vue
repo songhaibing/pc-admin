@@ -6,7 +6,7 @@
       </div>
       <el-tree :highlight-current="true" class="single-content" :data="data" :props="defaultProps" @node-click="handleNodeClick" />
     </div>
-    <div style="padding:30px;width: 100%;margin-left: 200px">
+    <div style="padding:30px;margin-left: 200px;width: 1200px">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <i class="el-icon-menu" />
@@ -15,7 +15,7 @@
             style="float: right;padding: 6px;margin-right: 6px"
             type="primary"
             icon="el-icon-plus"
-            @click="dialogFormVisible=true"
+            @click="addButton"
           >添加
           </el-button>
         </div>
@@ -77,20 +77,20 @@
         </div>
       </el-card>
     </div>
-    <el-dialog title="添加角色" width="500px" :visible.sync="dialogFormVisible">
+    <el-dialog :title="title" width="500px" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="姓名" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.name" autocomplete="off" />
+        <el-form-item label="姓名" :label-width="formLabelWidth" prop="Name">
+          <el-input v-model="form.Name" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="code" :label-width="formLabelWidth" prop="code">
-          <el-input v-model="form.code" autocomplete="off" />
+        <el-form-item label="code" :label-width="formLabelWidth" prop="Code">
+          <el-input v-model="form.Code" autocomplete="off" />
         </el-form-item>
         <el-form-item label="描述" :label-width="formLabelWidth" prop="des">
           <el-input v-model="form.des" autocomplete="off" />
         </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <!--<el-button type="primary" @click="addUser('form')">添加</el-button>-->
+          <el-button type="primary" @click="addUser('form')">添加</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -104,7 +104,9 @@ export default {
     return {
       loading: true,
       dialogFormVisible: false,
-      id: '',
+      title: '添加角色',
+      id: '', // 部门id
+      roleId: '', // 角色id
       records: [],
       size: 10,
       currentPage: 1,
@@ -115,15 +117,15 @@ export default {
         label: 'name'
       },
       form: {
-        name: '',
-        code: '',
+        Name: '',
+        Code: '',
         des: ''
       },
       rules: {
-        name: [
+        Name: [
           { required: true, message: '请输入姓名', trigger: 'blur' }
         ],
-        code: [
+        Code: [
           { required: true, message: '请输入code', trigger: 'blur' }
         ],
         des: [
@@ -140,12 +142,17 @@ export default {
       const id = res[0].id
       this.id = res[0].id
       this.findDept(id)
-      console.log(res)
     })
   },
   methods: {
+    addButton() {
+      this.dialogFormVisible = true
+      this.title = '添加角色'
+      this.form.Name = ''
+      this.form.Code = ''
+      this.form.des = ''
+    },
     handleNodeClick(data) {
-      console.log(data)
       const id = data.id
       this.id = id
       this.findDept(id)
@@ -162,7 +169,27 @@ export default {
     addUser(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
-
+          const data = {
+            name: this.form.Name,
+            code: this.form.Code,
+            description: this.form.des,
+            deptId: this.id
+          }
+          if (this.title === '添加角色') {
+            this.$_HTTP.post(this.$_API.addRole, data, res => {
+              if (res.code === 1) {
+                this.dialogFormVisible = false
+                this.findDept(this.id)
+              }
+            })
+          } else {
+            this.$_HTTP.put(this.$_API.editRole + this.roleId, data, res => {
+              if (res.code === 1) {
+                this.dialogFormVisible = false
+                this.findDept(this.id)
+              }
+            })
+          }
         }
       })
     },
@@ -175,9 +202,31 @@ export default {
       this.findDept(this.id)
     },
     handleEdit(index, row) {
-      console.log(index, row)
+      this.roleId = row.id
+      this.title = '编辑角色'
+      this.dialogFormVisible = true
+      this.form.Name = row.name
+      this.form.des = row.description
+      this.form.Code = row.code
     },
     deleteUser(index, row) {
+      this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$_HTTP.delete(this.$_API.deleteRole + row.id, {}, res => {
+          if (res.code === 1) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.findDept(this.id)
+          }
+        })
+      }).catch(() => {
+
+      })
       console.log(index, row)
     }
   }

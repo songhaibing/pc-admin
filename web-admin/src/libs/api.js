@@ -11,8 +11,10 @@ const API = {
   // 角色管理
   editAvatar: '/user/edit/', // 用户头像修改
   deptTree: 'dept/tree', // 获取树状部门结构数据
-  findDept: 'role/find/dept/'// 查询部门下全部的角色
-
+  findDept: 'role/find/dept/', // 查询部门下全部的角色
+  addRole: 'role/add', // 创建用户角色
+  editRole: 'role/edit/', // 修改用户角色信息
+  deleteRole: '/role/delete/'// 通过ID删除角色
 }
 
 export default API
