@@ -286,10 +286,10 @@ export default {
       })
     },
     // 上传头像
-    uploadAvatar() {
-      this.$_HTTP.put(this.$_API.editAvatar + this.form.userName + '/avatar', { content: this.base64 }, res => {
-      })
-    },
+    // uploadAvatar() {
+    //   this.$_HTTP.put(this.$_API.editAvatar + this.form.userName + '/avatar', { content: this.base64 }, res => {
+    //   })
+    // },
     // 编辑
     handleEdit(index, row) {
       if (row.avatar) {
@@ -385,12 +385,10 @@ export default {
             phone: this.form.mobile,
             password: this.form.password,
             email: this.form.Email,
-            nickname: this.form.nickName
+            nickname: this.form.nickName,
+            avatar: this.base64
           }
           if (this.title === '添加用户') {
-            if (this.base64) {
-              this.uploadAvatar()
-            }
             this.$_HTTP.post(this.$_API.addUser, params, res => {
               if (res.code === 1) {
                 this.dialogFormVisible = false
@@ -402,9 +400,6 @@ export default {
               }
             })
           } else {
-            if (this.base64) {
-              this.uploadAvatar()
-            }
             this.$_HTTP.put(this.$_API.editUser + this.form.userName, params, res => {
               if (res.code === 1) {
                 this.dialogFormVisible = false
