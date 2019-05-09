@@ -1,8 +1,7 @@
 'use strict'
 import axios from 'axios'
-import ip from './address'
 import Vue from 'vue'
-
+import router from '@/router'
 let $Vue = new Vue();
 
 
@@ -11,8 +10,7 @@ let HTTP = {}
 let instance = axios.create()
 
 // 添加请求拦截器
-let beforeRequest = instance.interceptors.request.use(function (config) {
-  // alert(localStorage.getItem('token'))
+instance.interceptors.request.use(function (config) {
   const token = localStorage.getItem('token')
   if(token){
     config.headers.Authorization = `Bearer ${token}`
@@ -24,7 +22,26 @@ let beforeRequest = instance.interceptors.request.use(function (config) {
   return Promise.reject(error)
 })
 
-/**
+// 添加响应拦截器
+instance.interceptors.response.use(function (config) {
+  console.log(config.status)
+  if(config.status===401){
+    localStorage.removeItem('token')
+    $Vue.$message.error({
+      message:'登陆信息失效，请重新登陆',
+      duration:6000
+    });
+    setTimeout(()=>{
+      router.push('/login')
+    },2000)
+  }
+  return config
+}, function (error) {
+  return Promise.reject(error)
+})
+
+
+  /**
  * 发送post请求
  *
  * @param url 接口url
@@ -34,7 +51,7 @@ let beforeRequest = instance.interceptors.request.use(function (config) {
  */
 HTTP.post = function (url, data, callback) {
   let params = data
-  instance.post(ip.address + url, params)
+  instance.post( url, params)
     .then(function (res) {
       // 响应成功回调
       if (res.data.code == '1') {
@@ -57,7 +74,7 @@ HTTP.post = function (url, data, callback) {
  */
 HTTP.get = function (url, data, callback) {
   let params = {params: data}
-  instance.get(ip.address + url, params)
+  instance.get( url, params)
     .then(function (res) {
       // 响应成功回调
       if (res.data.code === 1) {
@@ -80,7 +97,7 @@ HTTP.get = function (url, data, callback) {
  */
 HTTP.delete = function (url, data, callback) {
   let params = {params: data}
-  instance.delete(ip.address + url, params)
+  instance.delete( url, params)
     .then(function (res) {
       // 响应成功回调
       if (res.data.code === 1) {
@@ -103,7 +120,7 @@ HTTP.delete = function (url, data, callback) {
  * @param callback
  */
 HTTP.put = function (url, data, callback) {
-  instance.put(ip.address + url, data)
+  instance.put( url, data)
     .then(function (res) {
       // 响应成功回调
       if (res.data.code === 1) {

@@ -1,20 +1,23 @@
 'use strict'
-
+const adminIp='http://106.75.178.9:8080/admin/'
+const logoutIp='http://106.75.178.9:8080/'
 const API = {
+  //退出登陆
+  logout:logoutIp+'token/logout',
   // 用户管理
-  menu: 'menu/tree/current', // 获取当前用户菜单
-  userList: '/user/list', // 获取用户列表
-  userExits: '/user/exits/', // 检测用户名是否存在
-  addUser: '/user/add', // 添加用户
-  deleteUser: '/user/delete/', // 删除用户
-  editUser: '/user/edit/', // 编辑用户
+  menu: adminIp+'menu/tree/current', // 获取当前用户菜单
+  userList: adminIp+'user/list', // 获取用户列表
+  userExits: adminIp+'user/exits/', // 检测用户名是否存在
+  addUser: adminIp+'user/add', // 添加用户
+  deleteUser: adminIp+'user/delete/', // 删除用户
+  editUser: adminIp+'user/edit/', // 编辑用户
   // 角色管理
-  editAvatar: '/user/edit/', // 用户头像修改
-  deptTree: 'dept/tree', // 获取树状部门结构数据
-  findDept: 'role/find/dept/', // 查询部门下全部的角色
-  addRole: 'role/add', // 创建用户角色
-  editRole: 'role/edit/', // 修改用户角色信息
-  deleteRole: '/role/delete/'// 通过ID删除角色
+  editAvatar: adminIp+'user/edit/', // 用户头像修改
+  deptTree: adminIp+'dept/tree', // 获取树状部门结构数据
+  findDept:adminIp+ 'role/find/dept/', // 查询部门下全部的角色
+  addRole: adminIp+'role/add', // 创建用户角色
+  editRole: adminIp+'role/edit/', // 修改用户角色信息
+  deleteRole: adminIp+'role/delete/'// 通过ID删除角色
 }
 
 export default API

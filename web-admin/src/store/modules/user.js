@@ -34,7 +34,6 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        console.log(response.access_token)
         localStorage.setItem('token',response.access_token)
         commit('SET_TOKEN', response.access_token)
         setToken(response.access_token)
@@ -56,7 +55,6 @@ const actions = {
         }
 
         const { roles, name, avatar, introduction } = data
-        console.log(roles)
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
