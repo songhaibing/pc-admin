@@ -93,6 +93,12 @@ const actions = {
                   name: 'Jurisdiction',
                   component: 'management/authority/jurisdiction',
                   meta: { title: '权限管理', icon: 'table' }
+                },
+                {
+                  path: 'dictionary',
+                  name: 'dictionary',
+                  component: 'management/authority/dictionary',
+                  meta: { title: '字典管理', icon: 'table' }
                 }
               ]
             },

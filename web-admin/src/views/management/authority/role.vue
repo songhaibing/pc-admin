@@ -27,6 +27,12 @@
         >
           <el-table-column
             align="center"
+            label="序号"
+            type="index"
+            width="60"
+          />
+          <el-table-column
+            align="center"
             prop="name"
             label="姓名"
             width="150"
