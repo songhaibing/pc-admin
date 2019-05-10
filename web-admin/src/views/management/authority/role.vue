@@ -6,7 +6,8 @@
       </div>
       <el-tree :highlight-current="true" class="single-content" :data="data" :props="defaultProps" @node-click="handleNodeClick" />
     </div>
-    <div style="padding:30px;margin-left: 200px;width: 1200px">
+    <tip-message v-if="isShow" />
+    <div v-else style="padding:20px;margin-left: 200px;width: 1250px">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <i class="el-icon-menu" />
@@ -98,10 +99,13 @@
 </template>
 
 <script>
+import TipMessage from '../../../components/tipMessage/tipMessage'
 export default {
   name: 'Role',
+  components: { TipMessage },
   data() {
     return {
+      isShow: true,
       loading: true,
       dialogFormVisible: false,
       title: '添加角色',
@@ -139,9 +143,6 @@ export default {
   created() {
     this.$_HTTP.get(this.$_API.deptTree, {}, res => {
       this.data = res
-      const id = res[0].id
-      this.id = res[0].id
-      this.findDept(id)
     })
   },
   methods: {
@@ -153,6 +154,7 @@ export default {
       this.form.des = ''
     },
     handleNodeClick(data) {
+      this.isShow = false
       const id = data.id
       this.id = id
       this.findDept(id)
