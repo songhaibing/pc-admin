@@ -24,19 +24,21 @@ instance.interceptors.request.use(function (config) {
 
 // 添加响应拦截器
 instance.interceptors.response.use(function (config) {
-  console.log(config.status)
-  if(config.status===401){
-    localStorage.removeItem('token')
-    $Vue.$message.error({
-      message:'登陆信息失效，请重新登陆',
-      duration:6000
-    });
-    setTimeout(()=>{
-      router.push('/login')
-    },2000)
-  }
+
   return config
 }, function (error) {
+  if(error&&error.response.status){
+    if(error.response.status===401){
+      localStorage.removeItem('token')
+      $Vue.$message.error({
+        message:'登陆信息失效，请重新登陆',
+        duration:4000
+      });
+      setTimeout(()=>{
+        router.push('/login')
+      },1000)
+    }
+  }
   return Promise.reject(error)
 })
 

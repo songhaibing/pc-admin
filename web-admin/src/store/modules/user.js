@@ -1,7 +1,7 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
-
+import {  Message } from 'element-ui'
 const state = {
   token: getToken(),
   name: '',
@@ -39,6 +39,11 @@ const actions = {
         setToken(response.access_token)
         resolve()
       }).catch(error => {
+        Message({
+          message: '用户名或者密码错误',
+          type: 'error',
+          duration: 5 * 1000
+        })
         reject(error)
       })
     })
