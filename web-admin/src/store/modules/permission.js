@@ -2,8 +2,6 @@ import { asyncRoutes, constantRoutes } from '@/router'
 import Layout from '@/layout'
 import HTTP from '@/libs/httpRequest'
 import API from '@/libs/api'
-import Vue from 'vue'
-const $Vue = new Vue()
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
