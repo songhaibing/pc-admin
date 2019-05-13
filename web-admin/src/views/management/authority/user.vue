@@ -285,11 +285,6 @@ export default {
         this.loading = false
       })
     },
-    // 上传头像
-    // uploadAvatar() {
-    //   this.$_HTTP.put(this.$_API.editAvatar + this.form.userName + '/avatar', { content: this.base64 }, res => {
-    //   })
-    // },
     // 编辑
     handleEdit(index, row) {
       if (row.avatar) {

@@ -22,7 +22,9 @@ const API = {
   dictList: adminIp + 'dict/list', // 分页查询字典
   addDict: adminIp + 'dict/add', // 添加字典
   editDict: adminIp + 'dict/edit/', // 编辑字典信息
-  deleteDict: adminIp + 'dict/delete/'// 删除字典信息
+  deleteDict: adminIp + 'dict/delete/', // 删除字典信息
+  // 菜单管理
+  getMenu: adminIp + 'menu/tree/current'// 获取当前用户的树状菜单
 
 }
 
