@@ -20,7 +20,7 @@ import './permission' // permission control
 import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
-
+import '../mock/index.js'
 /**
  * If you don't want to use mock-server
  * you want to use mockjs for request interception
@@ -29,7 +29,10 @@ import * as filters from './filters' // global filters
  * import { mockXHR } from '../mock'
  * mockXHR()
  */
-
+import { mockXHR } from '../mock'
+if (process.env.NODE_ENV === 'production') {
+  mockXHR()
+}
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
   i18n: (key, value) => i18n.t(key, value)

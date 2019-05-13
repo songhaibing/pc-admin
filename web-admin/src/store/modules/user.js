@@ -1,7 +1,7 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
-import {  Message } from 'element-ui'
+import { Message } from 'element-ui'
 const state = {
   token: getToken(),
   name: '',
@@ -34,7 +34,7 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        localStorage.setItem('token',response.access_token)
+        localStorage.setItem('token', response.access_token)
         commit('SET_TOKEN', response.access_token)
         setToken(response.access_token)
         resolve()

@@ -4,6 +4,7 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 
 // create an axios instance
+
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
@@ -12,7 +13,6 @@ const service = axios.create({
 // if(localStorage.getItem('token')){
 //   service.defaults.headers.common['Authorization'] = 'bearer '+localStorage.getItem('token')
 // }
-
 
 // request interceptor
 service.interceptors.request.use(
@@ -44,7 +44,7 @@ service.interceptors.response.use(
    * Here is just an example
    * You can also judge the status by HTTP Status Code.
    */
-  response =>response.data,
+  response => response.data,
   //   const res = response.data
   //
   //   // if the custom code is not 20000, it is judged as an error.
@@ -74,7 +74,6 @@ service.interceptors.response.use(
   //   }
   // },
   error => {
-
     return Promise.reject(error)
   }
 )

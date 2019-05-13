@@ -1,183 +1,211 @@
 <template>
-  <div style="padding:30px;">
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <i class="el-icon-menu" />
-        <span>用户列表</span>
-        <el-button
-          style="float: right;padding: 6px;margin-right: 6px"
-          type="primary"
-          icon="el-icon-plus"
-          @click="addButton"
-        >添加
-        </el-button>
+  <div style="display: flex">
+    <div class="left-main">
+      <div class="boxLeftTop">
+        <span class="menu_title">系统目录</span>
       </div>
-      <el-table
-        v-loading="loading"
-        :data="tableData"
-        style="width: 100%"
-      >
-        <el-table-column
-          align="center"
-          label="序号"
-          type="index"
-          width="60"
-        />
-        <el-table-column
-          label="头像"
-          align="center"
-          width="150"
+      <el-tree
+        :highlight-current="true"
+        class="single-content"
+        :data="data"
+        :props="defaultProps"
+        @node-click="handleNodeClick"
+      />
+    </div>
+    <tip-message v-if="isShow" />
+    <div v-else style="padding:20px;margin-left: 200px;width: 1250px">
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <i class="el-icon-menu" />
+          <span>用户列表</span>
+          <el-button
+            style="float: right;padding: 6px;margin-right: 6px"
+            type="primary"
+            icon="el-icon-plus"
+            @click="addButton"
+          >添加
+          </el-button>
+        </div>
+        <el-table
+          v-loading="loading"
+          :data="tableData"
+          style="width: 100%"
         >
-          <template scope="scope">
-            <img v-if="scope.row.avatar" :src="'http://106.75.178.9:8080/resource/'+scope.row.avatar" class="head_pic">
-            <img v-else src="@/assets/avatar/mieba.png" class="head_pic">
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          prop="username"
-          width="150"
-          label="用户名"
-        />
-        <el-table-column
-          align="center"
-          prop="realname"
-          label="真实姓名"
-          width="100"
-        />
-        <el-table-column
-          align="center"
-          prop="nickname"
-          label="昵称"
-          width="100"
-        />
-        <el-table-column
-          align="center"
-          prop="phone"
-          label="手机号码"
-          width="150"
-        />
-        <el-table-column
-          align="center"
-          prop="deptId"
-          label="部门id"
-          width="150"
-        />
-        <el-table-column
-          align="center"
-          prop="email"
-          label="邮箱"
-          width="170"
-        />
-        <el-table-column
-          align="center"
-          label="是否禁止登陆"
-          width="120"
-        >
-          <template slot-scope="scope">{{ scope.row.lockFlag?'是':'否' }}</template>
-        </el-table-column>
-        <el-table-column align="center" label="操作">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              @click="handleEdit(scope.$index, scope.row)"
-            >编辑
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-              @click="deleteUser(scope.$index, scope.row)"
-            >删除
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-              @click="changePassword(scope.$index, scope.row)"
-            >修改密码
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="block">
-        <el-pagination
-          background
-          :current-page.sync="currentPage"
-          :page-sizes="[10, 20, 30]"
-          :page-size="size"
-          style="float: right;margin: 10px 0"
-          layout="sizes, prev, pager, next"
-          :total="total"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
-      </div>
-    </el-card>
-    <el-dialog :title="title" width="500px" :visible.sync="dialogFormVisible">
-      <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="头像上传" :label-width="formLabelWidth">
-          <el-upload
-            class="avatar-uploader"
-            action="http://106.75.178.9:8080/file/upload/file/avatar"
-            :headers="{token}"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
+          <el-table-column
+            align="center"
+            label="序号"
+            type="index"
+            width="60"
+          />
+          <el-table-column
+            label="头像"
+            align="center"
+            width="150"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon" />
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
-          <el-input v-model="form.userName" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realName">
-          <el-input v-model="form.realName" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="昵称" :label-width="formLabelWidth" prop="nickName">
-          <el-input v-model="form.nickName" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="邮箱" :label-width="formLabelWidth" prop="Email">
-          <el-input v-model="form.Email" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="手机号" :label-width="formLabelWidth" prop="mobile">
-          <el-input v-model="form.mobile" autocomplete="off" />
-        </el-form-item>
-        <el-form-item v-if="title==='添加用户'" label="密码" :label-width="formLabelWidth" prop="password">
-          <el-input v-model="form.password" autocomplete="off" />
-        </el-form-item>
-        <el-form-item class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addUser('form')">添加</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-    <el-dialog title="修改密码" width="500px" :visible.sync="dialogPwVisible">
-      <el-form ref="formPw" :model="formPw" status-icon :rules="rulesPw" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="旧密码" :label-width="formLabelWidth" prop="password">
-          <el-input v-model="formPw.password" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="新密码" :label-width="formLabelWidth" prop="newPassword">
-          <el-input v-model="formPw.newPassword" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="确认密码" :label-width="formLabelWidth" prop="repeatPassword">
-          <el-input v-model="formPw.repeatPassword" autocomplete="off" />
-        </el-form-item>
-        <el-form-item class="dialog-footer">
-          <el-button @click="dialogPwVisible = false">取 消</el-button>
-          <el-button type="primary" @click="sure('formPw')">确定</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
+            <template scope="scope">
+              <img
+                v-if="scope.row.avatar"
+                :src="'http://106.75.178.9:8080/resource/'+scope.row.avatar"
+                class="head_pic"
+              >
+              <img v-else src="@/assets/avatar/mieba.png" class="head_pic">
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="username"
+            width="100"
+            label="用户名"
+          />
+          <el-table-column
+            align="center"
+            prop="realname"
+            label="真实姓名"
+            width="100"
+          />
+          <el-table-column
+            align="center"
+            prop="nickname"
+            label="昵称"
+            width="100"
+          />
+          <el-table-column
+            align="center"
+            prop="phone"
+            label="手机号码"
+            width="120"
+          />
+          <el-table-column
+            align="center"
+            label="部门"
+            width="100"
+          >
+            <template slot-scope="scope">{{ scope.row.dept.name }}</template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="email"
+            label="邮箱"
+            width="170"
+          />
+          <el-table-column
+            align="center"
+            label="是否禁止登陆"
+            width="100"
+          >
+            <template slot-scope="scope">{{ scope.row.lockFlag?'是':'否' }}</template>
+          </el-table-column>
+          <el-table-column align="center" label="操作">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                @click="handleEdit(scope.$index, scope.row)"
+              >编辑
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                @click="deleteUser(scope.$index, scope.row)"
+              >删除
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                @click="changePassword(scope.$index, scope.row)"
+              >修改密码
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="block">
+          <el-pagination
+            background
+            :current-page.sync="currentPage"
+            :page-sizes="[10, 20, 30]"
+            :page-size="size"
+            style="float: right;margin: 10px 0"
+            layout="sizes, prev, pager, next"
+            :total="total"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          />
+        </div>
+      </el-card>
+      <el-dialog :title="title" width="500px" :visible.sync="dialogFormVisible">
+        <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="头像上传" :label-width="formLabelWidth">
+            <el-upload
+              class="avatar-uploader"
+              action="http://106.75.178.9:8080/file/upload/file/avatar"
+              :headers="{token}"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
+            >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon" />
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
+            <el-input v-model="form.userName" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realName">
+            <el-input v-model="form.realName" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="昵称" :label-width="formLabelWidth" prop="nickName">
+            <el-input v-model="form.nickName" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="部门" :label-width="formLabelWidth" prop="dept">
+            <el-select v-model="form.dept" placeholder="请选择部门" style="width: 100%">
+              <el-option label="区域一" value="shanghai" />
+              <el-option label="区域二" value="beijing" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="邮箱" :label-width="formLabelWidth" prop="Email">
+            <el-input v-model="form.Email" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="手机号" :label-width="formLabelWidth" prop="mobile">
+            <el-input v-model="form.mobile" autocomplete="off" />
+          </el-form-item>
+          <el-form-item v-if="title==='添加用户'" label="密码" :label-width="formLabelWidth" prop="password">
+            <el-input v-model="form.password" autocomplete="off" />
+          </el-form-item>
+          <el-form-item class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="addUser('form')">添加</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+      <el-dialog title="修改密码" width="500px" :visible.sync="dialogPwVisible">
+        <el-form ref="formPw" :model="formPw" status-icon :rules="rulesPw" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="旧密码" :label-width="formLabelWidth" prop="password">
+            <el-input v-model="formPw.password" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="新密码" :label-width="formLabelWidth" prop="newPassword">
+            <el-input v-model="formPw.newPassword" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="确认密码" :label-width="formLabelWidth" prop="repeatPassword">
+            <el-input v-model="formPw.repeatPassword" autocomplete="off" />
+          </el-form-item>
+          <el-form-item class="dialog-footer">
+            <el-button @click="dialogPwVisible = false">取 消</el-button>
+            <el-button type="primary" @click="sure('formPw')">确定</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
+import TipMessage from '../../../components/tipMessage/tipMessage'
 import { checkPhone, checkEmail, checkPw, checkRenewPw } from '@/libs/regular.js'
 import mixins from '@/mixins/user'
 
 export default {
-  name: 'Index',
+  name: 'User',
+  components: { TipMessage },
   mixins: [mixins],
   data() {
     const checkUserName = (rule, value, callback) => {
@@ -211,6 +239,13 @@ export default {
     return {
       token: localStorage.getItem('token'),
       loading: true,
+      data: [],
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      },
+      id: '',
+      isShow: true,
       tableData: [],
       currentPage: 1, // 当前多少页
       size: 10, // 每页多少条数据
@@ -230,7 +265,8 @@ export default {
         mobile: '',
         password: '',
         Email: '',
-        nickName: ''
+        nickName: '',
+        dept: ''
       },
       formPw: {
         password: '',
@@ -268,22 +304,35 @@ export default {
         ],
         nickName: [
           { required: true, message: '请输入昵称', trigger: 'blur' }
+        ],
+        dept: [
+          { required: true, message: '请选择部门', trigger: 'blur' }
         ]
       }
     }
   },
   created() {
-    this.init()
+    this.$_HTTP.get(this.$_API.deptTree, {}, res => {
+      this.data = res
+      res.map(item => {
+        console.log(item.name)
+      })
+    })
   },
   methods: {
     // 初始化分页
-    init() {
+    init(id) {
       this.loading = true
-      this.$_HTTP.get(this.$_API.userList, { size: this.size, current: this.currentPage }, res => {
+      this.$_HTTP.get(this.$_API.userList, { deptId: id, size: this.size, current: this.currentPage }, res => {
         this.tableData = res.records
         this.total = res.total
         this.loading = false
       })
+    },
+    handleNodeClick(data) {
+      this.isShow = false
+      this.id = data.id
+      this.init(data.id)
     },
     // 编辑
     handleEdit(index, row) {
@@ -313,7 +362,7 @@ export default {
               type: 'success',
               message: '删除成功!'
             })
-            this.init()
+            this.init(this.id)
           }
         })
       }).catch(() => {
@@ -336,7 +385,7 @@ export default {
     },
     handleSizeChange(val) {
       this.size = val
-      this.init()
+      this.init(this.id)
     },
     sure(formPw) {
       this.$refs[formPw].validate((valid) => {
@@ -381,7 +430,8 @@ export default {
             password: this.form.password,
             email: this.form.Email,
             nickname: this.form.nickName,
-            avatar: this.base64
+            avatar: this.base64,
+            deptId: this.id
           }
           if (this.title === '添加用户') {
             this.$_HTTP.post(this.$_API.addUser, params, res => {
@@ -391,7 +441,7 @@ export default {
                   message: '添加用户成功',
                   type: 'success'
                 })
-                this.init()
+                this.init(this.id)
               }
             })
           } else {
@@ -402,7 +452,7 @@ export default {
                   message: '修改用户成功',
                   type: 'success'
                 })
-                this.init()
+                this.init(this.id)
               }
             })
           }
@@ -417,7 +467,34 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  .left-main {
+    position: fixed;
+    height: 100%;
+    width: 200px;
+    border-right: 1px solid #e0e1e3;
+
+    .boxLeftTop {
+      .menu_title {
+        padding-left: 16px;
+        background-color: #f8f8f8;
+        font-size: 16px;
+        line-height: 55px;
+      }
+    }
+
+    .single-content {
+      cursor: pointer;
+      padding: 10px 0 0 16px;
+
+      .title {
+        font-size: 12px;
+        font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
+      }
+    }
+
+  }
+
   .dialog-footer {
     text-align: center;
   }
