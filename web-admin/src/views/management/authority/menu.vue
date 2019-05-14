@@ -2,105 +2,64 @@
   <div style="display: flex">
     <div class="left-main">
       <div class="boxLeftTop">
-        <span class="menu_title">系统目录</span>
+        <span class="menu_title">菜单目录</span>
       </div>
       <el-tree :highlight-current="true" class="single-content" :data="data" :props="defaultProps" @node-click="handleNodeClick" />
     </div>
     <tip-message v-if="isShow" />
-    <div v-else style="padding:20px;margin-left: 200px;width: 1250px">
+    <div v-else style="padding:30px;margin-left: 200px;width: 1200px">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <i class="el-icon-menu" />
-          <span>角色列表</span>
+          <span>系统菜单</span>
           <el-button
             style="float: right;padding: 6px;margin-right: 6px"
             type="primary"
             icon="el-icon-plus"
-            @click="addButton"
+            @click="add"
           >添加
           </el-button>
+          <el-button
+            style="float: right;padding: 6px;margin-right: 6px"
+            type="success"
+            icon="el-icon-edit"
+            @click="edit"
+          >编辑
+          </el-button>
+          <el-button
+            style="float: right;padding: 6px;"
+            type="danger"
+            icon="el-icon-delete"
+          >删除
+          </el-button>
         </div>
-        <el-table
-          v-loading="loading"
-          :data="tableData"
-          style="width: 100%"
-        >
-          <el-table-column
-            align="center"
-            label="序号"
-            type="index"
-            width="60"
-          />
-          <el-table-column
-            align="center"
-            prop="name"
-            label="姓名"
-            width="150"
-          />
-          <el-table-column
-            align="center"
-            prop="code"
-            label="code"
-            width="150"
-          />
-          <el-table-column
-            align="center"
-            prop="description"
-            label="描述"
-            width="400"
-          />
-          <el-table-column
-            label="操作"
-            align="center"
-          >
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="text"
-                @click="handleEdit(scope.$index, scope.row)"
-              >编辑
-              </el-button>
-              <el-button
-                size="mini"
-                type="text"
-                @click="deleteUser(scope.$index, scope.row)"
-              >删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="block">
-          <el-pagination
-            background
-            :current-page.sync="currentPage"
-            :page-sizes="[10, 20, 30]"
-            :page-size="size"
-            style="float: right;margin: 10px 0"
-            layout="sizes, prev, pager, next"
-            :total="total"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          />
-        </div>
+        <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="标题"  prop="title">
+            <el-input v-model="form.title" autocomplete="off" :disabled="disabled"/>
+          </el-form-item>
+          <el-form-item label="组件名称"  prop="name">
+            <el-input v-model="form.name" autocomplete="off" :disabled="disabled"/>
+          </el-form-item>
+          <el-form-item label="前端组件"  prop="component">
+            <el-input v-model="form.component" autocomplete="off" :disabled="disabled"/>
+          </el-form-item>
+          <el-form-item label="图标"  prop="icon">
+            <el-input v-model="form.icon" autocomplete="off" :disabled="disabled"/>
+          </el-form-item>
+          <el-form-item label="前端路径"  prop="path">
+            <el-input v-model="form.path" autocomplete="off" :disabled="disabled"/>
+          </el-form-item>
+          <el-form-item label="重定向路径"  prop="redirect">
+            <el-input v-model="form.redirect" autocomplete="off" :disabled="disabled"/>
+          </el-form-item>
+          <el-form-item class="dialog-footer">
+            <el-button >取 消</el-button>
+            <el-button type="primary" @click="sure">确定</el-button>
+          </el-form-item>
+        </el-form>
       </el-card>
     </div>
-    <el-dialog :title="title" width="500px" :visible.sync="dialogFormVisible">
-      <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="姓名" :label-width="formLabelWidth" prop="Name">
-          <el-input v-model="form.Name" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="code" :label-width="formLabelWidth" prop="Code">
-          <el-input v-model="form.Code" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="描述" :label-width="formLabelWidth" prop="des">
-          <el-input v-model="form.des" autocomplete="off" />
-        </el-form-item>
-        <el-form-item class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addUser('form')">添加</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
+
   </div>
 </template>
 
@@ -112,130 +71,93 @@ export default {
   data() {
     return {
       isShow: true,
-      loading: true,
-      dialogFormVisible: false,
-      title: '添加角色',
-      id: '', // 部门id
-      roleId: '', // 角色id
-      records: [],
-      size: 10,
-      currentPage: 1,
-      total: 0,
       data: [],
-      defaultProps: {
-        children: 'children',
-        label: 'name'
-      },
-      form: {
-        Name: '',
-        Code: '',
-        des: ''
+      disabled:true,
+      singleData:'',
+      title:'',
+      form:{
+        title:'',
+        name:'',
+        component:'',
+        path:'',
+        redirect:'',
+        icon:''
       },
       rules: {
-        Name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' }
+        title: [
+          { required: true, message: '请输入标题', trigger: 'blur' }
         ],
-        Code: [
-          { required: true, message: '请输入code', trigger: 'blur' }
+        name: [
+          { required: true, message: '请输入组件名称', trigger: 'blur' }
         ],
-        des: [
-          { required: true, message: '请输入描述信息', trigger: 'blur' }
-        ]
+        component: [
+          { required: true, message: '请输入前端组件', trigger: 'blur' }
+        ],
+        path: [
+          { required: true, message: '请输入前端路径', trigger: 'blur' }
+        ],
+        redirect: [
+          {  message: '请输入前端路径', trigger: 'blur' }
+        ],
       },
-      tableData: [],
-      formLabelWidth: '80px'
+      defaultProps: {
+        children: 'children',
+        label:'label'
+      },
     }
   },
+
   created() {
-    this.$_HTTP.get(this.$_API.deptTree, {}, res => {
-      this.data = res
+    this.$_HTTP.get(this.$_API.getMenu, {}, res => {
+      this.data = this.toTreeData(res)
     })
   },
   methods: {
-    addButton() {
-      this.dialogFormVisible = true
-      this.title = '添加角色'
-      this.form.Name = ''
-      this.form.Code = ''
-      this.form.des = ''
-    },
-    handleNodeClick(data) {
-      this.isShow = false
-      const id = data.id
-      this.id = id
-      this.findDept(id)
-    },
-    // 初始化角色列表分页
-    findDept(id) {
-      this.loading = true
-      this.$_HTTP.get(this.$_API.findDept + id, { size: this.size, current: this.currentPage }, res => {
-        this.tableData = res.records
-        this.total = res.total
-        this.loading = false
-      })
-    },
-    addUser(form) {
-      this.$refs[form].validate((valid) => {
-        if (valid) {
-          const data = {
-            name: this.form.Name,
-            code: this.form.Code,
-            description: this.form.des,
-            deptId: this.id
-          }
-          if (this.title === '添加角色') {
-            this.$_HTTP.post(this.$_API.addRole, data, res => {
-              if (res.code === 1) {
-                this.dialogFormVisible = false
-                this.findDept(this.id)
-              }
-            })
-          } else {
-            this.$_HTTP.put(this.$_API.editRole + this.roleId, data, res => {
-              if (res.code === 1) {
-                this.dialogFormVisible = false
-                this.findDept(this.id)
-              }
-            })
-          }
+    toTreeData(menu) {
+      return menu.map(data => {
+        return {
+          label: data.meta.title,
+          children: this.toTreeData(data.children),
+          icon:data.meta.icon,
+          name:data.name,
+          component:data.component,
+          path:data.path,
+          redirect:data.redirect
         }
       })
     },
-    handleSizeChange(val) {
-      this.size = val
-      this.findDept(this.id)
+    add(){
+      this.title='添加'
+      this.disabled=false
+      this.form.title=''
+      this.form.name=''
+      this.form.component=''
+      this.form.path=''
+      this.form.icon=''
+      this.form.redirect=''
     },
-    handleCurrentChange(val) {
-      this.currentPage = val
-      this.findDept(this.id)
+    edit(){
+      this.title='编辑'
+      this.getData()
     },
-    handleEdit(index, row) {
-      this.roleId = row.id
-      this.title = '编辑角色'
-      this.dialogFormVisible = true
-      this.form.Name = row.name
-      this.form.des = row.description
-      this.form.Code = row.code
-    },
-    deleteUser(index, row) {
-      this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$_HTTP.delete(this.$_API.deleteRole + row.id, {}, res => {
-          if (res.code === 1) {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            this.findDept(this.id)
-          }
-        })
-      }).catch(() => {
+    //确定
+    sure(){
+      if(this.title==='添加'){
 
-      })
-      console.log(index, row)
+      }
+    },
+    handleNodeClick(data) {
+      this.isShow = false
+      this.singleData=data
+      this.getData()
+    },
+    getData(){
+      this.form.title=this.singleData.label
+      this.form.name=this.singleData.name
+      this.form.component=this.singleData.component
+      this.form.path=this.singleData.path
+      this.form.icon=this.singleData.icon
+      this.form.redirect=this.singleData.redirect
     }
   }
 }

@@ -314,9 +314,6 @@ export default {
   created() {
     this.$_HTTP.get(this.$_API.deptTree, {}, res => {
       this.data = res
-      res.map(item => {
-        console.log(item.name)
-      })
     })
   },
   methods: {
