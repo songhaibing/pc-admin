@@ -11,6 +11,8 @@ const API = {
   addUser: adminIp + 'user/add', // 添加用户
   deleteUser: adminIp + 'user/delete/', // 删除用户
   editUser: adminIp + 'user/edit/', // 编辑用户
+  // 部门管理
+
   // 角色管理
   editAvatar: adminIp + 'user/edit/', // 用户头像修改
   deptTree: adminIp + 'dept/tree', // 获取树状部门结构数据
@@ -24,10 +26,10 @@ const API = {
   editDict: adminIp + 'dict/edit/', // 编辑字典信息
   deleteDict: adminIp + 'dict/delete/', // 删除字典信息
   // 菜单管理
-  getMenu: adminIp + 'menu/tree/current',// 获取当前用户的树状菜单
-  addMenu:adminIp+'menu/add',//添加系统菜单
-  deleteMenu:adminIp+'menu/delete/',//删除系统菜单
-  editMenu:adminIp+'menu/edit/'//修改系统菜单
+  getMenu: adminIp + 'menu/tree/current', // 获取当前用户的树状菜单
+  addMenu: adminIp + 'menu/add', // 添加系统菜单
+  deleteMenu: adminIp + 'menu/delete/', // 删除系统菜单
+  editMenu: adminIp + 'menu/edit/'// 修改系统菜单
 
 }
 
