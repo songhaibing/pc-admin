@@ -156,7 +156,8 @@ export default {
           component: data.component,
           path: data.path,
           redirect: data.redirect,
-          id: data.id
+          id: data.id,
+          type: data.type
         }
       })
     },
@@ -255,6 +256,7 @@ export default {
       this.form.path = this.singleData.path
       this.form.icon = this.singleData.icon
       this.form.redirect = this.singleData.redirect
+      this.value = this.singleData.type
     }
   }
 }
