@@ -57,7 +57,7 @@ const actions = {
       let accessedRoutes
       if (roles.includes('admin')) {
         HTTP.get(API.menu, {}, res => {
-          accessedRoutes = filterAsyncRouter(res)
+          accessedRoutes = filterAsyncRouter(filterMenu(res))
           accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
           commit('SET_ROUTES', accessedRoutes)
           resolve(accessedRoutes)
@@ -65,6 +65,13 @@ const actions = {
       }
     })
   }
+}
+
+function filterMenu(menu) {
+  return menu.filter(data => data.type === '1').map(data => {
+    data.children = filterMenu(data.children)
+    return data
+  })
 }
 
 export default {
