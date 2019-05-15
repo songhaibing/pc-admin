@@ -12,7 +12,9 @@ const API = {
   deleteUser: adminIp + 'user/delete/', // 删除用户
   editUser: adminIp + 'user/edit/', // 编辑用户
   // 部门管理
-
+  deleteDept: adminIp + 'dept/delete/', // 通过ID删除部门
+  addDept: adminIp + 'dept/add', // 添加部门数据
+  editDept: adminIp + 'dept/edit/', // 修改部门信息
   // 角色管理
   editAvatar: adminIp + 'user/edit/', // 用户头像修改
   deptTree: adminIp + 'dept/tree', // 获取树状部门结构数据
