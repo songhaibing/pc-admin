@@ -405,12 +405,8 @@ export default {
         this.getTreeId(this.data1, temp).forEach(item => {
           this.$refs.tree.setChecked(item, true, false)
         })
-        //
       })
       this.dialogFormRole = true
-    },
-    getData(data) {
-
     },
     getTreeId(data, authorities) {
       return data.filter(item => {
