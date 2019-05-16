@@ -4,7 +4,13 @@
       <div class="boxLeftTop">
         <span class="menu_title">系统目录</span>
       </div>
-      <el-tree :highlight-current="true" class="single-content" :data="data" :props="defaultProps" @node-click="handleNodeClick" />
+      <el-tree
+        :highlight-current="true"
+        class="single-content"
+        :data="data"
+        :props="defaultProps"
+        @node-click="handleNodeClick"
+      />
     </div>
     <tip-message v-if="isShow" />
     <div v-else style="padding:20px;margin-left: 200px;width: 1250px">
@@ -66,6 +72,12 @@
                 @click="deleteUser(scope.$index, scope.row)"
               >删除
               </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                @click="findRole(scope.$index, scope.row)"
+              >权限
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -101,16 +113,154 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog title="分配权限" width="500px" :visible.sync="dialogFormRole">
+      <el-tree
+        ref="tree"
+        :data="data1"
+        show-checkbox
+        node-key="id"
+        :default-expand-all="isExpand"
+        :props="defaultProps1"
+      />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormRole = false">取 消</el-button>
+        <el-button type="primary" @click="()=>getCheckedKeys()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import TipMessage from '../../../components/tipMessage/tipMessage'
+
 export default {
   name: 'Role',
   components: { TipMessage },
   data() {
     return {
+      isExpand: true,
+      permissionId: '',
+      data1: [{
+        id: 1,
+        permission: '平台系统管理',
+        children: [{
+          id: 2,
+          permission: '系统管理',
+          children: [{
+            id: 3,
+            permission: '用户管理',
+            children: [
+              {
+                id: 4,
+                permission: '用户删除'
+              },
+              {
+                id: 5,
+                permission: '用户编辑'
+              },
+              {
+                id: 6,
+                permission: '用户添加'
+              }
+            ]
+          }, {
+            id: 7,
+            permission: '部门管理',
+            children: [
+              {
+                id: 8,
+                permission: '部门删除'
+              },
+              {
+                id: 9,
+                permission: '部门编辑'
+              },
+              {
+                id: 10,
+                permission: '部门添加'
+              }
+            ]
+          },
+          {
+            id: 11,
+            permission: '角色管理',
+            children: [
+              {
+                id: 12,
+                permission: '角色删除'
+              },
+              {
+                id: 13,
+                permission: '角色编辑'
+              },
+              {
+                id: 14,
+                permission: '角色添加'
+              }
+            ]
+          },
+          {
+            id: 15,
+            permission: '权限管理',
+            children: [
+              {
+                id: 16,
+                permission: '权限删除'
+              },
+              {
+                id: 17,
+                permission: '权限编辑'
+              },
+              {
+                id: 18,
+                permission: '权限添加'
+              }
+            ]
+          },
+          {
+            id: 19,
+            permission: '字典管理',
+            children: [
+              {
+                id: 20,
+                permission: '字典删除'
+              },
+              {
+                id: 21,
+                permission: '字典编辑'
+              },
+              {
+                id: 22,
+                permission: '字典添加'
+              }
+            ]
+          },
+          {
+            id: 23,
+            permission: '菜单管理',
+            children: [
+              {
+                id: 24,
+                permission: '菜单删除'
+              },
+              {
+                id: 25,
+                permission: '菜单编辑'
+              },
+              {
+                id: 26,
+                permission: '菜单添加'
+              }
+            ]
+          }
+          ]
+        }]
+      }],
+      defaultProps1: {
+        children: 'children',
+        label: 'permission'
+      },
+      dialogFormRole: false,
       isShow: true,
       loading: true,
       dialogFormVisible: false,
@@ -152,6 +302,18 @@ export default {
     })
   },
   methods: {
+    getCheckedKeys() {
+      const data = this.$refs.tree.getCheckedNodes(false, true).map(item => { return item.permission })
+      this.$_HTTP.put(this.$_API.editRole + this.permissionId, { authorities: data }, res => {
+        if (res.code === 1) {
+          this.dialogFormRole = false
+          this.$message({
+            message: '修改角色权限成功',
+            type: 'success'
+          })
+        }
+      })
+    },
     addButton() {
       this.dialogFormVisible = true
       this.title = '添加角色'
@@ -235,30 +397,58 @@ export default {
       }).catch(() => {
 
       })
-      console.log(index, row)
+    },
+    async  findRole(index, row) {
+      this.permissionId = row.id
+      await this.$_HTTP.get(this.$_API.findRole + row.id, {}, res => {
+        const temp = res.authorities
+        this.getTreeId(this.data1, temp).forEach(item => {
+          this.$refs.tree.setChecked(item, true, false)
+        })
+        //
+      })
+      this.dialogFormRole = true
+    },
+    getData(data) {
+
+    },
+    getTreeId(data, authorities) {
+      return data.filter(item => {
+        return authorities.includes(item.permission)
+      }).reduce((arr, item) => {
+        arr.push(item.id)
+        if (item.children && item.children.length > 0) {
+          const temp = this.getTreeId(item.children, authorities)
+          arr = arr.concat(temp)
+        }
+        return arr
+      }, [])
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-  .left-main{
+  .left-main {
     position: fixed;
     height: 100%;
     width: 200px;
     border-right: 1px solid #e0e1e3;
-    .boxLeftTop{
-      .menu_title{
+
+    .boxLeftTop {
+      .menu_title {
         padding-left: 16px;
         background-color: #f8f8f8;
         font-size: 16px;
         line-height: 55px;
       }
     }
-    .single-content{
+
+    .single-content {
       cursor: pointer;
       padding: 10px 0 0 16px;
-      .title{
+
+      .title {
         font-size: 12px;
         font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
       }

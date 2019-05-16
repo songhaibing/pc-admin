@@ -22,6 +22,8 @@ const API = {
   addRole: adminIp + 'role/add', // 创建用户角色
   editRole: adminIp + 'role/edit/', // 修改用户角色信息
   deleteRole: adminIp + 'role/delete/', // 通过ID删除角色
+  getAuthorities: adminIp + 'role/authorities', // 获取当前用户权限信息
+  findRole: adminIp + 'role/find/', // 通过ID查询用户角色信息
   // 字典管理
   dictList: adminIp + 'dict/list', // 分页查询字典
   addDict: adminIp + 'dict/add', // 添加字典

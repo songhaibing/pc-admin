@@ -2,7 +2,7 @@
   <div style="display: flex">
     <div class="left-main">
       <div class="boxLeftTop">
-        <span class="menu_title">系统目录</span>
+        <span class="menu_title">所属部门</span>
       </div>
       <el-tree
         :highlight-current="true"
@@ -156,11 +156,16 @@
           <el-form-item label="昵称" :label-width="formLabelWidth" prop="nickName">
             <el-input v-model="form.nickName" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="部门" :label-width="formLabelWidth" prop="dept">
-            <el-select v-model="form.dept" placeholder="请选择部门" style="width: 100%">
-              <el-option label="区域一" value="shanghai" />
-              <el-option label="区域二" value="beijing" />
-            </el-select>
+          <el-form-item label="部门" :label-width="formLabelWidth">
+            <SelectTree
+              :props="props"
+              :options="data"
+              :value="valueId"
+              :clearable="isClearable"
+              :accordion="isAccordion"
+              style="width: 100%"
+              @getValue="getValue($event)"
+            />
           </el-form-item>
           <el-form-item label="邮箱" :label-width="formLabelWidth" prop="Email">
             <el-input v-model="form.Email" autocomplete="off" />
@@ -202,10 +207,10 @@
 import TipMessage from '../../../components/tipMessage/tipMessage'
 import { checkPhone, checkEmail, checkPw, checkRenewPw } from '@/libs/regular.js'
 import mixins from '@/mixins/user'
-
+import SelectTree from '@/components/treeSelect/treeSelect.vue'
 export default {
   name: 'User',
-  components: { TipMessage },
+  components: { TipMessage, SelectTree },
   mixins: [mixins],
   data() {
     const checkUserName = (rule, value, callback) => {
@@ -237,6 +242,14 @@ export default {
       }
     }
     return {
+      isClearable: true, // 可清空（可选）
+      isAccordion: true, // 可收起（可选）
+      valueId: '', // 初始ID（可选）
+      props: { // 配置项（必选）
+        value: 'id',
+        label: 'name',
+        children: 'children'
+      },
       token: localStorage.getItem('token'),
       loading: true,
       data: [],
@@ -265,8 +278,7 @@ export default {
         mobile: '',
         password: '',
         Email: '',
-        nickName: '',
-        dept: ''
+        nickName: ''
       },
       formPw: {
         password: '',
@@ -317,6 +329,10 @@ export default {
     })
   },
   methods: {
+    getValue(value) {
+      this.valueId = value
+      console.log(this.valueId)
+    },
     // 初始化分页
     init(id) {
       this.loading = true
@@ -333,6 +349,8 @@ export default {
     },
     // 编辑
     handleEdit(index, row) {
+      this.valueId = row.dept.id
+      console.log(row.dept.id)
       if (row.avatar) {
         this.imageUrl = 'http://106.75.178.9:8080/resource/' + row.avatar
       } else {
@@ -428,7 +446,7 @@ export default {
             email: this.form.Email,
             nickname: this.form.nickName,
             avatar: this.base64,
-            deptId: this.id
+            deptId: this.valueId
           }
           if (this.title === '添加用户') {
             this.$_HTTP.post(this.$_API.addUser, params, res => {
