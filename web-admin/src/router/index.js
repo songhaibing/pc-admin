@@ -49,6 +49,7 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true
   },
+
   {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
@@ -73,7 +74,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'dashboard', icon: 'dashboard', affix: true }
+        meta: {title: 'dashboard', icon: 'dashboard', affix: true}
       }
     ]
   },
@@ -87,10 +88,326 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/profile/index'),
         name: 'Profile',
-        meta: { title: 'profile', icon: 'user', noCache: true }
+        meta: {title: 'profile', icon: 'user', noCache: true}
       }
     ]
-  }
+  },
+  ///
+  {
+    path: '/account',
+    component: Layout,
+    redirect: '/account/unit/list',
+    alwaysShow: true,
+    name: 'account',
+    meta: { title: '账户中心', icon: 'example' },
+    children: [
+      {
+        path: 'unit',
+        name: 'Unit',
+        component: () => import('@/views/account/index'),
+        meta: {title: '单位管理', icon: 'table'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/account/unit/list'),
+            meta: {title: '单位列表', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '单位类型', icon: 'table'}
+          },
+          {
+            path: 'entering',
+            name: 'Entering',
+            component: import('@/views/account/unit/entering'),
+            meta: {title: '单位入驻', icon: 'table'}
+          },
+          {
+            path: 'expiring',
+            name: 'Expiring',
+            component: import('@/views/account/unit/expiring'),
+            meta: {title: '即将到期单位', icon: 'table'}
+          },
+          {
+            path: 'expired',
+            name: 'expired',
+            component: import('@/views/account/unit/expired'),
+            meta: {title: '已到期单位', icon: 'table'}
+          }
+        ]
+      }
+      ]
+  },
+  {
+    path: '/product',
+    component: Layout,
+    redirect: '/product/authority/user',
+    alwaysShow: true,
+    name: 'product',
+    meta: { title: '产品中心', icon: 'edit' },
+    children: [
+      {
+        path: 'unit',
+        name: 'Unit',
+        component: () => import('@/views/account/index'),
+        meta: {title: '商品管理', icon: 'table'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/account/unit/list'),
+            meta: {title: '商品列表', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '商品分类', icon: 'table'}
+          },
+        ]
+      },
+      {
+        path: 'unit',
+        name: 'Unit',
+        component: () => import('@/views/account/index'),
+        meta: {title: '数据分析', icon: 'table'},
+      },
+    ]
+  },
+  {
+    path: '/transaction',
+    component: Layout,
+    redirect: '/transaction/authority/user',
+    alwaysShow: true,
+    name: 'transaction',
+    meta: { title: '交易中心', icon: 'example' },
+    children: [
+      {
+        path: 'unit',
+        name: 'Unit',
+        component: () => import('@/views/account/index'),
+        meta: {title: '交易管理', icon: 'table'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/account/unit/list'),
+            meta: {title: '交易订单', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '退款订单', icon: 'table'}
+          },
+        ]
+      },
+      {
+        path: 'unit',
+        name: 'Unit',
+        component: () => import('@/views/account/index'),
+        meta: {title: '资金管理', icon: 'table'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/account/unit/list'),
+            meta: {title: '充值记录', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '退款订单', icon: 'table'}
+          },
+        ]
+      },
+      {
+        path: 'unit',
+        name: 'Unit',
+        component: () => import('@/views/account/index'),
+        meta: {title: '账单管理', icon: 'table'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/account/unit/list'),
+            meta: {title: '交易账单', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '资金账单', icon: 'table'}
+          },
+        ]
+      },
+    ]
+  },
+  {
+    path: '/data',
+    component: Layout,
+    redirect: '/data/authority/user',
+    alwaysShow: true,
+    name: 'data',
+    meta: { title: '数据中心', icon: 'example' },
+    children: [
+      {
+        path: 'unit',
+        name: 'Unit',
+        component: () => import('@/views/account/index'),
+        meta: {title: '单位分析', icon: 'table'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/account/unit/list'),
+            meta: {title: '单个分析', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '行业分析', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '交易分析', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '流水分析', icon: 'table'}
+          },
+        ]
+      },
+      {
+        path: 'unit',
+        name: 'Unit',
+        component: () => import('@/views/account/index'),
+        meta: {title: '商户分析', icon: 'table'},
+      },
+      {
+        path: 'unit',
+        name: 'Unit',
+        component: () => import('@/views/account/index'),
+        meta: {title: '用户分析', icon: 'table'},
+      },
+      {
+        path: 'unit',
+        name: 'Unit',
+        component: () => import('@/views/account/index'),
+        meta: {title: '交易分析', icon: 'table'},
+      },
+    ]
+
+  },
+  {
+    path: '/setting',
+    component: Layout,
+    redirect: '/setting/authority/user',
+    alwaysShow: true,
+    name: 'setting',
+    meta: { title: '设置', icon: 'example' },
+    children: [
+      {
+        path: 'unit',
+        name: 'Unit',
+        component: () => import('@/views/account/index'),
+        meta: {title: '系统设置', icon: 'table'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/account/unit/list'),
+            meta: {title: '子系统后台名称', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '子系统后台logo', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '主题色', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '域名配置', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '缓存清理', icon: 'table'}
+          },
+        ]
+      },
+      {
+        path: 'unit',
+        name: 'Unit',
+        component: () => import('@/views/account/index'),
+        meta: {title: '公众号设置', icon: 'table'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/account/unit/list'),
+            meta: {title: '菜单设置', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '关注自动回复设置', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '消息推送', icon: 'table'}
+          },
+        ]
+      },
+      {
+        path: 'unit',
+        name: 'Unit',
+        component: () => import('@/views/account/index'),
+        meta: {title: '支付设置', icon: 'table'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/account/unit/list'),
+            meta: {title: '微信支付设置', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '支付宝支付设置', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/unit/type'),
+            meta: {title: '银联支付设置', icon: 'table'}
+          },
+        ]
+      },
+    ]
+  },
 ]
 
 /**
@@ -100,7 +417,7 @@ export const constantRoutes = [
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({y: 0}),
   routes: constantRoutes
 })
 
