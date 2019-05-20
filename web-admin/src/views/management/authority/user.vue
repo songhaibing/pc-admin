@@ -1,205 +1,202 @@
 <template>
-  <div style="display: flex">
-    <div class="left-main">
-      <div class="boxLeftTop">
-        <span class="menu_title">所属部门</span>
-      </div>
-      <el-tree
-        :highlight-current="true"
-        class="single-content"
-        :data="data"
-        :props="defaultProps"
-        @node-click="handleNodeClick"
-      />
-    </div>
-    <tip-message v-if="isShow" />
-    <div v-else style="padding:20px;margin-left: 200px;width: 1250px">
-      <el-card class="box-card">
-        <div slot="header" class="clearfix">
-          <i class="el-icon-menu" />
-          <span>用户列表</span>
-          <el-button
-            style="float: right;padding: 6px;margin-right: 6px"
-            type="primary"
-            icon="el-icon-plus"
-            @click="addButton"
-          >添加
-          </el-button>
-        </div>
-        <el-table
-          v-loading="loading"
-          :data="tableData"
-          style="width: 100%"
-        >
-          <el-table-column
-            align="center"
-            label="序号"
-            type="index"
-            width="60"
-          />
-          <el-table-column
-            label="头像"
-            align="center"
-            width="150"
-          >
-            <template scope="scope">
-              <img
-                v-if="scope.row.avatar"
-                :src="'http://106.75.178.9:8080/resource/'+scope.row.avatar"
-                class="head_pic"
-              >
-              <img v-else src="@/assets/avatar/mieba.png" class="head_pic">
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="username"
-            width="100"
-            label="用户名"
-          />
-          <el-table-column
-            align="center"
-            prop="realname"
-            label="真实姓名"
-            width="100"
-          />
-          <el-table-column
-            align="center"
-            prop="nickname"
-            label="昵称"
-            width="100"
-          />
-          <el-table-column
-            align="center"
-            prop="phone"
-            label="手机号码"
-            width="120"
-          />
-          <el-table-column
-            align="center"
-            label="部门"
-            width="100"
-          >
-            <template slot-scope="scope">{{ scope.row.dept.name }}</template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="email"
-            label="邮箱"
-            width="170"
-          />
-          <el-table-column
-            align="center"
-            label="是否禁止登陆"
-            width="100"
-          >
-            <template slot-scope="scope">{{ scope.row.lockFlag?'是':'否' }}</template>
-          </el-table-column>
-          <el-table-column align="center" label="操作">
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="text"
-                @click="handleEdit(scope.$index, scope.row)"
-              >编辑
-              </el-button>
-              <el-button
-                size="mini"
-                type="text"
-                @click="deleteUser(scope.$index, scope.row)"
-              >删除
-              </el-button>
-              <el-button
-                size="mini"
-                type="text"
-                @click="changePassword(scope.$index, scope.row)"
-              >修改密码
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="block">
-          <el-pagination
-            background
-            :current-page.sync="currentPage"
-            :page-sizes="[10, 20, 30]"
-            :page-size="size"
-            style="float: right;margin: 10px 0"
-            layout="sizes, prev, pager, next"
-            :total="total"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
+  <div>
+    <el-row>
+      <el-col>
+        <div class="left-main">
+          <div class="boxLeftTop">
+            <span class="menu_title">所属部门</span>
+          </div>
+          <el-tree
+            :highlight-current="true"
+            class="single-content"
+            :data="data"
+            :props="defaultProps"
+            @node-click="handleNodeClick"
           />
         </div>
-      </el-card>
-      <el-dialog :title="title" width="500px" :visible.sync="dialogFormVisible">
-        <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="头像上传" :label-width="formLabelWidth">
-            <el-upload
-              class="avatar-uploader"
-              action="http://106.75.178.9:8080/file/upload/file/avatar"
-              :headers="{token}"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <img v-if="imageUrl" :src="imageUrl" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon" />
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
-            <el-input v-model="form.userName" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realName">
-            <el-input v-model="form.realName" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="昵称" :label-width="formLabelWidth" prop="nickName">
-            <el-input v-model="form.nickName" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="部门" :label-width="formLabelWidth">
-            <SelectTree
-              :props="props"
-              :options="data"
-              :value="valueId"
-              :clearable="isClearable"
-              :accordion="isAccordion"
-              style="width: 100%"
-              @getValue="getValue($event)"
+      </el-col>
+      <el-col v-if="isShow">
+        <tip-message />
+      </el-col>
+      <div v-else style="padding:20px;margin-left: 200px;">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <i class="el-icon-menu" />
+            <span>用户列表</span>
+            <el-button
+              style="float: right;padding: 6px;margin-right: 6px"
+              type="primary"
+              icon="el-icon-plus"
+              @click="addButton"
+            >添加
+            </el-button>
+          </div>
+          <el-table
+            v-loading="loading"
+            :data="tableData"
+            style="width: 100%"
+          >
+            <el-table-column
+              align="center"
+              label="序号"
+              type="index"
             />
-          </el-form-item>
-          <el-form-item label="邮箱" :label-width="formLabelWidth" prop="Email">
-            <el-input v-model="form.Email" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="手机号" :label-width="formLabelWidth" prop="mobile">
-            <el-input v-model="form.mobile" autocomplete="off" />
-          </el-form-item>
-          <el-form-item v-if="title==='添加用户'" label="密码" :label-width="formLabelWidth" prop="password">
-            <el-input v-model="form.password" autocomplete="off" />
-          </el-form-item>
-          <el-form-item class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addUser('form')">添加</el-button>
-          </el-form-item>
-        </el-form>
-      </el-dialog>
-      <el-dialog title="修改密码" width="500px" :visible.sync="dialogPwVisible">
-        <el-form ref="formPw" :model="formPw" status-icon :rules="rulesPw" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="旧密码" :label-width="formLabelWidth" prop="password">
-            <el-input v-model="formPw.password" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="新密码" :label-width="formLabelWidth" prop="newPassword">
-            <el-input v-model="formPw.newPassword" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="确认密码" :label-width="formLabelWidth" prop="repeatPassword">
-            <el-input v-model="formPw.repeatPassword" autocomplete="off" />
-          </el-form-item>
-          <el-form-item class="dialog-footer">
-            <el-button @click="dialogPwVisible = false">取 消</el-button>
-            <el-button type="primary" @click="sure('formPw')">确定</el-button>
-          </el-form-item>
-        </el-form>
-      </el-dialog>
-    </div>
+            <el-table-column
+              label="头像"
+              align="center"
+            >
+              <template scope="scope">
+                <img
+                  v-if="scope.row.avatar"
+                  :src="'http://106.75.178.9:8080/resource/'+scope.row.avatar"
+                  class="head_pic"
+                >
+                <img v-else src="@/assets/avatar/mieba.png" class="head_pic">
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="username"
+              label="用户名"
+            />
+            <el-table-column
+              align="center"
+              prop="realname"
+              label="真实姓名"
+            />
+            <el-table-column
+              align="center"
+              prop="nickname"
+              label="昵称"
+            />
+            <el-table-column
+              align="center"
+              prop="phone"
+              label="手机号码"
+            />
+            <el-table-column
+              align="center"
+              label="部门"
+            >
+              <template slot-scope="scope">{{ scope.row.dept.name }}</template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="email"
+              label="邮箱"
+            />
+            <el-table-column
+              align="center"
+              label="是否禁止登陆"
+            >
+              <template slot-scope="scope">{{ scope.row.lockFlag?'是':'否' }}</template>
+            </el-table-column>
+            <el-table-column align="center" label="操作" width="150">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="handleEdit(scope.$index, scope.row)"
+                >编辑
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="deleteUser(scope.$index, scope.row)"
+                >删除
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="changePassword(scope.$index, scope.row)"
+                >修改密码
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="block">
+            <el-pagination
+              background
+              :current-page.sync="currentPage"
+              :page-sizes="[10, 20, 30]"
+              :page-size="size"
+              style="float: right;margin: 10px 0"
+              layout="sizes, prev, pager, next"
+              :total="total"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            />
+          </div>
+        </el-card>
+        <el-dialog :title="title" width="500px" :visible.sync="dialogFormVisible">
+          <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="头像上传" :label-width="formLabelWidth">
+              <el-upload
+                class="avatar-uploader"
+                action="http://106.75.178.9:8080/file/upload/file/avatar"
+                :headers="{token}"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+              >
+                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon" />
+              </el-upload>
+            </el-form-item>
+            <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
+              <el-input v-model="form.userName" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realName">
+              <el-input v-model="form.realName" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="昵称" :label-width="formLabelWidth" prop="nickName">
+              <el-input v-model="form.nickName" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="部门" :label-width="formLabelWidth">
+              <SelectTree
+                :props="props"
+                :options="data"
+                :value="valueId"
+                :clearable="isClearable"
+                :accordion="isAccordion"
+                style="width: 100%"
+                @getValue="getValue($event)"
+              />
+            </el-form-item>
+            <el-form-item label="邮箱" :label-width="formLabelWidth" prop="Email">
+              <el-input v-model="form.Email" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="手机号" :label-width="formLabelWidth" prop="mobile">
+              <el-input v-model="form.mobile" autocomplete="off" />
+            </el-form-item>
+            <el-form-item v-if="title==='添加用户'" label="密码" :label-width="formLabelWidth" prop="password">
+              <el-input v-model="form.password" autocomplete="off" />
+            </el-form-item>
+            <el-form-item class="dialog-footer">
+              <el-button @click="dialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="addUser('form')">添加</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+        <el-dialog title="修改密码" width="500px" :visible.sync="dialogPwVisible">
+          <el-form ref="formPw" :model="formPw" status-icon :rules="rulesPw" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="旧密码" :label-width="formLabelWidth" prop="password">
+              <el-input v-model="formPw.password" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="新密码" :label-width="formLabelWidth" prop="newPassword">
+              <el-input v-model="formPw.newPassword" autocomplete="off" />
+            </el-form-item>
+            <el-form-item label="确认密码" :label-width="formLabelWidth" prop="repeatPassword">
+              <el-input v-model="formPw.repeatPassword" autocomplete="off" />
+            </el-form-item>
+            <el-form-item class="dialog-footer">
+              <el-button @click="dialogPwVisible = false">取 消</el-button>
+              <el-button type="primary" @click="sure('formPw')">确定</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+      </div>
+    </el-row>
   </div>
 </template>
 
@@ -208,6 +205,7 @@ import TipMessage from '../../../components/tipMessage/tipMessage'
 import { checkPhone, checkEmail, checkPw, checkRenewPw } from '@/libs/regular.js'
 import mixins from '@/mixins/user'
 import SelectTree from '@/components/treeSelect/treeSelect.vue'
+
 export default {
   name: 'User',
   components: { TipMessage, SelectTree },

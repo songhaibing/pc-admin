@@ -1,132 +1,138 @@
 <template>
-  <div style="display: flex">
-    <div class="left-main">
-      <div class="boxLeftTop">
-        <span class="menu_title">系统目录</span>
-      </div>
-      <el-tree
-        :highlight-current="true"
-        class="single-content"
-        :data="data"
-        :props="defaultProps"
-        @node-click="handleNodeClick"
-      />
-    </div>
-    <tip-message v-if="isShow" />
-    <div v-else style="padding:20px;margin-left: 200px;width: 1250px">
-      <el-card class="box-card">
-        <div slot="header" class="clearfix">
-          <i class="el-icon-menu" />
-          <span>角色列表</span>
-          <el-button
-            style="float: right;padding: 6px;margin-right: 6px"
-            type="primary"
-            icon="el-icon-plus"
-            @click="addButton"
-          >添加
-          </el-button>
+  <div>
+    <el-row>
+      <el-col>
+        <div class="left-main">
+          <div class="boxLeftTop">
+            <span class="menu_title">系统目录</span>
+          </div>
+          <el-tree
+            :highlight-current="true"
+            class="single-content"
+            :data="data"
+            :props="defaultProps"
+            @node-click="handleNodeClick"
+          />
         </div>
-        <el-table
-          v-loading="loading"
-          :data="tableData"
-          style="width: 100%"
-        >
-          <el-table-column
-            align="center"
-            label="序号"
-            type="index"
-            width="60"
-          />
-          <el-table-column
-            align="center"
-            prop="name"
-            label="姓名"
-            width="150"
-          />
-          <el-table-column
-            align="center"
-            prop="code"
-            label="code"
-            width="150"
-          />
-          <el-table-column
-            align="center"
-            prop="description"
-            label="描述"
-            width="400"
-          />
-          <el-table-column
-            label="操作"
-            align="center"
+      </el-col>
+      <el-col v-if="isShow">
+        <tip-message />
+      </el-col>
+      <div v-else style="padding:20px;margin-left: 200px;">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <i class="el-icon-menu" />
+            <span>角色列表</span>
+            <el-button
+              style="float: right;padding: 6px;margin-right: 6px"
+              type="primary"
+              icon="el-icon-plus"
+              @click="addButton"
+            >添加
+            </el-button>
+          </div>
+          <el-table
+            v-loading="loading"
+            :data="tableData"
+            style="width: 100%"
           >
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="text"
-                @click="handleEdit(scope.$index, scope.row)"
-              >编辑
-              </el-button>
-              <el-button
-                size="mini"
-                type="text"
-                @click="deleteUser(scope.$index, scope.row)"
-              >删除
-              </el-button>
-              <el-button
-                size="mini"
-                type="text"
-                @click="findRole(scope.$index, scope.row)"
-              >权限
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="block">
-          <el-pagination
-            background
-            :current-page.sync="currentPage"
-            :page-sizes="[10, 20, 30]"
-            :page-size="size"
-            style="float: right;margin: 10px 0"
-            layout="sizes, prev, pager, next"
-            :total="total"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          />
-        </div>
-      </el-card>
-    </div>
-    <el-dialog :title="title" width="500px" :visible.sync="dialogFormVisible">
-      <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="姓名" :label-width="formLabelWidth" prop="Name">
-          <el-input v-model="form.Name" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="code" :label-width="formLabelWidth" prop="Code">
-          <el-input v-model="form.Code" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="描述" :label-width="formLabelWidth" prop="des">
-          <el-input v-model="form.des" autocomplete="off" />
-        </el-form-item>
-        <el-form-item class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addUser('form')">添加</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-    <el-dialog title="分配权限" width="500px" :visible.sync="dialogFormRole">
-      <el-tree
-        ref="tree"
-        :data="data1"
-        show-checkbox
-        node-key="id"
-        :default-expand-all="isExpand"
-        :props="defaultProps1"
-      />
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormRole = false">取 消</el-button>
-        <el-button type="primary" @click="()=>getCheckedKeys()">确 定</el-button>
-      </span>
-    </el-dialog>
+            <el-table-column
+              align="center"
+              label="序号"
+              type="index"
+              width="60"
+            />
+            <el-table-column
+              align="center"
+              prop="name"
+              label="姓名"
+              width="150"
+            />
+            <el-table-column
+              align="center"
+              prop="code"
+              label="code"
+              width="150"
+            />
+            <el-table-column
+              align="center"
+              prop="description"
+              label="描述"
+              width="400"
+            />
+            <el-table-column
+              label="操作"
+              align="center"
+            >
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="handleEdit(scope.$index, scope.row)"
+                >编辑
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="deleteUser(scope.$index, scope.row)"
+                >删除
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="findRole(scope.$index, scope.row)"
+                >权限
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="block">
+            <el-pagination
+              background
+              :current-page.sync="currentPage"
+              :page-sizes="[10, 20, 30]"
+              :page-size="size"
+              style="float: right;margin: 10px 0"
+              layout="sizes, prev, pager, next"
+              :total="total"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            />
+          </div>
+        </el-card>
+      </div>
+      <el-dialog :title="title" width="500px" :visible.sync="dialogFormVisible">
+        <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="姓名" :label-width="formLabelWidth" prop="Name">
+            <el-input v-model="form.Name" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="code" :label-width="formLabelWidth" prop="Code">
+            <el-input v-model="form.Code" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="描述" :label-width="formLabelWidth" prop="des">
+            <el-input v-model="form.des" autocomplete="off" />
+          </el-form-item>
+          <el-form-item class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="addUser('form')">添加</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+      <el-dialog title="分配权限" width="500px" :visible.sync="dialogFormRole">
+        <el-tree
+          ref="tree"
+          :data="data1"
+          show-checkbox
+          node-key="id"
+          :default-expand-all="isExpand"
+          :props="defaultProps1"
+        />
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormRole = false">取 消</el-button>
+          <el-button type="primary" @click="()=>getCheckedKeys()">确 定</el-button>
+        </span>
+      </el-dialog>
+    </el-row>
   </div>
 </template>
 
@@ -303,7 +309,9 @@ export default {
   },
   methods: {
     getCheckedKeys() {
-      const data = this.$refs.tree.getCheckedNodes(false, true).map(item => { return item.permission })
+      const data = this.$refs.tree.getCheckedNodes(false, true).map(item => {
+        return item.permission
+      })
       this.$_HTTP.put(this.$_API.editRole + this.permissionId, { authorities: data }, res => {
         if (res.code === 1) {
           this.dialogFormRole = false
@@ -398,7 +406,7 @@ export default {
 
       })
     },
-    async  findRole(index, row) {
+    async findRole(index, row) {
       this.permissionId = row.id
       await this.$_HTTP.get(this.$_API.findRole + row.id, {}, res => {
         const temp = res.authorities
