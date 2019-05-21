@@ -105,7 +105,7 @@ export const constantRoutes = [
         path: 'unit',
         name: 'Unit',
         component: () => import('@/views/account/unit/index'),
-        meta: {title: '单位管理', icon: 'table'},
+        meta: {title: '单位管理', icon: 'calculator'},
         children: [
           {
             path: 'list',
@@ -167,7 +167,7 @@ export const constantRoutes = [
         children: [
           {
             path: 'list',
-            name: 'List',
+            name: 'list',
             component: () => import('@/views/account/user/list'),
             meta: {title: '用户列表', icon: 'table'}
           },
@@ -441,7 +441,7 @@ export const constantRoutes = [
     redirect: '/setting/authority/user',
     alwaysShow: true,
     name: 'setting',
-    meta: { title: '设置', icon: 'example' },
+    meta: { title: '设置', icon: 'tree' },
     children: [
       {
         path: 'system-settings',
@@ -536,7 +536,7 @@ export const constantRoutes = [
             name: 'unionPay-pay',
             component:  () => import('@/views/setting/pay/unionPay-pay'),
             meta: {title: '银联支付设置', icon: 'table'}
-          },
+          }
         ]
       },
     ]
@@ -550,7 +550,7 @@ export const constantRoutes = [
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
-  scrollBehavior: () => ({y: 0}),
+  scrollBehavior: () => ({y:0}),
   routes: constantRoutes
 })
 
