@@ -104,7 +104,7 @@ export const constantRoutes = [
       {
         path: 'unit',
         name: 'Unit',
-        component: () => import('@/views/account/index'),
+        component: () => import('@/views/account/unit/index'),
         meta: {title: '单位管理', icon: 'table'},
         children: [
           {
@@ -122,57 +122,190 @@ export const constantRoutes = [
           {
             path: 'entering',
             name: 'Entering',
-            component: import('@/views/account/unit/entering'),
+            component:() =>import('@/views/account/unit/entering'),
             meta: {title: '单位入驻', icon: 'table'}
           },
           {
             path: 'expiring',
             name: 'Expiring',
-            component: import('@/views/account/unit/expiring'),
+            component:() => import('@/views/account/unit/expiring'),
             meta: {title: '即将到期单位', icon: 'table'}
           },
           {
             path: 'expired',
             name: 'expired',
-            component: import('@/views/account/unit/expired'),
+            component:() => import('@/views/account/unit/expired'),
             meta: {title: '已到期单位', icon: 'table'}
           }
         ]
-      }
+      },
+      {
+        path: 'merchant',
+        name: 'merchant',
+        component: () => import('@/views/account/merchant/index'),
+        meta: {title: '商户管理', icon: 'table'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/account/merchant/list'),
+            meta: {title: '商户列表', icon: 'table'}
+          },
+          {
+            path: 'type',
+            name: 'Type',
+            component:  () => import('@/views/account/merchant/type'),
+            meta: {title: '商户分类', icon: 'table'}
+          }
+        ]
+      },
+      {
+        path: 'user',
+        name: 'user',
+        component: () => import('@/views/account/user/index'),
+        meta: {title: '用户管理', icon: 'table'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/account/user/list'),
+            meta: {title: '用户列表', icon: 'table'}
+          },
+          {
+            path: 'wallet',
+            name: 'wallet',
+            component:  () => import('@/views/account/user/wallet'),
+            meta: {title: '钱包管理', icon: 'table'}
+          },
+          {
+            path: 'blacklist',
+            name: 'blacklist',
+            component:  () => import('@/views/account/user/blacklist'),
+            meta: {title: '黑名单', icon: 'table'}
+          }
+        ]
+      },
+      {
+        path: 'role',
+        name: 'role',
+        component: () => import('@/views/account/role/index'),
+        meta: {title: '角色管理', icon: 'table'},
+        children: [
+          {
+            path: 'setting',
+            name: 'setting',
+            component: () => import('@/views/account/role/setting/index'),
+            meta: {title: '角色设置', icon: 'table'},
+            children: [
+              {
+                path: 'super',
+                name: 'super',
+                component: () => import('@/views/account/role/setting/super'),
+                meta: {title: '超级管理员', icon: 'table'}
+              },
+              {
+                path: 'administrator',
+                name: 'administrator',
+                component: () => import('@/views/account/role/setting/administrator'),
+                meta: {title: '管理员', icon: 'table'},
+              }
+            ]
+          },
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/account/role/list'),
+            meta: {title: '管理员列表', icon: 'table'},
+
+          },
+          {
+            path: 'permission',
+            name: 'permission',
+            component: () => import('@/views/account/role/permission'),
+            meta: {title: '权限分配', icon: 'table'},
+          },
+        ]
+      },
+      {
+        path: 'terminal',
+        name: 'terminal',
+        component: () => import('@/views/account/terminal/index'),
+        meta: {title: '终端管理', icon: 'table'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/account/terminal/list/index'),
+            meta: {title: '终端设备列表', icon: 'table'},
+            children: [
+              {
+                path: 'system',
+                name: 'system',
+                component: () => import('@/views/account/terminal/list/system'),
+                meta: {title: '系统', icon: 'table'}
+              },
+              {
+                path: 'unit',
+                name: 'unit',
+                component: () => import('@/views/account/terminal/list/unit'),
+                meta: {title: '单位', icon: 'table'},
+              }
+            ]
+          },
+          {
+            path: 'setting',
+            name: 'setting',
+            component: () => import('@/views/account/terminal/setting'),
+            meta: {title: '报修设置', icon: 'table'},
+          },
+          {
+            path: 'unused',
+            name: 'unused',
+            component: () => import('@/views/account/terminal/unused'),
+            meta: {title: '未使用设备', icon: 'table'},
+          },
+          {
+            path: 'scrapped',
+            name: 'scrapped',
+            component: () => import('@/views/account/terminal/scrapped'),
+            meta: {title: '报废设置', icon: 'table'},
+          },
+        ]
+      },
       ]
   },
   {
     path: '/product',
     component: Layout,
-    redirect: '/product/authority/user',
+    redirect: '/product/commodity/list',
     alwaysShow: true,
     name: 'product',
     meta: { title: '产品中心', icon: 'edit' },
     children: [
       {
-        path: 'unit',
-        name: 'Unit',
-        component: () => import('@/views/account/index'),
+        path: 'commodity',
+        name: 'commodity',
+        component: () => import('@/views/product/index'),
         meta: {title: '商品管理', icon: 'table'},
         children: [
           {
             path: 'list',
             name: 'List',
-            component: () => import('@/views/account/unit/list'),
+            component: () => import('@/views/product/commodity/list'),
             meta: {title: '商品列表', icon: 'table'}
           },
           {
             path: 'type',
             name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            component:  () => import('@/views/product/commodity/type'),
             meta: {title: '商品分类', icon: 'table'}
           },
         ]
       },
       {
-        path: 'unit',
-        name: 'Unit',
-        component: () => import('@/views/account/index'),
+        path: 'data',
+        name: 'data',
+        component: () => import('@/views/product/commodity/data-analysis'),
         meta: {title: '数据分析', icon: 'table'},
       },
     ]
@@ -186,61 +319,55 @@ export const constantRoutes = [
     meta: { title: '交易中心', icon: 'example' },
     children: [
       {
-        path: 'unit',
-        name: 'Unit',
-        component: () => import('@/views/account/index'),
+        path: 'management',
+        name: 'management',
+        component: () => import('@/views/transaction/management/index'),
         meta: {title: '交易管理', icon: 'table'},
         children: [
           {
-            path: 'list',
-            name: 'List',
-            component: () => import('@/views/account/unit/list'),
+            path: 'transaction-order',
+            name: 'transaction-order',
+            component: () => import('@/views/transaction/management/transaction-order'),
             meta: {title: '交易订单', icon: 'table'}
           },
           {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            path: 'refund-order',
+            name: 'refund-order',
+            component:  () => import('@/views/transaction/management/refund-order'),
             meta: {title: '退款订单', icon: 'table'}
           },
         ]
       },
       {
-        path: 'unit',
-        name: 'Unit',
-        component: () => import('@/views/account/index'),
+        path: 'money',
+        name: 'money',
+        component: () => import('@/views/transaction/money/index'),
         meta: {title: '资金管理', icon: 'table'},
         children: [
           {
-            path: 'list',
-            name: 'List',
-            component: () => import('@/views/account/unit/list'),
+            path: 'recharge-record',
+            name: 'recharge-record',
+            component: () => import('@/views/transaction/money/recharge-record'),
             meta: {title: '充值记录', icon: 'table'}
-          },
-          {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
-            meta: {title: '退款订单', icon: 'table'}
-          },
+          }
         ]
       },
       {
-        path: 'unit',
-        name: 'Unit',
-        component: () => import('@/views/account/index'),
+        path: 'bill',
+        name: 'bill',
+        component: () => import('@/views/transaction/bill/index'),
         meta: {title: '账单管理', icon: 'table'},
         children: [
           {
-            path: 'list',
-            name: 'List',
-            component: () => import('@/views/account/unit/list'),
+            path: 'transaction-bill',
+            name: 'transaction-bill',
+            component: () => import('@/views/transaction/bill/transaction-bill'),
             meta: {title: '交易账单', icon: 'table'}
           },
           {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            path: 'fund-bill',
+            name: 'fund-bill',
+            component:  () => import('@/views/transaction/bill/fund-bill'),
             meta: {title: '资金账单', icon: 'table'}
           },
         ]
@@ -250,7 +377,7 @@ export const constantRoutes = [
   {
     path: '/data',
     component: Layout,
-    redirect: '/data/authority/user',
+    redirect: '/data/unit/single-analysis',
     alwaysShow: true,
     name: 'data',
     meta: { title: '数据中心', icon: 'example' },
@@ -258,51 +385,51 @@ export const constantRoutes = [
       {
         path: 'unit',
         name: 'Unit',
-        component: () => import('@/views/account/index'),
+        component: () => import('@/views/data/unit/index'),
         meta: {title: '单位分析', icon: 'table'},
         children: [
           {
-            path: 'list',
-            name: 'List',
-            component: () => import('@/views/account/unit/list'),
+            path: 'single-analysis',
+            name: 'single-analysis',
+            component: () => import('@/views/data/unit/single-analysis'),
             meta: {title: '单个分析', icon: 'table'}
           },
           {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            path: 'industry-analysis',
+            name: 'industry-analysis',
+            component:  () => import('@/views/data/unit/industry-analysis'),
             meta: {title: '行业分析', icon: 'table'}
           },
           {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            path: 'transaction-analysis',
+            name: 'transaction-analysis',
+            component:  () => import('@/views/data/unit/transaction-analysis'),
             meta: {title: '交易分析', icon: 'table'}
           },
           {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            path: 'flow-analysis',
+            name: 'flow-analysis',
+            component:  () => import('@/views/data/unit/flow-analysis'),
             meta: {title: '流水分析', icon: 'table'}
           },
         ]
       },
       {
-        path: 'unit',
-        name: 'Unit',
-        component: () => import('@/views/account/index'),
+        path: 'merchant-analysis',
+        name: 'merchant-analysis',
+        component: () => import('@/views/data/merchant-analysis'),
         meta: {title: '商户分析', icon: 'table'},
       },
       {
-        path: 'unit',
-        name: 'Unit',
-        component: () => import('@/views/account/index'),
+        path: 'user-analysis',
+        name: 'user-analysis',
+        component: () => import('@/views/data/user-analysis'),
         meta: {title: '用户分析', icon: 'table'},
       },
       {
-        path: 'unit',
-        name: 'Unit',
-        component: () => import('@/views/account/index'),
+        path: 'transaction-analysis',
+        name: 'transaction-analysis',
+        component: () => import('@/views/data/transaction-analysis'),
         meta: {title: '交易分析', icon: 'table'},
       },
     ]
@@ -317,91 +444,97 @@ export const constantRoutes = [
     meta: { title: '设置', icon: 'example' },
     children: [
       {
-        path: 'unit',
-        name: 'Unit',
-        component: () => import('@/views/account/index'),
+        path: 'system-settings',
+        name: 'system-settings',
+        component: () => import('@/views/setting/system/index'),
         meta: {title: '系统设置', icon: 'table'},
         children: [
           {
-            path: 'list',
-            name: 'List',
-            component: () => import('@/views/account/unit/list'),
+            path: 'menu-management',
+            name: 'menu-management',
+            component: () => import('@/views/setting/system/menu-management'),
+            meta: {title: '菜单管理', icon: 'table'}
+          },
+          {
+            path: 'subsystem-name',
+            name: 'subsystem-name',
+            component: () => import('@/views/setting/system/subsystem-name'),
             meta: {title: '子系统后台名称', icon: 'table'}
           },
           {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            path: 'subsystem-logo',
+            name: 'subsystem-logo',
+            component:  () => import('@/views/setting/system/subsystem-logo'),
             meta: {title: '子系统后台logo', icon: 'table'}
           },
           {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            path: 'theme-color',
+            name: 'theme-color',
+            component:  () => import('@/views/setting/system/theme-color'),
             meta: {title: '主题色', icon: 'table'}
           },
           {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            path: 'domain-configuration',
+            name: 'domain-configuration',
+            component:  () => import('@/views/setting/system/domain-configuration'),
             meta: {title: '域名配置', icon: 'table'}
           },
           {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            path: 'cache-cleanup',
+            name: 'cache-cleanup',
+            component:  () => import('@/views/setting/system/cache-cleanup'),
             meta: {title: '缓存清理', icon: 'table'}
           },
         ]
       },
       {
-        path: 'unit',
-        name: 'Unit',
-        component: () => import('@/views/account/index'),
+        path: 'public',
+        name: 'public',
+        component: () => import('@/views/setting/public/index'),
         meta: {title: '公众号设置', icon: 'table'},
         children: [
           {
-            path: 'list',
-            name: 'List',
-            component: () => import('@/views/account/unit/list'),
+            path: 'menu-settings',
+            name: 'menu-settings',
+            component: () => import('@/views/setting/public/menu-settings'),
             meta: {title: '菜单设置', icon: 'table'}
           },
           {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            path: 'focus-settings',
+            name: 'focus-settings',
+            component:  () => import('@/views/setting/public/focus-settings'),
             meta: {title: '关注自动回复设置', icon: 'table'}
           },
           {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            path: 'message-push',
+            name: 'message-push',
+            component:  () => import('@/views/setting/public/message-push'),
             meta: {title: '消息推送', icon: 'table'}
           },
         ]
       },
       {
-        path: 'unit',
-        name: 'Unit',
-        component: () => import('@/views/account/index'),
+        path: 'pay',
+        name: 'pay',
+        component: () => import('@/views/setting/pay/index'),
         meta: {title: '支付设置', icon: 'table'},
         children: [
           {
-            path: 'list',
-            name: 'List',
-            component: () => import('@/views/account/unit/list'),
+            path: 'weChat-pay',
+            name: 'weChat-pay',
+            component: () => import('@/views/setting/pay/weChat-payment'),
             meta: {title: '微信支付设置', icon: 'table'}
           },
           {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            path: 'alipay-pay',
+            name: 'alipay-pay',
+            component:  () => import('@/views/setting/pay/alipay-pay'),
             meta: {title: '支付宝支付设置', icon: 'table'}
           },
           {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
+            path: 'unionPay-pay',
+            name: 'unionPay-pay',
+            component:  () => import('@/views/setting/pay/unionPay-pay'),
             meta: {title: '银联支付设置', icon: 'table'}
           },
         ]
