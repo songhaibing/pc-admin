@@ -1,5 +1,5 @@
 <template>
-
+    <div>单位类型</div>
 </template>
 
 <script>

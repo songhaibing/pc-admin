@@ -93,187 +93,187 @@ export const constantRoutes = [
     ]
   },
   ///
-  {
-    path: '/account',
-    component: Layout,
-    redirect: '/account/unit/list',
-    alwaysShow: true,
-    name: 'account',
-    meta: { title: '账户中心', icon: 'example' },
-    children: [
-      {
-        path: 'unit',
-        name: 'Unit',
-        component: () => import('@/views/account/unit/index'),
-        meta: {title: '单位管理', icon: 'calculator'},
-        children: [
-          {
-            path: 'list',
-            name: 'List',
-            component: () => import('@/views/account/unit/list'),
-            meta: {title: '单位列表', icon: 'table'}
-          },
-          {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/unit/type'),
-            meta: {title: '单位类型', icon: 'table'}
-          },
-          {
-            path: 'entering',
-            name: 'Entering',
-            component:() =>import('@/views/account/unit/entering'),
-            meta: {title: '单位入驻', icon: 'table'}
-          },
-          {
-            path: 'expiring',
-            name: 'Expiring',
-            component:() => import('@/views/account/unit/expiring'),
-            meta: {title: '即将到期单位', icon: 'table'}
-          },
-          {
-            path: 'expired',
-            name: 'expired',
-            component:() => import('@/views/account/unit/expired'),
-            meta: {title: '已到期单位', icon: 'table'}
-          }
-        ]
-      },
-      {
-        path: 'merchant',
-        name: 'merchant',
-        component: () => import('@/views/account/merchant/index'),
-        meta: {title: '商户管理', icon: 'table'},
-        children: [
-          {
-            path: 'list',
-            name: 'List',
-            component: () => import('@/views/account/merchant/list'),
-            meta: {title: '商户列表', icon: 'table'}
-          },
-          {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/account/merchant/type'),
-            meta: {title: '商户分类', icon: 'table'}
-          }
-        ]
-      },
-      {
-        path: 'user',
-        name: 'user',
-        component: () => import('@/views/account/user/index'),
-        meta: {title: '用户管理', icon: 'table'},
-        children: [
-          {
-            path: 'list',
-            name: 'list',
-            component: () => import('@/views/account/user/list'),
-            meta: {title: '用户列表', icon: 'table'}
-          },
-          {
-            path: 'wallet',
-            name: 'wallet',
-            component:  () => import('@/views/account/user/wallet'),
-            meta: {title: '钱包管理', icon: 'table'}
-          },
-          {
-            path: 'blacklist',
-            name: 'blacklist',
-            component:  () => import('@/views/account/user/blacklist'),
-            meta: {title: '黑名单', icon: 'table'}
-          }
-        ]
-      },
-      {
-        path: 'role',
-        name: 'role',
-        component: () => import('@/views/account/role/index'),
-        meta: {title: '角色管理', icon: 'table'},
-        children: [
-          {
-            path: 'setting',
-            name: 'setting',
-            component: () => import('@/views/account/role/setting/index'),
-            meta: {title: '角色设置', icon: 'table'},
-            children: [
-              {
-                path: 'super',
-                name: 'super',
-                component: () => import('@/views/account/role/setting/super'),
-                meta: {title: '超级管理员', icon: 'table'}
-              },
-              {
-                path: 'administrator',
-                name: 'administrator',
-                component: () => import('@/views/account/role/setting/administrator'),
-                meta: {title: '管理员', icon: 'table'},
-              }
-            ]
-          },
-          {
-            path: 'list',
-            name: 'List',
-            component: () => import('@/views/account/role/list'),
-            meta: {title: '管理员列表', icon: 'table'},
-
-          },
-          {
-            path: 'permission',
-            name: 'permission',
-            component: () => import('@/views/account/role/permission'),
-            meta: {title: '权限分配', icon: 'table'},
-          },
-        ]
-      },
-      {
-        path: 'terminal',
-        name: 'terminal',
-        component: () => import('@/views/account/terminal/index'),
-        meta: {title: '终端管理', icon: 'table'},
-        children: [
-          {
-            path: 'list',
-            name: 'List',
-            component: () => import('@/views/account/terminal/list/index'),
-            meta: {title: '终端设备列表', icon: 'table'},
-            children: [
-              {
-                path: 'system',
-                name: 'system',
-                component: () => import('@/views/account/terminal/list/system'),
-                meta: {title: '系统', icon: 'table'}
-              },
-              {
-                path: 'unit',
-                name: 'unit',
-                component: () => import('@/views/account/terminal/list/unit'),
-                meta: {title: '单位', icon: 'table'},
-              }
-            ]
-          },
-          {
-            path: 'setting',
-            name: 'setting',
-            component: () => import('@/views/account/terminal/setting'),
-            meta: {title: '报修设置', icon: 'table'},
-          },
-          {
-            path: 'unused',
-            name: 'unused',
-            component: () => import('@/views/account/terminal/unused'),
-            meta: {title: '未使用设备', icon: 'table'},
-          },
-          {
-            path: 'scrapped',
-            name: 'scrapped',
-            component: () => import('@/views/account/terminal/scrapped'),
-            meta: {title: '报废设置', icon: 'table'},
-          },
-        ]
-      },
-      ]
-  },
+  // {
+  //   path: '/account',
+  //   component: Layout,
+  //   redirect: '/account/unit/list',
+  //   alwaysShow: true,
+  //   name: 'account',
+  //   meta: { title: '账户中心', icon: 'example' },
+  //   children: [
+  //     {
+  //       path: 'unit',
+  //       name: 'Unit',
+  //       component: () => import('@/views/account/unit/index'),
+  //       meta: {title: '单位管理', icon: 'shop'},
+  //       children: [
+  //         {
+  //           path: 'list',
+  //           name: 'List',
+  //           component: () => import('@/views/account/unit/list'),
+  //           meta: {title: '单位列表', icon: 'table'}
+  //         },
+  //         {
+  //           path: 'type',
+  //           name: 'Type',
+  //           component:  () => import('@/views/account/unit/type'),
+  //           meta: {title: '单位类型', icon: 'table'}
+  //         },
+  //         {
+  //           path: 'entering',
+  //           name: 'Entering',
+  //           component:() =>import('@/views/account/unit/entering'),
+  //           meta: {title: '单位入驻', icon: 'table'}
+  //         },
+  //         {
+  //           path: 'expiring',
+  //           name: 'Expiring',
+  //           component:() => import('@/views/account/unit/expiring'),
+  //           meta: {title: '即将到期单位', icon: 'table'}
+  //         },
+  //         {
+  //           path: 'expired',
+  //           name: 'expired',
+  //           component:() => import('@/views/account/unit/expired'),
+  //           meta: {title: '已到期单位', icon: 'table'}
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       path: 'merchant',
+  //       name: 'merchant',
+  //       component: () => import('@/views/account/merchant/index'),
+  //       meta: {title: '商户管理', icon: 'table'},
+  //       children: [
+  //         {
+  //           path: 'list',
+  //           name: 'List',
+  //           component: () => import('@/views/account/merchant/list'),
+  //           meta: {title: '商户列表', icon: 'table'}
+  //         },
+  //         {
+  //           path: 'type',
+  //           name: 'Type',
+  //           component:  () => import('@/views/account/merchant/type'),
+  //           meta: {title: '商户分类', icon: 'table'}
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       path: 'user',
+  //       name: 'user',
+  //       component: () => import('@/views/account/user/index'),
+  //       meta: {title: '用户管理', icon: 'table'},
+  //       children: [
+  //         {
+  //           path: 'list',
+  //           name: 'list',
+  //           component: () => import('@/views/account/user/list'),
+  //           meta: {title: '用户列表', icon: 'table'}
+  //         },
+  //         {
+  //           path: 'wallet',
+  //           name: 'wallet',
+  //           component:  () => import('@/views/account/user/wallet'),
+  //           meta: {title: '钱包管理', icon: 'table'}
+  //         },
+  //         {
+  //           path: 'blacklist',
+  //           name: 'blacklist',
+  //           component:  () => import('@/views/account/user/blacklist'),
+  //           meta: {title: '黑名单', icon: 'table'}
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       path: 'role',
+  //       name: 'role',
+  //       component: () => import('@/views/account/role/index'),
+  //       meta: {title: '角色管理', icon: 'table'},
+  //       children: [
+  //         {
+  //           path: 'setting',
+  //           name: 'setting',
+  //           component: () => import('@/views/account/role/setting/index'),
+  //           meta: {title: '角色设置', icon: 'table'},
+  //           children: [
+  //             {
+  //               path: 'super',
+  //               name: 'super',
+  //               component: () => import('@/views/account/role/setting/super'),
+  //               meta: {title: '超级管理员', icon: 'table'}
+  //             },
+  //             {
+  //               path: 'administrator',
+  //               name: 'administrator',
+  //               component: () => import('@/views/account/role/setting/administrator'),
+  //               meta: {title: '管理员', icon: 'table'},
+  //             }
+  //           ]
+  //         },
+  //         {
+  //           path: 'list',
+  //           name: 'List',
+  //           component: () => import('@/views/account/role/list'),
+  //           meta: {title: '管理员列表', icon: 'table'},
+  //
+  //         },
+  //         {
+  //           path: 'permission',
+  //           name: 'permission',
+  //           component: () => import('@/views/account/role/permission'),
+  //           meta: {title: '权限分配', icon: 'table'},
+  //         },
+  //       ]
+  //     },
+  //     {
+  //       path: 'terminal',
+  //       name: 'terminal',
+  //       component: () => import('@/views/account/terminal/index'),
+  //       meta: {title: '终端管理', icon: 'table'},
+  //       children: [
+  //         {
+  //           path: 'list',
+  //           name: 'List',
+  //           component: () => import('@/views/account/terminal/list/index'),
+  //           meta: {title: '终端设备列表', icon: 'table'},
+  //           children: [
+  //             {
+  //               path: 'system',
+  //               name: 'system',
+  //               component: () => import('@/views/account/terminal/list/system'),
+  //               meta: {title: '系统', icon: 'table'}
+  //             },
+  //             {
+  //               path: 'unit',
+  //               name: 'unit',
+  //               component: () => import('@/views/account/terminal/list/unit'),
+  //               meta: {title: '单位', icon: 'table'},
+  //             }
+  //           ]
+  //         },
+  //         {
+  //           path: 'setting',
+  //           name: 'setting',
+  //           component: () => import('@/views/account/terminal/setting'),
+  //           meta: {title: '报修设置', icon: 'table'},
+  //         },
+  //         {
+  //           path: 'unused',
+  //           name: 'unused',
+  //           component: () => import('@/views/account/terminal/unused'),
+  //           meta: {title: '未使用设备', icon: 'table'},
+  //         },
+  //         {
+  //           path: 'scrapped',
+  //           name: 'scrapped',
+  //           component: () => import('@/views/account/terminal/scrapped'),
+  //           meta: {title: '报废设置', icon: 'table'},
+  //         },
+  //       ]
+  //     },
+  //     ]
+  // },
   {
     path: '/product',
     component: Layout,
@@ -441,7 +441,7 @@ export const constantRoutes = [
     redirect: '/setting/authority/user',
     alwaysShow: true,
     name: 'setting',
-    meta: { title: '设置', icon: 'tree' },
+    meta: { title: '设置', icon: 'cog' },
     children: [
       {
         path: 'system-settings',

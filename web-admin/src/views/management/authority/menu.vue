@@ -23,7 +23,14 @@
             type="primary"
             icon="el-icon-plus"
             @click="add"
-          >添加
+          >添加子菜单
+          </el-button>
+          <el-button
+            style="float: right;padding: 6px;margin-right: 6px"
+            type="primary"
+            icon="el-icon-plus"
+            @click="addFather"
+          >添加一级菜单
           </el-button>
           <el-button
             style="float: right;padding: 6px;margin-right: 6px"
@@ -171,6 +178,16 @@ export default {
       this.form.icon = ''
       this.form.redirect = ''
     },
+    addFather(){
+      this.title = '添加一级菜单'
+      this.disabled = false
+      this.form.title = ''
+      this.form.name = ''
+      this.form.component = ''
+      this.form.path = ''
+      this.form.icon = ''
+      this.form.redirect = ''
+    },
     edit() {
       this.title = '编辑'
       this.disabled = false
@@ -235,6 +252,17 @@ export default {
             this.$message({
               type: 'success',
               message: '编辑成功!'
+            })
+            this.disabled = true
+            this.getMenu()
+          }
+        })
+      }else if(this.title==='添加一级菜单'){
+        this.$_HTTP.post(this.$_API.addMenu, params1, res => {
+          if (res.code === 1) {
+            this.$message({
+              type: 'success',
+              message: '添加成功!'
             })
             this.disabled = true
             this.getMenu()

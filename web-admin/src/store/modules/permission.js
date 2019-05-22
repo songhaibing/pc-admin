@@ -56,10 +56,13 @@ const actions = {
     return new Promise(resolve => {
       let accessedRoutes
       if (roles.includes('admin')) {
-        accessedRoutes = filterAsyncRouter(filterMenu(JSON.parse(localStorage.getItem('router'))))
-        accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
-        commit('SET_ROUTES', accessedRoutes)
-        resolve(accessedRoutes)
+        HTTP.get(API.menu, {}, res => {
+          accessedRoutes = filterAsyncRouter(filterMenu(res))
+          accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
+          commit('SET_ROUTES', accessedRoutes)
+          resolve(accessedRoutes)
+        })
+
       }
     })
   }
