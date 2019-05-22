@@ -316,7 +316,7 @@ export const constantRoutes = [
     redirect: '/transaction/management/transaction-order',
     alwaysShow: true,
     name: 'transaction',
-    meta: { title: '交易中心', icon: 'example' },
+    meta: { title: '交易中心', icon: 'international' },
     children: [
       {
         path: 'management',
@@ -357,7 +357,7 @@ export const constantRoutes = [
         path: 'bill',
         name: 'bill',
         component: () => import('@/views/transaction/bill/index'),
-        meta: {title: '账单管理', icon: 'table'},
+        meta: {title: '账单管理', icon: 'zhangdan'},
         children: [
           {
             path: 'transaction-bill',
@@ -381,7 +381,7 @@ export const constantRoutes = [
     redirect: '/data/unit/single-analysis',
     alwaysShow: true,
     name: 'data',
-    meta: { title: '数据中心', icon: 'example' },
+    meta: { title: '数据中心', icon: 'chart' },
     children: [
       {
         path: 'unit',
