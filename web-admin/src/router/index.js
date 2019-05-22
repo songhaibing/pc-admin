@@ -274,46 +274,46 @@ export const constantRoutes = [
   //     },
   //     ]
   // },
-  {
-    path: '/product',
-    component: Layout,
-    redirect: '/product/commodity/list',
-    alwaysShow: true,
-    name: 'product',
-    meta: { title: '产品中心', icon: 'edit' },
-    children: [
-      {
-        path: 'commodity',
-        name: 'commodity',
-        component: () => import('@/views/product/index'),
-        meta: {title: '商品管理', icon: 'table'},
-        children: [
-          {
-            path: 'list',
-            name: 'List',
-            component: () => import('@/views/product/commodity/list'),
-            meta: {title: '商品列表', icon: 'table'}
-          },
-          {
-            path: 'type',
-            name: 'Type',
-            component:  () => import('@/views/product/commodity/type'),
-            meta: {title: '商品分类', icon: 'table'}
-          },
-        ]
-      },
-      {
-        path: 'data',
-        name: 'data',
-        component: () => import('@/views/product/commodity/data-analysis'),
-        meta: {title: '数据分析', icon: 'table'},
-      },
-    ]
-  },
+  // {
+  //   path: '/product',
+  //   component: Layout,
+  //   redirect: '/product/commodity/commodity-list',
+  //   alwaysShow: true,
+  //   name: 'product',
+  //   meta: { title: '产品中心', icon: 'edit' },
+  //   children: [
+  //     {
+  //       path: 'commodity-management',
+  //       name: 'commodity-management',
+  //       component: () => import('@/views/product/commodity/index'),
+  //       meta: {title: '商品管理', icon: 'table'},
+  //       children: [
+  //         {
+  //           path: 'commodity-list',
+  //           name: 'commodity-list',
+  //           component: () => import('@/views/product/commodity/commodity-list'),
+  //           meta: {title: '商品列表', icon: 'table'}
+  //         },
+  //         {
+  //           path: 'commodity-type',
+  //           name: 'commodity-type',
+  //           component:  () => import('@/views/product/commodity/commodity-type'),
+  //           meta: {title: '商品分类', icon: 'table'}
+  //         },
+  //       ]
+  //     },
+  //     {
+  //       path: 'data-analysis',
+  //       name: 'data-analysis',
+  //       component: () => import('@/views/product/analysis/data-analysis'),
+  //       meta: {title: '数据分析', icon: 'table'},
+  //     },
+  //   ]
+  // },
   {
     path: '/transaction',
     component: Layout,
-    redirect: '/transaction/authority/user',
+    redirect: '/transaction/management/transaction-order',
     alwaysShow: true,
     name: 'transaction',
     meta: { title: '交易中心', icon: 'example' },
@@ -341,6 +341,7 @@ export const constantRoutes = [
       {
         path: 'money',
         name: 'money',
+        alwaysShow: true,
         component: () => import('@/views/transaction/money/index'),
         meta: {title: '资金管理', icon: 'table'},
         children: [
@@ -438,7 +439,7 @@ export const constantRoutes = [
   {
     path: '/setting',
     component: Layout,
-    redirect: '/setting/authority/user',
+    redirect: '/setting/system-settings/menu-management',
     alwaysShow: true,
     name: 'setting',
     meta: { title: '设置', icon: 'cog' },

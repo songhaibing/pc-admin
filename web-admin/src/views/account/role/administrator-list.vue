@@ -2,8 +2,8 @@
   <div style="padding: 20px">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <i class="el-icon-school"/>
-        <span>商户列表</span>
+        <i class="el-icon-s-custom"/>
+        <span>管理员列表</span>
         <el-button
           style="float: right;padding: 6px;margin-right: 6px"
           type="primary"
@@ -28,36 +28,26 @@
         <el-table-column
           align="center"
           prop="realname"
-          label="商户名称"
+          label="登录名"
         />
         <el-table-column
           align="center"
           prop="nickname"
-          label="主营类目"
+          label="角色"
         />
         <el-table-column
           align="center"
-          prop="email"
+          label="归属单位"
+        >
+        </el-table-column>
+        <el-table-column
+          align="center"
+          label="上次登陆时间"
+        >
+        </el-table-column>
+        <el-table-column
+          align="center"
           label="状态"
-        />
-        <el-table-column
-          align="center"
-          label="商户负责人"
-        >
-        </el-table-column>
-        <el-table-column
-          align="center"
-          label="联系方式"
-        >
-        </el-table-column>
-        <el-table-column
-          align="center"
-          label="设备数"
-        >
-        </el-table-column>
-        <el-table-column
-          align="center"
-          label="签约周期"
         >
         </el-table-column>
         <el-table-column align="center" label="操作" width="150">
@@ -66,6 +56,11 @@
               size="mini"
               type="text"
             >编辑
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+            >禁用
             </el-button>
             <el-button
               size="mini"
@@ -81,7 +76,7 @@
 
 <script>
   export default {
-    name: "merchant-list",
+    name: "administrator-list",
     data(){
       return{
         tableData:[]
