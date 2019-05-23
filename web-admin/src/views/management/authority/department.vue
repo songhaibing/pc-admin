@@ -4,7 +4,7 @@
       <el-col>
         <div class="left-main">
           <div class="boxLeftTop">
-            <span class="menu_title">部门目录</span>
+            <span class="menu_title">所属部门</span>
           </div>
           <el-tree
             :highlight-current="true"
