@@ -1,5 +1,5 @@
 <template>
-    <div>资金账单</div>
+    <div>交易账单</div>
 </template>
 
 <script>
