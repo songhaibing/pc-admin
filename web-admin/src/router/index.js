@@ -74,7 +74,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: {title: 'dashboard', icon: 'dashboard', affix: true}
+        meta: {title: 'dashboard', icon: 'component', affix: true}
       }
     ]
   },
@@ -310,71 +310,71 @@ export const constantRoutes = [
   //     },
   //   ]
   // },
-  {
-    path: '/transaction',
-    component: Layout,
-    redirect: '/transaction/management/transaction-order',
-    alwaysShow: true,
-    name: 'transaction',
-    meta: { title: '交易中心', icon: 'international' },
-    children: [
-      {
-        path: 'management',
-        name: 'management',
-        component: () => import('@/views/transaction/management/index'),
-        meta: {title: '交易管理', icon: 'table'},
-        children: [
-          {
-            path: 'transaction-order',
-            name: 'transaction-order',
-            component: () => import('@/views/transaction/management/transaction-order'),
-            meta: {title: '交易订单', icon: 'table'}
-          },
-          {
-            path: 'refund-order',
-            name: 'refund-order',
-            component:  () => import('@/views/transaction/management/refund-order'),
-            meta: {title: '退款订单', icon: 'table'}
-          },
-        ]
-      },
-      {
-        path: 'money',
-        name: 'money',
-        alwaysShow: true,
-        component: () => import('@/views/transaction/money/index'),
-        meta: {title: '资金管理', icon: 'table'},
-        children: [
-          {
-            path: 'recharge-record',
-            name: 'recharge-record',
-            component: () => import('@/views/transaction/money/recharge-record'),
-            meta: {title: '充值记录', icon: 'table'}
-          }
-        ]
-      },
-      {
-        path: 'bill',
-        name: 'bill',
-        component: () => import('@/views/transaction/bill/index'),
-        meta: {title: '账单管理', icon: 'zhangdan'},
-        children: [
-          {
-            path: 'transaction-bill',
-            name: 'transaction-bill',
-            component: () => import('@/views/transaction/bill/transaction-bill'),
-            meta: {title: '交易账单', icon: 'table'}
-          },
-          {
-            path: 'fund-bill',
-            name: 'fund-bill',
-            component:  () => import('@/views/transaction/bill/fund-bill'),
-            meta: {title: '资金账单', icon: 'table'}
-          },
-        ]
-      },
-    ]
-  },
+  // {
+  //   path: '/transaction',
+  //   component: Layout,
+  //   redirect: '/transaction/management/transaction-order',
+  //   alwaysShow: true,
+  //   name: 'transaction',
+  //   meta: { title: '交易中心', icon: 'international' },
+  //   children: [
+  //     {
+  //       path: 'management',
+  //       name: 'management',
+  //       component: () => import('@/views/transaction/management/index'),
+  //       meta: {title: '交易管理', icon: ''},
+  //       children: [
+  //         {
+  //           path: 'transaction-order',
+  //           name: 'transaction-order',
+  //           component: () => import('@/views/transaction/management/transaction-order'),
+  //           meta: {title: '交易订单', icon: ''}
+  //         },
+  //         {
+  //           path: 'refund-order',
+  //           name: 'refund-order',
+  //           component:  () => import('@/views/transaction/management/refund-order'),
+  //           meta: {title: '退款订单', icon: ''}
+  //         },
+  //       ]
+  //     },
+  //     {
+  //       path: 'money',
+  //       name: 'money',
+  //       alwaysShow: true,
+  //       component: () => import('@/views/transaction/money/index'),
+  //       meta: {title: '资金管理', icon: ''},
+  //       children: [
+  //         {
+  //           path: 'recharge-record',
+  //           name: 'recharge-record',
+  //           component: () => import('@/views/transaction/money/recharge-record'),
+  //           meta: {title: '充值记录', icon: ''}
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       path: 'bill',
+  //       name: 'bill',
+  //       component: () => import('@/views/transaction/bill/index'),
+  //       meta: {title: '账单管理', icon: ''},
+  //       children: [
+  //         {
+  //           path: 'transaction-bill',
+  //           name: 'transaction-bill',
+  //           component: () => import('@/views/transaction/bill/transaction-bill'),
+  //           meta: {title: '交易账单', icon: ''}
+  //         },
+  //         {
+  //           path: 'fund-bill',
+  //           name: 'fund-bill',
+  //           component:  () => import('@/views/transaction/bill/fund-bill'),
+  //           meta: {title: '资金账单', icon: ''}
+  //         },
+  //       ]
+  //     },
+  //   ]
+  // },
   {
     path: '/data',
     component: Layout,
@@ -387,31 +387,31 @@ export const constantRoutes = [
         path: 'unit',
         name: 'Unit',
         component: () => import('@/views/data/unit/index'),
-        meta: {title: '单位分析', icon: 'table'},
+        meta: {title: '单位分析', icon: ''},
         children: [
           {
             path: 'single-analysis',
             name: 'single-analysis',
             component: () => import('@/views/data/unit/single-analysis'),
-            meta: {title: '单个分析', icon: 'table'}
+            meta: {title: '单个分析', icon: ''}
           },
           {
             path: 'industry-analysis',
             name: 'industry-analysis',
             component:  () => import('@/views/data/unit/industry-analysis'),
-            meta: {title: '行业分析', icon: 'table'}
+            meta: {title: '行业分析', icon: ''}
           },
           {
             path: 'transaction-analysis',
             name: 'transaction-analysis',
             component:  () => import('@/views/data/unit/transaction-analysis'),
-            meta: {title: '交易分析', icon: 'table'}
+            meta: {title: '交易分析', icon: ''}
           },
           {
             path: 'flow-analysis',
             name: 'flow-analysis',
             component:  () => import('@/views/data/unit/flow-analysis'),
-            meta: {title: '流水分析', icon: 'table'}
+            meta: {title: '流水分析', icon: ''}
           },
         ]
       },
@@ -419,19 +419,19 @@ export const constantRoutes = [
         path: 'merchant-analysis',
         name: 'merchant-analysis',
         component: () => import('@/views/data/merchant-analysis'),
-        meta: {title: '商户分析', icon: 'table'},
+        meta: {title: '商户分析', icon: ''},
       },
       {
         path: 'user-analysis',
         name: 'user-analysis',
         component: () => import('@/views/data/user-analysis'),
-        meta: {title: '用户分析', icon: 'table'},
+        meta: {title: '用户分析', icon: ''},
       },
       {
         path: 'transaction-analysis',
         name: 'transaction-analysis',
         component: () => import('@/views/data/transaction-analysis'),
-        meta: {title: '交易分析', icon: 'table'},
+        meta: {title: '交易分析', icon: ''},
       },
     ]
 
@@ -448,43 +448,43 @@ export const constantRoutes = [
         path: 'system-settings',
         name: 'system-settings',
         component: () => import('@/views/setting/system/index'),
-        meta: {title: '系统设置', icon: 'table'},
+        meta: {title: '系统设置', icon: ''},
         children: [
           {
             path: 'menu-management',
             name: 'menu-management',
             component: () => import('@/views/setting/system/menu-management'),
-            meta: {title: '菜单管理', icon: 'table'}
+            meta: {title: '菜单管理', icon: ''}
           },
           {
             path: 'subsystem-name',
             name: 'subsystem-name',
             component: () => import('@/views/setting/system/subsystem-name'),
-            meta: {title: '子系统后台名称', icon: 'table'}
+            meta: {title: '子系统后台名称', icon: ''}
           },
           {
             path: 'subsystem-logo',
             name: 'subsystem-logo',
             component:  () => import('@/views/setting/system/subsystem-logo'),
-            meta: {title: '子系统后台logo', icon: 'table'}
+            meta: {title: '子系统后台logo', icon: ''}
           },
           {
             path: 'theme-color',
             name: 'theme-color',
             component:  () => import('@/views/setting/system/theme-color'),
-            meta: {title: '主题色', icon: 'table'}
+            meta: {title: '主题色', icon: ''}
           },
           {
             path: 'domain-configuration',
             name: 'domain-configuration',
             component:  () => import('@/views/setting/system/domain-configuration'),
-            meta: {title: '域名配置', icon: 'table'}
+            meta: {title: '域名配置', icon: ''}
           },
           {
             path: 'cache-cleanup',
             name: 'cache-cleanup',
             component:  () => import('@/views/setting/system/cache-cleanup'),
-            meta: {title: '缓存清理', icon: 'table'}
+            meta: {title: '缓存清理', icon: ''}
           },
         ]
       },
@@ -492,25 +492,25 @@ export const constantRoutes = [
         path: 'public',
         name: 'public',
         component: () => import('@/views/setting/public/index'),
-        meta: {title: '公众号设置', icon: 'table'},
+        meta: {title: '公众号设置', icon: ''},
         children: [
           {
             path: 'menu-settings',
             name: 'menu-settings',
             component: () => import('@/views/setting/public/menu-settings'),
-            meta: {title: '菜单设置', icon: 'table'}
+            meta: {title: '菜单设置', icon: ''}
           },
           {
             path: 'focus-settings',
             name: 'focus-settings',
             component:  () => import('@/views/setting/public/focus-settings'),
-            meta: {title: '关注自动回复设置', icon: 'table'}
+            meta: {title: '关注自动回复设置', icon: ''}
           },
           {
             path: 'message-push',
             name: 'message-push',
             component:  () => import('@/views/setting/public/message-push'),
-            meta: {title: '消息推送', icon: 'table'}
+            meta: {title: '消息推送', icon: ''}
           },
         ]
       },
@@ -518,25 +518,25 @@ export const constantRoutes = [
         path: 'pay',
         name: 'pay',
         component: () => import('@/views/setting/pay/index'),
-        meta: {title: '支付设置', icon: 'table'},
+        meta: {title: '支付设置', icon: ''},
         children: [
           {
             path: 'weChat-pay',
             name: 'weChat-pay',
             component: () => import('@/views/setting/pay/weChat-payment'),
-            meta: {title: '微信支付设置', icon: 'table'}
+            meta: {title: '微信支付设置', icon: ''}
           },
           {
             path: 'alipay-pay',
             name: 'alipay-pay',
             component:  () => import('@/views/setting/pay/alipay-pay'),
-            meta: {title: '支付宝支付设置', icon: 'table'}
+            meta: {title: '支付宝支付设置', icon: ''}
           },
           {
             path: 'unionPay-pay',
             name: 'unionPay-pay',
             component:  () => import('@/views/setting/pay/unionPay-pay'),
-            meta: {title: '银联支付设置', icon: 'table'}
+            meta: {title: '银联支付设置', icon: ''}
           }
         ]
       },

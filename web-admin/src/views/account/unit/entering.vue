@@ -1,5 +1,5 @@
 <template>
-
+    <div>单位入驻</div>
 </template>
 
 <script>
