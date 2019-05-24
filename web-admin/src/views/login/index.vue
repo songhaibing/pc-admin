@@ -164,6 +164,7 @@ export default {
             .then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
+              this.$router.addRoutes(global.antRouter)
             })
             .catch(() => {
               this.loading = false
