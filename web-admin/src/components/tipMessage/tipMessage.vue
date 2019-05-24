@@ -1,9 +1,12 @@
 <template>
   <div class="main-contain">
-    <h1 class="font-s36 font-w300 text-amethyst animated fadeInDown">提示</h1>
-    <h2 class="h3 font-w300 push-20 animated fadeInUp">
-      请选择子系统进行操作
-    </h2>
+    <div style="padding-top: 5px">
+      <h1 class="font-s36 font-w300 text-amethyst animated fadeInDown">提示</h1>
+      <h2 class="h3 font-w300 push-20 animated fadeInUp">
+        请选择子系统进行操作
+      </h2>
+    </div>
+
   </div>
 </template>
 
@@ -45,9 +48,7 @@ export default {
   .font-w300 {
     font-weight: 300 !important;
   }
-  .push-20 {
-    margin-bottom: 20px !important;
-  }
+
   @keyframes fadeInUp {
     0% {
       opacity: 0;
