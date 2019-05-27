@@ -1,15 +1,25 @@
 <template>
+  <!--交易订单-->
   <div style="padding: 20px">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <i class="el-icon-school" />
-        <span>交易订单</span>
         <el-button
-          style="float: right;padding: 6px;margin-right: 6px"
-          type="primary"
-          icon="el-icon-plus"
-        >添加
+          style="float: right"
+          type="success"
+        >查询
         </el-button>
+        <el-input v-model="number" style="width: 150px;float: right;margin-right: 5px" placeholder="请输入用户名" />
+        <el-date-picker
+          v-model="value"
+          type="daterange"
+          align="right"
+          style="float: right;margin-right: 5px"
+          unlink-panels
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :picker-options="pickerOptions"
+        />
       </div>
       <el-table
         v-loading="loading"
@@ -22,23 +32,27 @@
           type="index"
         />
         <el-table-column
-          label="商户流水号"
+          label="创建时间"
           align="center"
-        >
-        </el-table-column>
+        />
         <el-table-column
           align="center"
           prop="username"
-          label="支付订单"
+          label="商户流水号"
         />
         <el-table-column
           align="center"
           prop="realname"
-          label="消费人"
+          label="支付单号"
         />
         <el-table-column
           align="center"
           prop="nickname"
+          label="消费人"
+        />
+        <el-table-column
+          align="center"
+          prop="phone"
           label="支付场景"
         />
         <el-table-column
@@ -56,13 +70,11 @@
             <el-button
               size="mini"
               type="text"
-              @click="handleEdit(scope.$index, scope.row)"
             >查看
             </el-button>
             <el-button
               size="mini"
               type="text"
-              @click="changePassword(scope.$index, scope.row)"
             >退款
             </el-button>
           </template>
@@ -73,9 +85,42 @@
 </template>
 
 <script>
-  export default {
-    name: "commodity-list"
+export default {
+  name: 'CommodityList',
+  data() {
+    return {
+      number: '',
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      },
+      value: ''
+    }
   }
+}
 </script>
 
 <style scoped>

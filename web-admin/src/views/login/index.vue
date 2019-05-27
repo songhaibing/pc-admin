@@ -43,7 +43,7 @@
             @keyup.enter.native="handleLogin"
           />
           <!--<span class="show-pwd" @click="showPwd">-->
-            <!--<svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />-->
+          <!--<svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />-->
           <!--</span>-->
         </el-form-item>
       </el-tooltip>
@@ -53,20 +53,20 @@
       </el-button>
 
       <!--<div style="position:relative">-->
-        <!--<div class="tips">-->
-          <!--<span>{{ $t('login.username') }} : admin</span>-->
-          <!--<span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>-->
-        <!--</div>-->
-        <!--<div class="tips">-->
-          <!--<span style="margin-right:18px;">-->
-            <!--{{ $t('login.username') }} : editor-->
-          <!--</span>-->
-          <!--<span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>-->
-        <!--</div>-->
+      <!--<div class="tips">-->
+      <!--<span>{{ $t('login.username') }} : admin</span>-->
+      <!--<span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>-->
+      <!--</div>-->
+      <!--<div class="tips">-->
+      <!--<span style="margin-right:18px;">-->
+      <!--{{ $t('login.username') }} : editor-->
+      <!--</span>-->
+      <!--<span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>-->
+      <!--</div>-->
 
-        <!--<el-button class="thirdparty-button" type="primary" @click="showDialog=true">-->
-          <!--{{ $t('login.thirdparty') }}-->
-        <!--</el-button>-->
+      <!--<el-button class="thirdparty-button" type="primary" @click="showDialog=true">-->
+      <!--{{ $t('login.thirdparty') }}-->
+      <!--</el-button>-->
       <!--</div>-->
     </el-form>
 
@@ -164,7 +164,7 @@ export default {
             .then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
-              this.$router.addRoutes(global.antRouter)
+              history.go(0)
             })
             .catch(() => {
               this.loading = false

@@ -1,14 +1,19 @@
 <template>
+  <!--商品列表-->
   <div style="padding: 20px">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <i class="el-icon-school" />
-        <span>商户列表</span>
         <el-button
-          style="float: right;padding: 6px;margin-right: 6px"
+          style="padding: 6px;"
           type="primary"
           icon="el-icon-plus"
         >添加
+        </el-button>
+        <el-button
+          style="padding: 6px;margin-right: 6px"
+          type="danger"
+          icon="el-icon-plus"
+        >批量删除
         </el-button>
       </div>
       <el-table
@@ -22,57 +27,59 @@
           type="index"
         />
         <el-table-column
-          label="账户ID"
+          label="ID"
           align="center"
-        >
-        </el-table-column>
+        />
         <el-table-column
           align="center"
           prop="username"
-          label="商户名称"
+          label="图片"
         />
         <el-table-column
           align="center"
           prop="realname"
-          label="主营类目"
+          label="品名"
         />
         <el-table-column
           align="center"
           prop="nickname"
-          label="状态"
+          label="类型"
         />
         <el-table-column
           align="center"
           prop="phone"
-          label="商户负责人"
+          label="定价"
         />
         <el-table-column
           align="center"
           prop="phone"
-          label="联系方式"
+          label="可选日期"
         />
         <el-table-column
           align="center"
           prop="phone"
-          label="设备数"
+          label="预定时间"
         />
         <el-table-column
           align="center"
           prop="phone"
-          label="签约周期"
+          label="好评率"
         />
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="text"
-              @click="handleEdit(scope.$index, scope.row)"
             >编辑
             </el-button>
             <el-button
               size="mini"
               type="text"
-              @click="changePassword(scope.$index, scope.row)"
+            >下架
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
             >删除
             </el-button>
           </template>
@@ -83,9 +90,9 @@
 </template>
 
 <script>
-  export default {
-    name: "commodity-list"
-  }
+export default {
+  name: 'CommodityList'
+}
 </script>
 
 <style scoped>
