@@ -59,6 +59,9 @@ const API = {
    */
   //商品管理-商品列表
   goodsList:smartcardIp +'goods/list',//分页查询商品列表
+  addGoods:smartcardIp +'goods/add',//添加一个商品
+  delGoods:smartcardIp +'goods/delete',//删除商品
+  editGoods:smartcardIp +'goods/update',//修改商品
 }
 
 export default API
