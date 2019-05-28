@@ -1,10 +1,10 @@
 <template>
-   <router-view></router-view>
+    <div>终端设备</div>
 </template>
 
 <script>
     export default {
-        name: "index"
+        name: "terminal-list"
     }
 </script>
 

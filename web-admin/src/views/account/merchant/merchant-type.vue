@@ -14,6 +14,7 @@
         </el-button>
       </div>
       <el-table
+        v-loading="loading"
         :data="tableData"
         style="width: 100%"
       >
@@ -65,7 +66,29 @@ export default {
   name: 'MerchantType',
   data() {
     return {
-      tableData: []
+      loading: true,
+      tableData: [],
+      currentPage: 1, // 当前多少页
+      size: 10, // 每页多少条数据
+      total: 0, // 总共多少数据
+    }
+  },
+  created(){
+    this.init()
+  },
+  methods:{
+    // 初始化分页
+    init() {
+      this.loading = true
+      this.$_HTTP.get(this.$_API.businesstypeList, { size: this.size, current: this.currentPage }, res => {
+        this.tableData = res.records
+        console.log(res)
+        this.total = res.total
+        this.loading = false
+      })
+    },
+    addButton(){
+
     }
   }
 }

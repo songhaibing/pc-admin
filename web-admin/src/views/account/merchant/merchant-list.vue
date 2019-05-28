@@ -61,7 +61,7 @@
           <el-input v-model="form.category" autocomplete="off" />
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
-          <el-select v-model="form.status" placeholder="请选择" style="width: 100%" @change="change">
+          <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
             <el-option label="营业中" value="0" />
             <el-option label="已清退" value="1" />
           </el-select>
@@ -76,7 +76,13 @@
           <el-input v-model="form.num" autocomplete="off" />
         </el-form-item>
         <el-form-item label="到期时间" :label-width="formLabelWidth" prop="time">
-          <el-input v-model="form.time" autocomplete="off" />
+          <!--<el-input v-model="form.time" autocomplete="off" />-->
+          <el-date-picker
+            style="width: 100%"
+            v-model="form.time"
+            type="datetime"
+            placeholder="选择日期时间">
+          </el-date-picker>
         </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -88,7 +94,8 @@
 </template>
 
 <script>
-export default {
+  import { checkPhone } from '@/libs/regular.js'
+  export default {
   name: 'MerchantList',
   data() {
     return {
@@ -128,7 +135,7 @@ export default {
           { required: true, message: '请输入商户负责人', trigger: 'blur' }
         ],
         phone: [
-          { required: true, message: '请输入联系电话', trigger: 'blur' }
+          { required: true, validator:checkPhone, trigger: 'blur' }
         ],
         num: [
           { required: true, message: '请输入设备数', trigger: 'blur' }
@@ -143,15 +150,11 @@ export default {
     this.init()
   },
   methods: {
-    change() {
-      console.log(this.form.status)
-    },
     // 初始化分页
     init() {
       this.loading = true
       this.$_HTTP.get(this.$_API.businessList, { size: this.size, current: this.currentPage }, res => {
         this.tableData = res.records
-        console.log(res)
         this.total = res.total
         this.loading = false
       })
@@ -166,8 +169,8 @@ export default {
     },
     addButton() {
       this.form.name = ''
+      this.form.id = ''
       this.form.status = ''
-      this.form.name = ''
       this.form.category = ''
       this.form.principal = ''
       this.form.num = ''
@@ -181,30 +184,44 @@ export default {
         if (valid) {
           const params = {
             name: this.form.name,
-            type: this.form.type,
-            value: this.form.value,
-            remarks: this.form.remarks
+            businessState: this.form.status,
+            categories: this.form.category,
+            deviceNumber: this.form.num,
+            expireTime:this.form.time,
+            head:this.form.principal,
+            id:this.form.id,
+            phoneNumber:this.form.phone
           }
           if (this.title === '添加商户') {
             this.$_HTTP.post(this.$_API.addBusiness, params, res => {
               if (res.code === 1) {
                 this.dialogFormVisible = false
                 this.$message({
-                  message: '添加字典成功',
+                  message: '添加商户成功',
                   type: 'success'
                 })
                 this.init()
+              }else{
+                this.$message({
+                  message: '添加商户失败',
+                  type: 'error'
+                })
               }
             })
           } else {
-            this.$_HTTP.put(this.$_API.editDict + this.dictId, params, res => {
+            this.$_HTTP.put(this.$_API.editBusiness + this.dictId, params, res => {
               if (res.code === 1) {
                 this.dialogFormVisible = false
                 this.$message({
-                  message: '修改字典成功',
+                  message: '修改商户成功',
                   type: 'success'
                 })
                 this.init()
+              }else{
+                this.$message({
+                  message: '修改商户失败',
+                  type: 'error'
+                })
               }
             })
           }

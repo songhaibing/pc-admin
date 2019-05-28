@@ -39,10 +39,16 @@ const API = {
   /**
    *  账户中心API
    */
-  // 商户管理
+  // 商户管理-商户列表
   addBusiness: smartcardIp + 'business/add', // 添加商户
-  businessList: smartcardIp + 'business/list'// 分页查询商户列表
-
+  businessList: smartcardIp + 'business/list',// 分页查询商户列表
+  editBusiness:smartcardIp +'business/update',//修改商户
+  delBusiness:smartcardIp +'business/delete/',//删除商户
+  // 商户管理-商户分类
+  businesstypeList:smartcardIp +'businesstype/list',//分页查询商户分类列表
+  addBusinesstype:smartcardIp +'businesstype/add',//添加商户分类类型
+  editBusinesstype:smartcardIp +'businesstype/update/',//修改商户分类类型
+  delBusinesstype:smartcardIp +'businesstype/delete/',//删除商户分类类型
 }
 
 export default API
