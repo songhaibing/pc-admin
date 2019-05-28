@@ -51,9 +51,6 @@
     </el-card>
     <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="账户ID" :label-width="formLabelWidth" prop="id">
-          <el-input v-model="form.id" autocomplete="off" />
-        </el-form-item>
         <el-form-item label="商户名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
@@ -109,7 +106,6 @@
       total: 0, // 总共多少数据
       value: '',
       form: {
-        id: '',
         status: '',
         name: '',
         category: '',
@@ -119,9 +115,6 @@
         time: ''
       },
       rules: {
-        id: [
-          { required: true, message: '请输入商户id', trigger: 'blur' }
-        ],
         status: [
           { required: true, message: '请选择类型', trigger: 'blur' }
         ],
@@ -189,7 +182,6 @@
             deviceNumber: this.form.num,
             expireTime:this.form.time,
             head:this.form.principal,
-            id:this.form.id,
             phoneNumber:this.form.phone
           }
           if (this.title === '添加商户') {

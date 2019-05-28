@@ -14,7 +14,6 @@
         </el-button>
       </div>
       <el-table
-        v-loading="loading"
         :data="tableData"
         style="width: 100%"
       >
@@ -67,7 +66,32 @@
 
 <script>
 export default {
-  name: 'CommodityType'
+  name: 'Commodity-type',
+  data(){
+    return{
+      formLabelWidth: '100px',
+      title:'添加商品分类',
+      tableData: [],
+      dialogFormVisible: false,
+      form: {
+        id: '',
+        name: ''
+      },
+      rules: {
+        id: [
+          { required: true, message: '请输入商品id', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '请输入商品分类', trigger: 'blur' }
+        ]
+      }
+    }
+  },
+  methods:{
+    addButton(){
+      this.dialogFormVisible=true
+    }
+  }
 }
 </script>
 

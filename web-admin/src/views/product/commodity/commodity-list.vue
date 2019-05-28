@@ -129,7 +129,7 @@ export default {
     // 初始化分页
     init() {
       this.loading = true
-      this.$_HTTP.get(this.$_API.businessList, { size: this.size, current: this.currentPage }, res => {
+      this.$_HTTP.get(this.$_API.goodsList, { size: this.size, current: this.currentPage }, res => {
         this.tableData = res.records
         console.log(res)
         this.total = res.total

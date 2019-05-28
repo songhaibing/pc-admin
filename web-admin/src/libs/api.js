@@ -49,6 +49,11 @@ const API = {
   addBusinesstype:smartcardIp +'businesstype/add',//添加商户分类类型
   editBusinesstype:smartcardIp +'businesstype/update/',//修改商户分类类型
   delBusinesstype:smartcardIp +'businesstype/delete/',//删除商户分类类型
+  /**
+   *  产品中心API
+   */
+  //商品管理-商品列表
+  goodsList:smartcardIp +'goods/list',//分页查询商品列表
 }
 
 export default API
