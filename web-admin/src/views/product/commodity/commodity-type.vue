@@ -1,19 +1,16 @@
 <template>
-  <!--商品列表-->
+  <!--商品分类-->
   <div style="padding: 20px">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
+        <i class="el-icon-school" />
+        <span>商品分类</span>
         <el-button
-          style="padding: 6px;"
+          style="float: right;padding: 6px;margin-right: 6px"
           type="primary"
           icon="el-icon-plus"
+          @click="addButton"
         >添加
-        </el-button>
-        <el-button
-          style="padding: 6px;margin-right: 6px"
-          type="danger"
-          icon="el-icon-plus"
-        >批量删除
         </el-button>
       </div>
       <el-table
@@ -35,16 +32,6 @@
           prop="username"
           label="分类名"
         />
-        <el-table-column
-          align="center"
-          prop="realname"
-          label="排序"
-        />
-        <el-table-column
-          align="center"
-          prop="nickname"
-          label="状态"
-        />
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
             <el-button
@@ -55,22 +42,26 @@
             <el-button
               size="mini"
               type="text"
-            >添加子类
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-            >禁用
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
             >删除
             </el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
+    <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
+      <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="ID" :label-width="formLabelWidth" prop="id">
+          <el-input v-model="form.id" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="分类名" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addMerchant('form')">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 

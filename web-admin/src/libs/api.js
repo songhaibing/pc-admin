@@ -1,6 +1,7 @@
 'use strict'
 const adminIp = 'http://106.75.178.9:8080/admin/'
 const logoutIp = 'http://106.75.178.9:8080/'
+const smartcardIp = 'http://106.75.178.9:8080/smartcard/'
 const API = {
   // 退出登陆
   logout: logoutIp + 'token/logout',
@@ -33,7 +34,14 @@ const API = {
   getMenu: adminIp + 'menu/tree/current', // 获取当前用户的树状菜单
   addMenu: adminIp + 'menu/add', // 添加系统菜单
   deleteMenu: adminIp + 'menu/delete/', // 删除系统菜单
-  editMenu: adminIp + 'menu/edit/'// 修改系统菜单
+  editMenu: adminIp + 'menu/edit/', // 修改系统菜单
+
+  /**
+   *  账户中心API
+   */
+  // 商户管理
+  addBusiness: smartcardIp + 'business/add', // 添加商户
+  businessList: smartcardIp + 'business/list'// 分页查询商户列表
 
 }
 
