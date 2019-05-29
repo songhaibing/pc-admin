@@ -344,7 +344,7 @@
               name: this.form.name,
               goodsState: this.form.status,
               picture: this.base64,
-              optionalDate: this.form.week,
+              optionalDate: this.form.week.join(','),
               dueDate: this.form.scheduledTime,
               rate:this.form.rate,
               price:this.form.price

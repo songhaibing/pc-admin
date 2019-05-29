@@ -18,12 +18,11 @@
         style="width: 100%"
       >
         <el-table-column align="center" label="序号" type="index" />
-        <el-table-column label="ID" align="center" />
-        <el-table-column align="center" prop="username" label="设备ID" />
+        <el-table-column align="center" prop="id" label="设备ID" />
         <el-table-column align="center" prop="realname" label="外观图" />
         <el-table-column align="center" prop="nickname" label="设备名称" />
         <el-table-column align="center" prop="phone" label="归属单位" />
-        <el-table-column align="center" prop="phone" label="设备位置" />
+        <el-table-column align="center" prop="address" label="设备位置" />
         <el-table-column align="center" prop="phone" label="启用时间" />
         <el-table-column align="center" prop="phone" label="管理密码" />
         <el-table-column align="center" prop="phone" label="设备状态" />
@@ -129,7 +128,7 @@
       // 初始化分页
       init() {
         this.loading = true
-        this.$_HTTP.get(this.$_API.goodsList, { size: this.size, current: this.currentPage }, res => {
+        this.$_HTTP.get(this.$_API.airportDeviceList, { size: this.size, current: this.currentPage,deptId:0 }, res => {
           this.tableData = res.records
           console.log(res)
           this.total = res.total

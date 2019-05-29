@@ -67,6 +67,10 @@ const API = {
   addGoodstype:smartcardIp +'goodstype/add',//添加商品分类类型
   editGoodstype:smartcardIp +'goodstype/update/',//修改商品分类类型
   delGoodstype:smartcardIp +'goodstype/delete/',//删除商品分类类型
+  /**
+   *  交易中心API
+   */
+  //交易管理-交易订单
 }
 
 export default API

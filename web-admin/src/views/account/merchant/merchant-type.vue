@@ -22,6 +22,7 @@
         <el-table-column label="ID" prop="id" align="center"/>
         <el-table-column align="center" prop="name" label="分类名"/>
         <el-table-column align="center" prop="sort" label="排序"/>
+        <el-table-column align="center" prop="sort" label="状态"/>
         <el-table-column align="center" prop="createTime" label="创建时间"/>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
