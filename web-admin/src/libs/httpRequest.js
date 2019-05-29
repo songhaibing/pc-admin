@@ -55,7 +55,9 @@ HTTP.post = function(url, data, callback) {
       // 响应成功回调
       if (res.data.code == '1') {
         callback(res.data)
-      } else {
+      } else if(res.data.code == '2'){
+        callback(res.data)
+      }else{
         $Vue.$message.error('网络异常请刷新')
       }
     })

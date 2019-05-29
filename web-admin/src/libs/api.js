@@ -42,7 +42,7 @@ const API = {
   // 商户管理-商户列表
   addBusiness: smartcardIp + 'business/add', // 添加商户
   businessList: smartcardIp + 'business/list',// 分页查询商户列表
-  editBusiness:smartcardIp +'business/update',//修改商户
+  editBusiness:smartcardIp +'business/update/',//修改商户
   delBusiness:smartcardIp +'business/delete/',//删除商户
   // 商户管理-商户分类
   businesstypeList:smartcardIp +'businesstype/list',//分页查询商户分类列表

@@ -30,8 +30,8 @@
         <el-table-column align="center" label="到期时间" prop="expireTime" />
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="text">编辑</el-button>
-            <el-button size="mini" type="text">删除</el-button>
+            <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -51,8 +51,8 @@
     </el-card>
     <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="商户名称" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.name" autocomplete="off" />
+        <el-form-item label="商户名称" :label-width="formLabelWidth" prop="name" >
+          <el-input v-model="form.name" autocomplete="off" :disabled="disabled"/>
         </el-form-item>
         <el-form-item label="主营类目" :label-width="formLabelWidth" prop="category">
           <el-input v-model="form.category" autocomplete="off" />
@@ -73,10 +73,10 @@
           <el-input v-model="form.num" autocomplete="off" />
         </el-form-item>
         <el-form-item label="到期时间" :label-width="formLabelWidth" prop="time">
-          <!--<el-input v-model="form.time" autocomplete="off" />-->
           <el-date-picker
             style="width: 100%"
             v-model="form.time"
+            value-format="yyyy-MM-dd HH:mm:ss"
             type="datetime"
             placeholder="选择日期时间">
           </el-date-picker>
@@ -96,6 +96,8 @@
   name: 'MerchantList',
   data() {
     return {
+      disabled:false,
+      merchantId:'',
       formLabelWidth: '100px',
       tableData: [],
       dialogFormVisible: false,
@@ -162,15 +164,47 @@
     },
     addButton() {
       this.form.name = ''
-      this.form.id = ''
       this.form.status = ''
       this.form.category = ''
       this.form.principal = ''
       this.form.num = ''
       this.form.time = ''
       this.form.phone = ''
+      this.disabled=false
       this.title = '添加商户'
       this.dialogFormVisible = true
+    },
+    handleEdit(index,row){
+      this.disabled=true
+      this.title='编辑商户'
+      this.merchantId=row.id
+      this.form.name = row.name
+      this.form.status = row.businessState
+      this.form.category = row.categories
+      this.form.principal = row.head
+      this.form.num = row.deviceNumber
+      this.form.time = row.expireTime
+      this.form.phone = row.phoneNumber
+      this.dialogFormVisible = true
+    },
+    handleDelete(index,row){
+      this.$confirm('此操作将永久删除该商户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$_HTTP.delete(this.$_API.delBusinesstype + row.id, {}, res => {
+          if (res.code === 1) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.init()
+          }
+        })
+      }).catch(() => {
+
+      })
     },
     addMerchant(form) {
       this.$refs[form].validate((valid) => {
@@ -193,15 +227,15 @@
                   type: 'success'
                 })
                 this.init()
-              }else{
+              }else if(res.code===2){
                 this.$message({
-                  message: '添加商户失败',
+                  message: res.msg,
                   type: 'error'
                 })
               }
             })
           } else {
-            this.$_HTTP.put(this.$_API.editBusiness + this.dictId, params, res => {
+            this.$_HTTP.put(this.$_API.editBusiness + this.merchantId, params, res => {
               if (res.code === 1) {
                 this.dialogFormVisible = false
                 this.$message({
