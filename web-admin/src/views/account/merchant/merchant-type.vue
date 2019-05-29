@@ -21,31 +21,38 @@
         <el-table-column align="center" label="序号" type="index"/>
         <el-table-column label="ID" prop="id" align="center"/>
         <el-table-column align="center" prop="name" label="分类名"/>
+        <el-table-column align="center" prop="sort" label="排序"/>
         <el-table-column align="center" prop="createTime" label="创建时间"/>
-        <el-table-column align="center" label="操作" width="150">
+        <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-            >编辑
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-            >删除
-            </el-button>
+            <el-button size="mini" type="text" >添加子分类</el-button>
+            <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <div class="block">
+        <el-pagination
+          background
+          :current-page.sync="currentPage"
+          :page-sizes="[10, 20, 30]"
+          :page-size="size"
+          style="float: right;margin: 10px 0"
+          layout="sizes, prev, pager, next"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
     </el-card>
     <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="商户名称" :label-width="formLabelWidth" prop="name">
+        <el-form-item label="商户分类" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off"/>
         </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addMerchant('form')">添加</el-button>
+          <el-button type="primary" @click="addClass('form')">添加</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -57,6 +64,7 @@
     name: 'MerchantType',
     data() {
       return {
+        merchantId:'',
         title: '添加商户分类',
         formLabelWidth: '100px',
         form: {
@@ -69,23 +77,8 @@
           time: ''
         },
         rules: {
-          status: [
-            {required: true, message: '请选择类型', trigger: 'blur'}
-          ],
           name: [
-            {required: true, message: '请输入商户名称', trigger: 'blur'}
-          ],
-          category: [
-            {required: true, message: '请输入主营类目', trigger: 'blur'}
-          ],
-          principal: [
-            {required: true, message: '请输入商户负责人', trigger: 'blur'}
-          ],
-          num: [
-            {required: true, message: '请输入设备数', trigger: 'blur'}
-          ],
-          time: [
-            {required: true, message: '请输入到期时间', trigger: 'blur'}
+            {required: true, message: '请输入商户分类', trigger: 'blur'}
           ]
         },
         dialogFormVisible: false,
@@ -105,12 +98,87 @@
         this.loading = true
         this.$_HTTP.get(this.$_API.businesstypeList, {size: this.size, current: this.currentPage}, res => {
           this.tableData = res.records
-          console.log(res)
           this.total = res.total
           this.loading = false
         })
       },
+      handleSizeChange(val) {
+        this.size = val
+        this.init()
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val
+        this.init()
+      },
+      handleEdit(index,row){
+        this.title='编辑商户分类'
+        this.form.name = row.name
+        this.merchantId=row.id
+        this.dialogFormVisible = true
+      },
+      handleDelete(index,row){
+        this.$confirm('此操作将永久删除该商户分类, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$_HTTP.delete(this.$_API.delBusinesstype + row.id, {}, res => {
+            if (res.code === 1) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.init()
+            }
+          })
+        }).catch(() => {
+
+        })
+      },
+      addClass(form){
+          this.$refs[form].validate((valid) => {
+            if (valid) {
+              const params = {
+                name: this.form.name,
+              }
+              if (this.title === '添加商户分类') {
+                this.$_HTTP.post(this.$_API.addBusinesstype, params, res => {
+                  if (res.code === 1) {
+                    this.dialogFormVisible = false
+                    this.$message({
+                      message: '添加商户分类成功',
+                      type: 'success'
+                    })
+                    this.init()
+                  }else if(res.code===2){
+                    this.$message({
+                      message: res.msg,
+                      type: 'error'
+                    })
+                  }
+                })
+              } else {
+                this.$_HTTP.put(this.$_API.editBusinesstype + this.merchantId, params, res => {
+                  if (res.code === 1) {
+                    this.dialogFormVisible = false
+                    this.$message({
+                      message: '修改商户成功',
+                      type: 'success'
+                    })
+                    this.init()
+                  }else{
+                    this.$message({
+                      message: '修改商户失败',
+                      type: 'error'
+                    })
+                  }
+                })
+              }
+            }
+          })
+      },
       addButton() {
+        this.name=''
         this.dialogFormVisible=true
       }
     }

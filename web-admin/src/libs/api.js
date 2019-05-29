@@ -60,8 +60,13 @@ const API = {
   //商品管理-商品列表
   goodsList:smartcardIp +'goods/list',//分页查询商品列表
   addGoods:smartcardIp +'goods/add',//添加一个商品
-  delGoods:smartcardIp +'goods/delete',//删除商品
-  editGoods:smartcardIp +'goods/update',//修改商品
+  delGoods:smartcardIp +'goods/delete/',//删除商品
+  editGoods:smartcardIp +'goods/update/',//修改商品
+  //商品管理-商品分类
+  goodstypeList:smartcardIp +'goodstype/list',//分页查询商品分类列表
+  addGoodstype:smartcardIp +'goodstype/add',//添加商品分类类型
+  editGoodstype:smartcardIp +'goodstype/update/',//修改商品分类类型
+  delGoodstype:smartcardIp +'goodstype/delete/',//删除商品分类类型
 }
 
 export default API

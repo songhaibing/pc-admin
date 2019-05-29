@@ -21,7 +21,7 @@
         <el-table-column label="ID" align="center" prop="id" width="50" />
         <el-table-column align="center" prop="name" label="商户名称" />
         <el-table-column align="center" prop="categories" label="主营类目" />
-        <el-table-column align="center" prop="email" label="状态">
+        <el-table-column align="center" label="状态">
           <template slot-scope="scope">{{ scope.row.businessState==='0'?'营业中':'已清退' }}</template>
         </el-table-column>
         <el-table-column align="center" label="商户负责人" prop="head" />
@@ -69,6 +69,9 @@
         <el-form-item label="联系电话" :label-width="formLabelWidth" prop="phone">
           <el-input v-model="form.phone" autocomplete="off" />
         </el-form-item>
+        <el-form-item label="所属分类" :label-width="formLabelWidth" prop="type">
+          <el-input v-model="form.type" autocomplete="off" />
+        </el-form-item>
         <el-form-item label="设备数" :label-width="formLabelWidth" prop="num">
           <el-input v-model="form.num" autocomplete="off" />
         </el-form-item>
@@ -114,7 +117,8 @@
         principal: '',
         phone: '',
         num: '',
-        time: ''
+        time: '',
+        type:''
       },
       rules: {
         status: [
@@ -193,7 +197,7 @@
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$_HTTP.delete(this.$_API.delBusinesstype + row.id, {}, res => {
+        this.$_HTTP.delete(this.$_API.delBusiness + row.id, {}, res => {
           if (res.code === 1) {
             this.$message({
               type: 'success',
