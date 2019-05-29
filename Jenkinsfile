@@ -5,7 +5,7 @@ pipeline {
       steps {
         sh 'ci-init'
         checkout([$class: 'GitSCM', branches: [[name: env.GIT_BUILD_REF]], 
-                                    userRemoteConfigs: [[url: env.GIT_REPO_URL]]])
+                                            userRemoteConfigs: [[url: env.GIT_REPO_URL]]])
       }
     }
     stage('构建') {
