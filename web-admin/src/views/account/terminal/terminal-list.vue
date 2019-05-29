@@ -21,7 +21,7 @@
         <el-table-column align="center" prop="id" label="设备ID" />
         <el-table-column align="center" prop="realname" label="外观图" />
         <el-table-column align="center" prop="name" label="设备名称" />
-        <el-table-column align="center" prop="dept.name" label="归属单位" />
+        <el-table-column align="center" prop="" label="归属单位" />
         <el-table-column align="center" prop="address" label="设备位置" />
         <el-table-column align="center" prop="phone" label="启用时间" />
         <el-table-column align="center" prop="phone" label="管理密码" />
