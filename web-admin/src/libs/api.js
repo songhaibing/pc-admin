@@ -70,7 +70,10 @@ const API = {
   /**
    *  交易中心API
    */
-  //交易管理-交易订单
+  //资金管理-钱包管理
+  walletList:smartcardIp +'wallet/list',//分页查询钱包列表
+  editWallet:smartcardIp +'wallet/edit/',//修改钱包信息
+  delWallet:smartcardIp +'wallet/delete/',//修改钱包信息
 }
 
 export default API
