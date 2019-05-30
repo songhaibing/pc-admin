@@ -74,6 +74,11 @@ const API = {
   walletList:smartcardIp +'wallet/list',//分页查询钱包列表
   editWallet:smartcardIp +'wallet/edit/',//修改钱包信息
   delWallet:smartcardIp +'wallet/delete/',//修改钱包信息
+  //资金管理-钱包分类
+  purseTypeList:smartcardIp +'purseType/list',//分页查询钱包类型列表
+  addPurseType:smartcardIp +'purseType/add',//创建钱包类型
+  editPurseType:smartcardIp +'purseType/edit/',//修改钱包类型信息
+  delPurseType:smartcardIp +'purseType/delete/' ,//通过ID删除钱包类型
 }
 
 export default API
