@@ -4,24 +4,33 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <el-button
-          style="float: right"
-          type="success"
-        >查询
+          style="float: right;padding: 6px;margin-right: 6px"
+          type="primary"
+          icon="el-icon-plus"
+          @click="addButton"
+        >添加
         </el-button>
-        <el-input v-model="number" style="width: 150px;float: right;margin-right: 5px" placeholder="请输入交易单号" />
-        <el-date-picker
-          v-model="value"
-          type="daterange"
-          align="right"
-          style="float: right;margin-right: 5px"
-          unlink-panels
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :picker-options="pickerOptions"
-        />
+        <!--<el-button-->
+          <!--style="float: right"-->
+          <!--type="success"-->
+        <!--&gt;查询-->
+        <!--</el-button>-->
+        <!--<el-input v-model="number" style="width: 150px;float: right;margin-right: 5px" placeholder="请输入交易单号" />-->
+        <!--<el-date-picker-->
+          <!--v-model="value"-->
+          <!--type="daterange"-->
+          <!--align="right"-->
+          <!--style="float: right;margin-right: 5px"-->
+          <!--unlink-panels-->
+          <!--range-separator="-"-->
+          <!--start-placeholder="开始日期"-->
+          <!--end-placeholder="结束日期"-->
+          <!--:picker-options="pickerOptions"-->
+        <!--/>-->
       </div>
       <el-table
+        v-loading="loading"
+        :data="tableData"
         style="width: 100%"
       >
         <el-table-column
@@ -31,6 +40,7 @@
         />
         <el-table-column
           label="账户ID"
+          prop="id"
           align="center"
         />
         <el-table-column
@@ -40,22 +50,22 @@
         />
         <el-table-column
           align="center"
-          prop="realname"
+          prop="userVo.username"
           label="持有人姓名"
         />
         <el-table-column
           align="center"
-          prop="nickname"
+          prop="userVo.phone"
           label="手机号"
         />
         <el-table-column
           align="center"
-          prop="phone"
+          prop="balance"
           label="账户余额"
         />
         <el-table-column
           align="center"
-          prop="phone"
+          prop="userVo.dept.name"
           label="归属单位"
         />
         <el-table-column
@@ -97,6 +107,32 @@
         />
       </div>
     </el-card>
+    <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
+      <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="类型" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="持有人姓名" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="手机号" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="账户余额" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="归属单位" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="是否允许充值" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addClass('form')">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -105,10 +141,25 @@ export default {
   name: 'WalletManagement',
   data() {
     return {
+      loading:true,
+      tableData:[],
       currentPage: 1, // 当前多少页
       size: 10, // 每页多少条数据
       total: 0, // 总共多少数据
       number: '',
+      dialogFormVisible: false,
+      form: {
+        name: '',
+        status:''
+      },
+      rules: {
+        name: [
+          { required: true, message: '请输入分类名称', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '请选择分类状态', trigger: 'blur' }
+        ]
+      },
       pickerOptions: {
         shortcuts: [{
           text: '最近一周',
@@ -161,6 +212,9 @@ export default {
       this.currentPage = val
       this.init()
     },
+    addButton(){
+      this.dialogFormVisible=true
+    }
   }
 }
 </script>

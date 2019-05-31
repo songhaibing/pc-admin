@@ -28,8 +28,8 @@
           type="selection"
           width="55">
         </el-table-column>
-        <el-table-column align="center" label="序号" type="index"/>
-        <el-table-column label="ID" prop="id" align="center"/>
+        <el-table-column align="center" label="序号" type="index" width="50"/>
+        <el-table-column label="ID" prop="id" align="center" width="50"/>
         <el-table-column align="center" label="图片">
           <template scope="scope">
             <img
@@ -41,14 +41,14 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="name" label="品名"/>
-        <el-table-column align="center" prop="nickname" label="类型"/>
+        <el-table-column align="center" prop="nickname" label="类型" width="50"/>
         <el-table-column align="center" label="状态">
           <template slot-scope="scope">{{ scope.row.goodsState==='0'?'上架':'下架' }}</template>
         </el-table-column>
         <el-table-column align="center" prop="price" label="定价"/>
         <el-table-column align="center" prop="optionalDate" label="可选日期"/>
         <el-table-column align="center" prop="dueDate" label="预定时间"/>
-        <el-table-column align="center" prop="rate" label="好评率"/>
+        <el-table-column align="center" prop="rate" label="好评率" width="50"/>
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
             <el-button size="mini" type="text"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -416,8 +416,8 @@
   }
 
   .head_pic {
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
   }
 
   .avatar-uploader {

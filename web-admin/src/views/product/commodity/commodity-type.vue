@@ -47,8 +47,17 @@
     </el-card>
     <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
+          <el-input v-model="form.sort" autocomplete="off" />
+        </el-form-item>
         <el-form-item label="分类名" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
+          <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
+            <el-option label="显示" value="0" />
+            <el-option label="隐藏" value="1" />
+          </el-select>
         </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -73,11 +82,19 @@ export default {
       total: 0, // 总共多少数据
       dialogFormVisible: false,
       form: {
-        name: ''
+        name: '',
+        sort:'',
+        status:''
       },
       rules: {
         name: [
           { required: true, message: '请输入商品分类', trigger: 'blur' }
+        ],
+        sort: [
+          { required: true, message: '请输入商品排序', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: '请选择分类状态', trigger: 'blur' }
         ]
       }
     }
@@ -98,6 +115,8 @@ export default {
     handleEdit(index,row){
       this.title='编辑商品分类'
       this.form.name = row.name
+      this.form.sort=row.sort
+      this.form.status=row.goodsTypeState
       this.merchantId=row.id
       this.dialogFormVisible = true
     },
@@ -125,6 +144,8 @@ export default {
         if (valid) {
           const params = {
             name: this.form.name,
+            sort:this.form.sort,
+            goodsTypeState:this.form.status
           }
           if (this.title === '添加商品分类') {
             this.$_HTTP.post(this.$_API.addGoodstype, params, res => {
@@ -171,6 +192,10 @@ export default {
       this.init()
     },
     addButton(){
+      this.title='添加商品分类'
+      this.form.status=''
+      this.form.sort=''
+      this.form.name=''
       this.dialogFormVisible=true
     }
   }
