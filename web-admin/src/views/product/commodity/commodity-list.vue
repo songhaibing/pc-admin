@@ -41,7 +41,7 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="name" label="品名"/>
-        <el-table-column align="center" prop="nickname" label="类型" width="50"/>
+        <el-table-column align="center" prop="goodsType.name" label="类型" width="50"/>
         <el-table-column align="center" label="状态">
           <template slot-scope="scope">{{ scope.row.goodsState==='0'?'上架':'下架' }}</template>
         </el-table-column>
@@ -95,6 +95,17 @@
             <el-option label="下架" value="1"/>
           </el-select>
         </el-form-item>
+        <el-form-item label="类型" :label-width="formLabelWidth">
+          <SelectTree
+            :props="props"
+            :options="data"
+            :value="valueId"
+            :clearable="isClearable"
+            :accordion="isAccordion"
+            style="width: 100%"
+            @getValue="getValue($event)"
+          />
+        </el-form-item>
         <el-form-item label="定价" :label-width="formLabelWidth" prop="price">
           <el-input v-model="form.price" autocomplete="off"/>
         </el-form-item>
@@ -130,12 +141,23 @@
 </template>
 
 <script>
+  import SelectTree from '@/components/treeSelect/treeSelect.vue'
   import mixins from '@/mixins/user'
   export default {
     name: 'CommodityList',
     mixins: [mixins],
+    components: { SelectTree },
     data() {
       return {
+        data: [],
+        isClearable: true, // 可清空（可选）
+        isAccordion: true, // 可收起（可选）
+        valueId: '', // 初始ID（可选）
+        props: { // 配置项（必选）
+          value: 'id',
+          label: 'name',
+          children: 'children'
+        },
         options: [{
           value: '星期一',
           label: '星期一'
@@ -211,6 +233,10 @@
       this.init()
     },
     methods: {
+      getValue(value) {
+        this.valueId = value
+        console.log(this.valueId)
+      },
       // 初始化分页
       init() {
         this.loading = true
@@ -219,6 +245,9 @@
           console.log(res)
           this.total = res.total
           this.loading = false
+        })
+        this.$_HTTP.get(this.$_API.goodstypeList, {size: 10, current: 1}, res => {
+          this.data = res.records
         })
       },
       handleSizeChange(val) {
@@ -259,7 +288,6 @@
         this.dialogFormVisible = true
       },
       handleEdit(index,row){
-        console.log(row)
         this.goodId = row.id
         if (row.picture) {
           this.imageUrl = 'http://106.75.178.9:8080/resource/' + row.picture
@@ -347,7 +375,8 @@
               optionalDate: this.form.week.join(','),
               dueDate: this.form.scheduledTime,
               rate:this.form.rate,
-              price:this.form.price
+              price:this.form.price,
+              goodsTypeId:this.valueId
             }
             if (this.title === '添加商品') {
               this.$_HTTP.post(this.$_API.addGoods, params, res => {
@@ -421,8 +450,8 @@
   }
 
   .avatar-uploader {
-    width: 178px;
-    height: 178px;
+    width: 100px;
+    height: 100px;
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     cursor: pointer;
@@ -437,15 +466,15 @@
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
     text-align: center;
   }
 
   .avatar {
-    width: 178px;
-    height: 178px;
+    width: 100px;
+    height: 100px;
     display: block;
   }
 

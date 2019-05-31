@@ -15,14 +15,16 @@
       </div>
       <el-table
         v-loading="loading"
+        row-key="id"
         :data="tableData"
         style="width: 100%"
       >
-        <el-table-column align="center" label="序号" type="index"/>
         <el-table-column label="ID" prop="id" align="center"/>
         <el-table-column align="center" prop="name" label="分类名"/>
         <el-table-column align="center" prop="sort" label="排序"/>
-        <el-table-column align="center" prop="sort" label="状态"/>
+        <el-table-column align="center" label="状态">
+          <template slot-scope="scope">{{ statusCode[scope.row.businessTypeState] }}</template>
+        </el-table-column>
         <el-table-column align="center" prop="createTime" label="创建时间"/>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
@@ -51,6 +53,15 @@
         <el-form-item label="商户分类" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off"/>
         </el-form-item>
+        <el-form-item label="分类名" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
+          <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
+            <el-option label="显示" value="0" />
+            <el-option label="隐藏" value="1" />
+          </el-select>
+        </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="addClass('form')">添加</el-button>
@@ -61,25 +72,29 @@
 </template>
 
 <script>
+  import goodCode from '@/libs/goodCode'
   export default {
     name: 'MerchantType',
     data() {
       return {
+        statusCode: goodCode,
         merchantId:'',
         title: '添加商户分类',
         formLabelWidth: '100px',
         form: {
-          status: '',
           name: '',
-          category: '',
-          principal: '',
-          phone: '',
-          num: '',
-          time: ''
+          sort:'',
+          status:''
         },
         rules: {
           name: [
             {required: true, message: '请输入商户分类', trigger: 'blur'}
+          ],
+          sort: [
+            { required: true, message: '请输入商户排序', trigger: 'blur' }
+          ],
+          status: [
+            { required: true, message: '请选择商户状态', trigger: 'blur' }
           ]
         },
         dialogFormVisible: false,
@@ -98,6 +113,7 @@
       init() {
         this.loading = true
         this.$_HTTP.get(this.$_API.businesstypeList, {size: this.size, current: this.currentPage}, res => {
+          console.log(res.records)
           this.tableData = res.records
           this.total = res.total
           this.loading = false
@@ -141,6 +157,8 @@
             if (valid) {
               const params = {
                 name: this.form.name,
+                sort:this.form.sort,
+                businessTypeState:this.form.status
               }
               if (this.title === '添加商户分类') {
                 this.$_HTTP.post(this.$_API.addBusinesstype, params, res => {

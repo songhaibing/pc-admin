@@ -45,7 +45,7 @@ const API = {
   editBusiness:smartcardIp +'business/update/',//修改商户
   delBusiness:smartcardIp +'business/delete/',//删除商户
   // 商户管理-商户分类
-  businesstypeList:smartcardIp +'businesstype/list',//分页查询商户分类列表
+  businesstypeList:smartcardIp +'businesstype/tree',//分页查询商户分类列表
   addBusinesstype:smartcardIp +'businesstype/add',//添加商户分类类型
   editBusinesstype:smartcardIp +'businesstype/update/',//修改商户分类类型
   delBusinesstype:smartcardIp +'businesstype/delete/',//删除商户分类类型
@@ -63,7 +63,7 @@ const API = {
   delGoods:smartcardIp +'goods/delete/',//删除商品
   editGoods:smartcardIp +'goods/update/',//修改商品
   //商品管理-商品分类
-  goodstypeList:smartcardIp +'goodstype/list',//分页查询商品分类列表
+  goodstypeList:smartcardIp +'goodstype/tree',//分页查询商品分类列表
   addGoodstype:smartcardIp +'goodstype/add',//添加商品分类类型
   editGoodstype:smartcardIp +'goodstype/update/',//修改商品分类类型
   delGoodstype:smartcardIp +'goodstype/delete/',//删除商品分类类型

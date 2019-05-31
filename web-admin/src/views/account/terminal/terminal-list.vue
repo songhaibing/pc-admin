@@ -81,7 +81,7 @@
         <el-form-item label="设备名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="归属单位" :label-width="formLabelWidth">
+        <el-form-item label="归属单位"  :label-width="formLabelWidth">
           <SelectTree
             :props="props"
             :options="data"
@@ -376,13 +376,13 @@
   }
 
   .head_pic {
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
   }
 
   .avatar-uploader {
-    width: 178px;
-    height: 178px;
+    width: 100px;
+    height: 100px;
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     cursor: pointer;
@@ -397,15 +397,15 @@
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
     text-align: center;
   }
 
   .avatar {
-    width: 178px;
-    height: 178px;
+    width: 100px;
+    height: 100px;
     display: block;
   }
 

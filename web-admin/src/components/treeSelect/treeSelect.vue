@@ -1,7 +1,12 @@
 <template>
-  <el-select :value="valueTitle" :clearable="clearable" @clear="clearHandle">
+  <el-select :value="valueTitle"  :clearable="clearable" @clear="clearHandle">
     <el-option :value="valueTitle" :label="valueTitle" class="options">
+      <el-input
+        placeholder="输入关键字进行过滤"
+        v-model="filterText">
+      </el-input>
       <el-tree
+        :filter-node-method="filterNode"
         id="tree-option"
         ref="selectTree"
         :accordion="accordion"
@@ -18,6 +23,7 @@
 <script>
 export default {
   name: 'ElTreeSelect',
+
   props: {
     /* 配置项 */
     props: {
@@ -59,6 +65,9 @@ export default {
     }
   },
   watch: {
+    filterText(val) {
+      this.$refs.selectTree.filter(val);
+    },
     value() {
       this.valueId = this.value
       this.initHandle()
@@ -68,6 +77,10 @@ export default {
     this.initHandle()
   },
   methods: {
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
+    },
     // 初始化值
     initHandle() {
       if (this.valueId) {
