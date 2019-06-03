@@ -70,16 +70,17 @@
         <el-form-item label="联系电话" :label-width="formLabelWidth" prop="phone">
           <el-input v-model="form.phone" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="所属分类" :label-width="formLabelWidth" prop="type">
-          <SelectTree
-            :props="props"
-            :options="data"
-            :value="valueId"
-            :clearable="isClearable"
-            :accordion="isAccordion"
-            style="width: 100%"
-            @getValue="getValue($event)"
-          />
+        <el-form-item label="所属分类"  placeholder="请选择" :label-width="formLabelWidth" prop="className">
+          <!--<SelectTree-->
+            <!--:props="props"-->
+            <!--:options="data"-->
+            <!--:value="valueId"-->
+            <!--:clearable="isClearable"-->
+            <!--:accordion="isAccordion"-->
+            <!--style="width: 100%"-->
+            <!--@getValue="getValue($event)"-->
+          <!--/>-->
+          <el-input ref="input" v-model="form.className" autocomplete="off" @focus="clickInput"/>
         </el-form-item>
         <el-form-item label="设备数" :label-width="formLabelWidth" prop="num">
           <el-input v-model="form.num" autocomplete="off"/>
@@ -99,6 +100,20 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog :title="titleTree" width="600px" :visible.sync="dialogFormTree">
+      <el-input
+        placeholder="输入关键字进行过滤"
+        v-model="filterText">
+      </el-input>
+      <el-tree
+        class="filter-tree"
+        :data="dataTree"
+        :props="defaultProps"
+        :filter-node-method="filterNode"
+        @node-click="handleNodeClick"
+        ref="tree2">
+      </el-tree>
+    </el-dialog>
   </div>
 </template>
 
@@ -109,9 +124,23 @@
   export default {
     name: 'MerchantList',
     components: {SelectTree},
+    watch: {
+      filterText(val) {
+        this.$refs.tree2.filter(val);
+      }
+    },
     data() {
       return {
+        filterText: '',
+        dataTree:[],
+        defaultProps: {
+          children: 'children',
+          label: 'name'
+        },
+        classId:'',
         data: [],
+        titleTree:'请选择',
+        dialogFormTree:false,
         isClearable: true, // 可清空（可选）
         isAccordion: true, // 可收起（可选）
         valueId: '', // 初始ID（可选）
@@ -139,7 +168,7 @@
           phone: '',
           num: '',
           time: '',
-          type: ''
+          className:''
         },
         rules: {
           status: [
@@ -170,9 +199,24 @@
       this.init()
     },
     methods: {
+      handleNodeClick(data) {
+        console.log(data)
+        this.form.className=data.name
+        this.classId=data.id
+        this.dialogFormTree=false
+      },
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
+      clickInput(){
+        this.dialogFormTree=true
+        setTimeout(()=>{
+          this.$refs.input.blur()
+        },500)
+      },
       getValue(value) {
         this.valueId = value
-        console.log(this.valueId)
       },
       // 初始化分页
       init() {
@@ -182,8 +226,9 @@
           this.total = res.total
           this.loading = false
         })
-        this.$_HTTP.get(this.$_API.businesstypeList, {size: 10, current: 1}, res => {
-          this.data = res.records
+        this.$_HTTP.get(this.$_API.businessAllTree, {}, res => {
+          console.log('res',res)
+          this.dataTree = res
         })
       },
       handleSizeChange(val) {
@@ -202,14 +247,18 @@
         this.form.num = ''
         this.form.time = ''
         this.form.phone = ''
+        this.form.className=''
         this.disabled = false
         this.title = '添加商户'
         this.dialogFormVisible = true
       },
       handleEdit(index, row) {
+        console.log(row)
+        this.classId=row.businessTypeId
         this.disabled = true
         this.title = '编辑商户'
         this.merchantId = row.id
+        this.form.className=row.businessType.name
         this.form.name = row.name
         this.form.status = row.businessState
         this.form.category = row.categories
@@ -249,7 +298,7 @@
               expireTime: this.form.time,
               head: this.form.principal,
               phoneNumber: this.form.phone,
-              businessTypeId:this.valueId
+              businessTypeId:this.classId
             }
             if (this.title === '添加商户') {
               this.$_HTTP.post(this.$_API.addBusiness, params, res => {

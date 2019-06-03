@@ -95,16 +95,17 @@
             <el-option label="下架" value="1"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="类型" :label-width="formLabelWidth">
-          <SelectTree
-            :props="props"
-            :options="data"
-            :value="valueId"
-            :clearable="isClearable"
-            :accordion="isAccordion"
-            style="width: 100%"
-            @getValue="getValue($event)"
-          />
+        <el-form-item label="类型" :label-width="formLabelWidth" prop="className">
+          <!--<SelectTree-->
+            <!--:props="props"-->
+            <!--:options="data"-->
+            <!--:value="valueId"-->
+            <!--:clearable="isClearable"-->
+            <!--:accordion="isAccordion"-->
+            <!--style="width: 100%"-->
+            <!--@getValue="getValue($event)"-->
+          <!--/>-->
+          <el-input ref="input" v-model="form.className" autocomplete="off" @focus="clickInput"/>
         </el-form-item>
         <el-form-item label="定价" :label-width="formLabelWidth" prop="price">
           <el-input v-model="form.price" autocomplete="off"/>
@@ -137,6 +138,20 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog :title="titleTree" width="600px" :visible.sync="dialogFormTree">
+      <el-input
+        placeholder="输入关键字进行过滤"
+        v-model="filterText">
+      </el-input>
+      <el-tree
+        class="filter-tree"
+        :data="dataTree"
+        :props="defaultProps"
+        :filter-node-method="filterNode"
+        @node-click="handleNodeClick"
+        ref="tree2">
+      </el-tree>
+    </el-dialog>
   </div>
 </template>
 
@@ -147,8 +162,22 @@
     name: 'CommodityList',
     mixins: [mixins],
     components: { SelectTree },
+    watch: {
+      filterText(val) {
+        this.$refs.tree2.filter(val);
+      }
+    },
     data() {
       return {
+        filterText: '',
+        classId:'',
+        dialogFormTree:false,
+        dataTree:[],
+        titleTree:'请选择',
+        defaultProps: {
+          children: 'children',
+          label: 'name'
+        },
         data: [],
         isClearable: true, // 可清空（可选）
         isAccordion: true, // 可收起（可选）
@@ -203,9 +232,9 @@
           scheduledTime:'',
           status: '',
           name: '',
-          optionalDate:'',
           rate:'',
-          price:''
+          price:'',
+          className:''
         },
         rules: {
           status: [
@@ -233,6 +262,22 @@
       this.init()
     },
     methods: {
+      clickInput(){
+        this.dialogFormTree=true
+        setTimeout(()=>{
+          this.$refs.input.blur()
+        },500)
+      },
+      handleNodeClick(data) {
+        console.log(data)
+        this.form.className=data.name
+        this.classId=data.id
+        this.dialogFormTree=false
+      },
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
       getValue(value) {
         this.valueId = value
         console.log(this.valueId)
@@ -246,8 +291,8 @@
           this.total = res.total
           this.loading = false
         })
-        this.$_HTTP.get(this.$_API.goodstypeList, {size: 10, current: 1}, res => {
-          this.data = res.records
+        this.$_HTTP.get(this.$_API.goodsAllTree, {}, res => {
+          this.dataTree = res
         })
       },
       handleSizeChange(val) {
@@ -277,6 +322,7 @@
         return isJPG && isLt2M
       },
       addButton() {
+        this.form.className=''
         this.form.status = ''
         this.form.name = ''
         this.form.scheduledTime = ''
@@ -295,9 +341,13 @@
           this.imageUrl = this.avatar
         }
         this.title = '编辑商品'
+        this.classId=row.goodsTypeId
+        if(row.optionalDate){
+          this.form.week=row.optionalDate.split(',')
+        }
         this.dialogFormVisible = true
+        this.form.className=row.goodsType.name
         this.form.name = row.name
-        this.form.optionalDate = row.optionalDate
         this.form.scheduledTime = row.dueDate
         this.form.rate = row.rate
         this.form.price = row.price
@@ -376,7 +426,7 @@
               dueDate: this.form.scheduledTime,
               rate:this.form.rate,
               price:this.form.price,
-              goodsTypeId:this.valueId
+              goodsTypeId:this.classId
             }
             if (this.title === '添加商品') {
               this.$_HTTP.post(this.$_API.addGoods, params, res => {

@@ -45,7 +45,7 @@
         />
         <el-table-column
           align="center"
-          prop="username"
+          prop="purseTypeVo.name"
           label="类型"
         />
         <el-table-column
@@ -72,7 +72,9 @@
           align="center"
           prop="phone"
           label="是否允许充值"
-        />
+        >
+          <template slot-scope="scope">{{ scope.row.isAllow?'是':'否' }}</template>
+        </el-table-column>
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
             <el-button
