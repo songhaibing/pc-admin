@@ -71,15 +71,6 @@
           <el-input v-model="form.phone" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="所属分类"  placeholder="请选择" :label-width="formLabelWidth" prop="className">
-          <!--<SelectTree-->
-            <!--:props="props"-->
-            <!--:options="data"-->
-            <!--:value="valueId"-->
-            <!--:clearable="isClearable"-->
-            <!--:accordion="isAccordion"-->
-            <!--style="width: 100%"-->
-            <!--@getValue="getValue($event)"-->
-          <!--/>-->
           <el-input ref="input" v-model="form.className" autocomplete="off" @focus="clickInput"/>
         </el-form-item>
         <el-form-item label="设备数" :label-width="formLabelWidth" prop="num">

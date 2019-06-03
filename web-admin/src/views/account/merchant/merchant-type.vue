@@ -28,7 +28,7 @@
         <el-table-column align="center" prop="createTime" label="创建时间"/>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="text" >添加子分类</el-button>
+            <el-button size="mini" type="text" @click="addSubclass(scope.$index, scope.row)">添加子分类</el-button>
             <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
@@ -50,8 +50,8 @@
     </el-card>
     <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="商户分类" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.name" autocomplete="off"/>
+        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
+          <el-input v-model="form.sort" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="分类名" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off" />
@@ -77,6 +77,7 @@
     name: 'MerchantType',
     data() {
       return {
+        parentId:'',
         statusCode: goodCode,
         merchantId:'',
         title: '添加商户分类',
@@ -119,6 +120,15 @@
           this.loading = false
         })
       },
+      addSubclass(index,row){
+        this.parentId=row.id
+        this.title='添加商户子类'
+        this.form.name = row.name
+        this.form.sort = row.sort
+        this.form.status = row.businessTypeState
+        this.merchantId = row.id
+        this.dialogFormVisible = true
+      },
       handleSizeChange(val) {
         this.size = val
         this.init()
@@ -130,7 +140,9 @@
       handleEdit(index,row){
         this.title='编辑商户分类'
         this.form.name = row.name
-        this.merchantId=row.id
+        this.form.sort = row.sort
+        this.form.status = row.businessTypeState
+        this.merchantId = row.id
         this.dialogFormVisible = true
       },
       handleDelete(index,row){
@@ -160,6 +172,12 @@
                 sort:this.form.sort,
                 businessTypeState:this.form.status
               }
+              const childParams = {
+                name: this.form.name,
+                sort:this.form.sort,
+                businessTypeState:this.form.status,
+                parentId:this.parentId
+              }
               if (this.title === '添加商户分类') {
                 this.$_HTTP.post(this.$_API.addBusinesstype, params, res => {
                   if (res.code === 1) {
@@ -176,7 +194,7 @@
                     })
                   }
                 })
-              } else {
+              } else if(this.title==='编辑商户分类'){
                 this.$_HTTP.put(this.$_API.editBusinesstype + this.merchantId, params, res => {
                   if (res.code === 1) {
                     this.dialogFormVisible = false
@@ -192,13 +210,32 @@
                     })
                   }
                 })
+              }else {
+                this.$_HTTP.post(this.$_API.addBusinesstype,childParams, res => {
+                  if (res.code === 1) {
+                    this.dialogFormVisible = false
+                    this.$message({
+                      message: '添加商户子分类成功',
+                      type: 'success'
+                    })
+                    this.init()
+                  }else if(res.code===2){
+                    this.$message({
+                      message: res.msg,
+                      type: 'error'
+                    })
+                  }
+                })
               }
             }
           })
       },
       addButton() {
-        this.name=''
-        this.dialogFormVisible=true
+        this.title = '添加商户分类'
+        this.form.status = ''
+        this.form.sort = ''
+        this.form.name = ''
+        this.dialogFormVisible = true
       }
     }
   }

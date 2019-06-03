@@ -27,7 +27,7 @@
         <el-table-column align="center" prop="createTime" label="创建时间"/>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="text">添加子分类</el-button>
+            <el-button size="mini" type="text" @click="addSubclass(scope.$index, scope.row)">添加子分类</el-button>
             <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
@@ -76,6 +76,7 @@
     name: 'Commodity-type',
     data() {
       return {
+        parentId:'',
         statusCode: goodCode,
         merchantId: '',
         formLabelWidth: '100px',
@@ -116,6 +117,15 @@
           this.loading = false
         })
       },
+      addSubclass(index,row){
+        this.parentId=row.id
+        this.title='编辑商品子类'
+        this.form.name = row.name
+        this.form.sort = row.sort
+        this.form.status = row.goodsTypeState
+        this.merchantId = row.id
+        this.dialogFormVisible = true
+      },
       handleEdit(index, row) {
         this.title = '编辑商品分类'
         this.form.name = row.name
@@ -151,6 +161,12 @@
               sort: this.form.sort,
               goodsTypeState: this.form.status
             }
+            const childParams = {
+              parentId:this.parentId,
+              name: this.form.name,
+              sort: this.form.sort,
+              goodsTypeState: this.form.status
+            }
             if (this.title === '添加商品分类') {
               this.$_HTTP.post(this.$_API.addGoodstype, params, res => {
                 if (res.code === 1) {
@@ -167,7 +183,7 @@
                   })
                 }
               })
-            } else {
+            } else if(this.title==='编辑商品分类'){
               this.$_HTTP.put(this.$_API.editGoodstype + this.merchantId, params, res => {
                 if (res.code === 1) {
                   this.dialogFormVisible = false
@@ -179,6 +195,22 @@
                 } else {
                   this.$message({
                     message: '修改商品失败',
+                    type: 'error'
+                  })
+                }
+              })
+            }else{
+              this.$_HTTP.post(this.$_API.addGoodstype,childParams, res => {
+                if (res.code === 1) {
+                  this.dialogFormVisible = false
+                  this.$message({
+                    message: '添加商品子分类成功',
+                    type: 'success'
+                  })
+                  this.init()
+                } else if (res.code === 2) {
+                  this.$message({
+                    message: res.msg,
                     type: 'error'
                   })
                 }
