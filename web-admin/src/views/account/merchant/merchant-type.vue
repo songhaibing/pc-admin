@@ -23,7 +23,11 @@
         <el-table-column align="center" prop="name" label="分类名"/>
         <el-table-column align="center" prop="sort" label="排序"/>
         <el-table-column align="center" label="状态">
-          <template slot-scope="scope">{{ statusCode[scope.row.businessTypeState] }}</template>
+          <!--<template slot-scope="scope">{{ statusCode[scope.row.businessTypeState] }}</template>-->
+          <template slot-scope="scope">
+            <el-switch active-color="#13ce66" active-value="0" inactive-value="1"
+                       v-model="scope.row.businessTypeState" @change='change(scope.row,scope.row.businessTypeState)'/>
+          </template>
         </el-table-column>
         <el-table-column align="center" prop="createTime" label="创建时间"/>
         <el-table-column align="center" label="操作">
@@ -54,13 +58,7 @@
           <el-input v-model="form.sort" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="分类名" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="form.name" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
-          <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
-            <el-option label="显示" value="0" />
-            <el-option label="隐藏" value="1" />
-          </el-select>
+          <el-input v-model="form.name" autocomplete="off"/>
         </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -73,30 +71,27 @@
 
 <script>
   import goodCode from '@/libs/goodCode'
+
   export default {
     name: 'MerchantType',
     data() {
       return {
-        parentId:'',
+        parentId: '',
         statusCode: goodCode,
-        merchantId:'',
+        merchantId: '',
         title: '添加商户分类',
         formLabelWidth: '100px',
         form: {
           name: '',
-          sort:'',
-          status:''
+          sort: '',
         },
         rules: {
           name: [
             {required: true, message: '请输入商户分类', trigger: 'blur'}
           ],
           sort: [
-            { required: true, message: '请输入商户排序', trigger: 'blur' }
+            {required: true, message: '请输入商户排序', trigger: 'blur'}
           ],
-          status: [
-            { required: true, message: '请选择商户状态', trigger: 'blur' }
-          ]
         },
         dialogFormVisible: false,
         loading: true,
@@ -120,12 +115,16 @@
           this.loading = false
         })
       },
-      addSubclass(index,row){
-        this.parentId=row.id
-        this.title='添加商户子类'
-        this.form.name = row.name
-        this.form.sort = row.sort
-        this.form.status = row.businessTypeState
+      change(row,data){
+        this.$_HTTP.put(this.$_API.editBusinesstype + row.id, {businessTypeState:data}, res => {
+        })
+        },
+      addSubclass(index, row) {
+        this.parentId = row.id
+        this.title = '添加商户子类'
+        this.form.name = ""
+        this.form.sort = ""
+        this.form.status = ""
         this.merchantId = row.id
         this.dialogFormVisible = true
       },
@@ -137,15 +136,15 @@
         this.currentPage = val
         this.init()
       },
-      handleEdit(index,row){
-        this.title='编辑商户分类'
+      handleEdit(index, row) {
+        this.title = '编辑商户分类'
         this.form.name = row.name
         this.form.sort = row.sort
         this.form.status = row.businessTypeState
         this.merchantId = row.id
         this.dialogFormVisible = true
       },
-      handleDelete(index,row){
+      handleDelete(index, row) {
         this.$confirm('此操作将永久删除该商户分类, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -164,71 +163,69 @@
 
         })
       },
-      addClass(form){
-          this.$refs[form].validate((valid) => {
-            if (valid) {
-              const params = {
-                name: this.form.name,
-                sort:this.form.sort,
-                businessTypeState:this.form.status
-              }
-              const childParams = {
-                name: this.form.name,
-                sort:this.form.sort,
-                businessTypeState:this.form.status,
-                parentId:this.parentId
-              }
-              if (this.title === '添加商户分类') {
-                this.$_HTTP.post(this.$_API.addBusinesstype, params, res => {
-                  if (res.code === 1) {
-                    this.dialogFormVisible = false
-                    this.$message({
-                      message: '添加商户分类成功',
-                      type: 'success'
-                    })
-                    this.init()
-                  }else if(res.code===2){
-                    this.$message({
-                      message: res.msg,
-                      type: 'error'
-                    })
-                  }
-                })
-              } else if(this.title==='编辑商户分类'){
-                this.$_HTTP.put(this.$_API.editBusinesstype + this.merchantId, params, res => {
-                  if (res.code === 1) {
-                    this.dialogFormVisible = false
-                    this.$message({
-                      message: '修改商户成功',
-                      type: 'success'
-                    })
-                    this.init()
-                  }else{
-                    this.$message({
-                      message: '修改商户失败',
-                      type: 'error'
-                    })
-                  }
-                })
-              }else {
-                this.$_HTTP.post(this.$_API.addBusinesstype,childParams, res => {
-                  if (res.code === 1) {
-                    this.dialogFormVisible = false
-                    this.$message({
-                      message: '添加商户子分类成功',
-                      type: 'success'
-                    })
-                    this.init()
-                  }else if(res.code===2){
-                    this.$message({
-                      message: res.msg,
-                      type: 'error'
-                    })
-                  }
-                })
-              }
+      addClass(form) {
+        this.$refs[form].validate((valid) => {
+          if (valid) {
+            const params = {
+              name: this.form.name,
+              sort: this.form.sort,
             }
-          })
+            const childParams = {
+              name: this.form.name,
+              sort: this.form.sort,
+              parentId: this.parentId
+            }
+            if (this.title === '添加商户分类') {
+              this.$_HTTP.post(this.$_API.addBusinesstype, params, res => {
+                if (res.code === 1) {
+                  this.dialogFormVisible = false
+                  this.$message({
+                    message: '添加商户分类成功',
+                    type: 'success'
+                  })
+                  this.init()
+                } else if (res.code === 2) {
+                  this.$message({
+                    message: res.msg,
+                    type: 'error'
+                  })
+                }
+              })
+            } else if (this.title === '编辑商户分类') {
+              this.$_HTTP.put(this.$_API.editBusinesstype + this.merchantId, params, res => {
+                if (res.code === 1) {
+                  this.dialogFormVisible = false
+                  this.$message({
+                    message: '修改商户成功',
+                    type: 'success'
+                  })
+                  this.init()
+                } else {
+                  this.$message({
+                    message: '修改商户失败',
+                    type: 'error'
+                  })
+                }
+              })
+            } else {
+              this.$_HTTP.post(this.$_API.addBusinesstype, childParams, res => {
+                if (res.code === 1) {
+                  this.dialogFormVisible = false
+                  this.$message({
+                    message: '添加商户子分类成功',
+                    type: 'success'
+                  })
+                  this.init()
+                } else if (res.code === 2) {
+                  this.$message({
+                    message: res.msg,
+                    type: 'error'
+                  })
+                }
+              })
+            }
+          }
+        })
       },
       addButton() {
         this.title = '添加商户分类'
