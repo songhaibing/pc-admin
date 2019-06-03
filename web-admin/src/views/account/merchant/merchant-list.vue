@@ -55,11 +55,17 @@
         <el-form-item label="商户名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off" :disabled="disabled"/>
         </el-form-item>
+        <el-form-item label="所属分类"  :label-width="formLabelWidth" prop="className">
+          <el-input ref="input" v-model="form.className"  placeholder="请选择所属分类" autocomplete="off" @focus="clickInput"/>
+        </el-form-item>
         <el-form-item label="主营类目" :label-width="formLabelWidth" prop="category">
           <el-input v-model="form.category" autocomplete="off"/>
         </el-form-item>
+        <el-form-item label="所属单位"   :label-width="formLabelWidth" prop="unit">
+          <el-input ref="input" v-model="form.unit"  placeholder="请选择所属单位" autocomplete="off" @focus="clickInput"/>
+        </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
-          <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
+          <el-select v-model="form.status" placeholder="请选择状态" style="width: 100%">
             <el-option label="营业中" value="0"/>
             <el-option label="已清退" value="1"/>
           </el-select>
@@ -69,9 +75,6 @@
         </el-form-item>
         <el-form-item label="联系电话" :label-width="formLabelWidth" prop="phone">
           <el-input v-model="form.phone" autocomplete="off"/>
-        </el-form-item>
-        <el-form-item label="所属分类"  placeholder="请选择" :label-width="formLabelWidth" prop="className">
-          <el-input ref="input" v-model="form.className" autocomplete="off" @focus="clickInput"/>
         </el-form-item>
         <el-form-item label="设备数" :label-width="formLabelWidth" prop="num">
           <el-input v-model="form.num" autocomplete="off"/>
@@ -130,7 +133,7 @@
         },
         classId:'',
         data: [],
-        titleTree:'请选择',
+        titleTree:'请选择分类',
         dialogFormTree:false,
         isClearable: true, // 可清空（可选）
         isAccordion: true, // 可收起（可选）
@@ -157,13 +160,16 @@
           category: '',
           principal: '',
           phone: '',
-          num: '',
+          num: 0,
           time: '',
-          className:''
+          className:'未分类'
         },
         rules: {
           status: [
             {required: true, message: '请选择类型', trigger: 'blur'}
+          ],
+          unit: [
+            {required: true, message: '请选择所属单位', trigger: 'blur'}
           ],
           name: [
             {required: true, message: '请输入商户名称', trigger: 'blur'}
@@ -235,16 +241,13 @@
         this.form.status = ''
         this.form.category = ''
         this.form.principal = ''
-        this.form.num = ''
         this.form.time = ''
         this.form.phone = ''
-        this.form.className=''
         this.disabled = false
         this.title = '添加商户'
         this.dialogFormVisible = true
       },
       handleEdit(index, row) {
-        console.log(row)
         this.classId=row.businessTypeId
         this.disabled = true
         this.title = '编辑商户'
