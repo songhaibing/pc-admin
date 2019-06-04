@@ -1,52 +1,50 @@
 <template>
   <!--账单资金-->
   <div style="padding: 20px">
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <div style="display: flex;justify-content: space-between">
-          <div style="display: flex;flex-direction: column;">
-            <div>
-              <span>账户归属</span>
-              <el-select  placeholder="请选择" style="width: 300px">
+    <div style="display: flex;justify-content: space-between;margin-left: 10px">
+      <div style="display: flex;flex-direction: column;">
+        <div>
+          <span>账户归属</span>
+          <el-select placeholder="请选择" style="width: 300px;margin-left: 20px">
 
-              </el-select>
-            </div>
-            <div style="margin-top: 10px">
-              <span>日期</span>
-              <el-date-picker
-                v-model="value"
-                type="daterange"
-                align="right"
-                unlink-panels
-                range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                :picker-options="pickerOptions"
-              />
-              <el-button
-                type="success"
-                style="margin-left: 10px"
-              >查询
-              </el-button>
-            </div>
-          </div>
-          <div style="margin-top: 40px">
-            <el-button
-              style="margin-right: 6px;float: right"
-              type="text"
-              icon="el-icon-download"
-            >批量下载明细
-            </el-button>
-            <el-button
-              style="margin-right: 6px;float: right"
-              type="text"
-              icon="el-icon-download"
-            >批量下载汇总
-            </el-button>
-          </div>
-
+          </el-select>
+        </div>
+        <div style="margin-top: 20px">
+          <span>查询日期</span>
+          <el-date-picker
+            v-model="value"
+            style="margin-left: 20px"
+            type="daterange"
+            align="right"
+            unlink-panels
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="pickerOptions"
+          />
+          <el-button
+            type="success"
+            style="margin-left: 10px"
+          >查询
+          </el-button>
         </div>
       </div>
+      <div style="margin-top: 60px">
+        <el-button
+          style="margin-right: 6px;float: right"
+          type="text"
+          icon="el-icon-download"
+        >批量下载明细
+        </el-button>
+        <el-button
+          style="margin-right: 6px;float: right"
+          type="text"
+          icon="el-icon-download"
+        >批量下载汇总
+        </el-button>
+      </div>
+    </div>
+    <el-card class="box-card">
       <el-table
         v-loading="loading"
         :data="tableData"
@@ -146,5 +144,7 @@
 </script>
 
 <style scoped>
-
+  .box-card{
+    margin-top: 20px;
+  }
 </style>

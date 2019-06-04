@@ -23,6 +23,7 @@
         v-loading="loading"
         :data="tableData"
         style="width: 100%"
+        @selection-change="handleSelectionChange"
       >
         <el-table-column
           type="selection"
@@ -161,6 +162,7 @@
     },
     data() {
       return {
+        selectedIDs:[],
         filterText: '',
         classId:'',
         dialogFormTree:false,
@@ -171,14 +173,6 @@
           label: 'name'
         },
         data: [],
-        isClearable: true, // 可清空（可选）
-        isAccordion: true, // 可收起（可选）
-        valueId: '', // 初始ID（可选）
-        props: { // 配置项（必选）
-          value: 'id',
-          label: 'name',
-          children: 'children'
-        },
         options: [{
           value: '星期一',
           label: '星期一'
@@ -260,8 +254,16 @@
           this.$refs.input.blur()
         },500)
       },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+        let ids = []
+        this.multipleSelection.map((item)=> {
+          ids.push(item.id)
+        })
+        this.selectedIDs = ids
+        console.log('多选',this.selectedIDs.join('&'))
+      },
       handleNodeClick(data) {
-        console.log(data)
         this.form.className=data.name
         this.classId=data.id
         this.dialogFormTree=false
@@ -270,16 +272,11 @@
         if (!value) return true;
         return data.name.indexOf(value) !== -1;
       },
-      getValue(value) {
-        this.valueId = value
-        console.log(this.valueId)
-      },
       // 初始化分页
       init() {
         this.loading = true
         this.$_HTTP.get(this.$_API.goodsList, {size: this.size, current: this.currentPage}, res => {
           this.tableData = res.records
-          console.log(res)
           this.total = res.total
           this.loading = false
         })

@@ -63,6 +63,7 @@ const API = {
   addGoods:smartcardIp +'goods/add',//添加一个商品
   delGoods:smartcardIp +'goods/delete/',//删除商品
   editGoods:smartcardIp +'goods/update/',//修改商品
+  delMoreGoods:smartcardIp +'goods/delete',//删除多个商品
   //商品管理-商品分类
   goodsAllTree:smartcardIp +'goodstype/allTree',//查询商品所有分类
   goodstypeList:smartcardIp +'goodstype/tree',//分页查询商品分类列表

@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 20px;">
-    <el-card style="display: flex;align-items: center;justify-content: center">
+    <el-card style="display: flex;padding: 20px 20px 20px 40px">
       <div>* 请确保设备联网正常，同时完成数据同步后获取账单</div>
       <div style="margin-top: 40px">
         <span>对账单归属</span>
