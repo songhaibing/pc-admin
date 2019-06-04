@@ -75,14 +75,12 @@
 </template>
 
 <script>
-  import goodCode from '@/libs/goodCode'
 
   export default {
     name: 'Commodity-type',
     data() {
       return {
         parentId: '',
-        statusCode: goodCode,
         merchantId: '',
         formLabelWidth: '100px',
         title: '添加商品分类',

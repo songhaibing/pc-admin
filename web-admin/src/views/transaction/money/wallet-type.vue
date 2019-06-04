@@ -21,8 +21,8 @@
         <el-table-column align="center" label="序号" type="index"/>
         <el-table-column label="ID" align="center" prop="id"/>
         <el-table-column align="center" prop="name" label="分类名"/>
-        <el-table-column align="center" prop="" label="商户分类"/>
-        <el-table-column align="center" prop="createTime" label="创建时间"/>
+        <el-table-column align="center" prop="businessTypeId.name" label="商户分类"/>
+        <el-table-column align="center" prop="businessTypeId. createTime" label="创建时间"/>
         <el-table-column align="center" label="操作" >
           <template slot-scope="scope">
             <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -49,15 +49,8 @@
         <el-form-item label="分类名" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="商户类型" :label-width="formLabelWidth" prop="status">
-          <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
-            <el-option
-              v-for="item in options"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
-            </el-option>
-          </el-select>
+        <el-form-item label="商户类型" :label-width="formLabelWidth" prop="className">
+          <el-input ref="input" v-model="form.className"  placeholder="请选择商户类型" autocomplete="off" @focus="clickInput"/>
         </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -65,14 +58,42 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog :title="titleTree" width="600px" :visible.sync="dialogFormTree">
+      <el-input
+        placeholder="输入关键字进行过滤"
+        v-model="filterText">
+      </el-input>
+      <el-tree
+        class="filter-tree"
+        :data="dataTree"
+        :props="defaultProps"
+        :filter-node-method="filterNode"
+        @node-click="handleNodeClick"
+        ref="tree2">
+      </el-tree>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   export default {
     name: 'Commodity-type',
+    watch: {
+      filterText(val) {
+        this.$refs.tree2.filter(val);
+      }
+    },
     data(){
       return{
+        dataTree:[],
+        defaultProps: {
+          children: 'children',
+          label: 'name'
+        },
+        classId:'',
+        filterText: '',
+        dialogFormTree:false,
+        titleTree:'请选择类型',
         options:[],
         loading:true,
         merchantId:'',
@@ -85,20 +106,22 @@
         dialogFormVisible: false,
         form: {
           name: '',
-          status:''
+          className:''
         },
         rules: {
           name: [
             { required: true, message: '请输入分类名称', trigger: 'blur' }
-          ],
-          status: [
-            { required: true, message: '请选择分类状态', trigger: 'blur' }
           ]
         }
       }
     },
     created(){
       this.init()
+      //获取商户分类
+      this.$_HTTP.get(this.$_API.businessAllTree, {}, res => {
+        console.log('res',res)
+        this.dataTree = res
+      })
     },
     methods:{
       // 初始化分页
@@ -109,15 +132,31 @@
           this.total = res.total
           this.loading = false
         })
-        this.$_HTTP.get(this.$_API.businesstypeList, {size: 10, current: 1}, res => {
-          this.options = res.records
-        })
+      },
+      handleNodeClick(data) {
+        console.log(data)
+        this.form.className=data.name
+        this.classId=data.id
+        this.dialogFormTree=false
+      },
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
       },
       handleEdit(index,row){
+        console.log(row)
         this.title='编辑钱包分类'
+        this.classId=row.businessTypeId.id
+        this.form.className=row.businessTypeId.name
         this.form.name = row.name
         this.merchantId=row.id
         this.dialogFormVisible = true
+      },
+      clickInput(){
+        this.dialogFormTree=true
+        setTimeout(()=>{
+          this.$refs.input.blur()
+        },500)
       },
       handleDelete(index,row){
         this.$confirm('此操作将永久删除该商户分类, 是否继续?', '提示', {
@@ -143,6 +182,7 @@
           if (valid) {
             const params = {
               name: this.form.name,
+              businessTypeId:this.classId
             }
             if (this.title === '添加钱包分类') {
               this.$_HTTP.post(this.$_API.addPurseType, params, res => {
@@ -208,6 +248,8 @@
         this.init()
       },
       addButton(){
+        this.form.name=''
+        this.form.className=''
         this.dialogFormVisible=true
       }
     }

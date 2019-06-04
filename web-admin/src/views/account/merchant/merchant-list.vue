@@ -225,7 +225,6 @@
           this.loading = false
         })
         this.$_HTTP.get(this.$_API.businessAllTree, {}, res => {
-          console.log('res',res)
           this.dataTree = res
         })
       },
