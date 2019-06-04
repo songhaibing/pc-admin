@@ -22,12 +22,9 @@
         <el-table-column align="center" prop="name" label="分类名"/>
         <el-table-column align="center" prop="sort" label="排序"/>
         <el-table-column align="center" prop="sort" label="状态">
-          <!--<template slot-scope="scope">{{ statusCode[scope.row.goodsTypeState] }}</template>-->
           <template slot-scope="scope">
-            <el-switch  active-value="0" inactive-value="1"
-                        class="switchStyle"
-                       active-text="显示"
-                       inactive-text="隐藏"
+            <el-switch active-value="0" inactive-value="1"
+                       active-color="#13ce66"
                        v-model="scope.row.goodsTypeState" @change='change(scope.row,scope.row.goodsTypeState)'/>
           </template>
         </el-table-column>
@@ -79,11 +76,12 @@
 
 <script>
   import goodCode from '@/libs/goodCode'
+
   export default {
     name: 'Commodity-type',
     data() {
       return {
-        parentId:'',
+        parentId: '',
         statusCode: goodCode,
         merchantId: '',
         formLabelWidth: '100px',
@@ -124,12 +122,12 @@
           this.loading = false
         })
       },
-      addSubclass(index,row){
-        this.parentId=row.id
-        this.title='编辑商品子类'
-        this.form.name = row.name
-        this.form.sort = row.sort
-        this.form.status = row.goodsTypeState
+      addSubclass(index, row) {
+        this.parentId = row.id
+        this.title = '添加商品子类'
+        this.form.name = ''
+        this.form.sort = ''
+        this.form.status = ''
         this.merchantId = row.id
         this.dialogFormVisible = true
       },
@@ -141,8 +139,8 @@
         this.merchantId = row.id
         this.dialogFormVisible = true
       },
-      change(row,data){
-        this.$_HTTP.put(this.$_API.editGoodstype + row.id, {businessTypeState:data}, res => {
+      change(row, data) {
+        this.$_HTTP.put(this.$_API.editGoodstype + row.id, {goodsTypeState: data}, res => {
         })
       },
       handleDelete(index, row) {
@@ -173,7 +171,7 @@
               goodsTypeState: this.form.status
             }
             const childParams = {
-              parentId:this.parentId,
+              parentId: this.parentId,
               name: this.form.name,
               sort: this.form.sort,
               goodsTypeState: this.form.status
@@ -194,7 +192,7 @@
                   })
                 }
               })
-            } else if(this.title==='编辑商品分类'){
+            } else if (this.title === '编辑商品分类') {
               this.$_HTTP.put(this.$_API.editGoodstype + this.merchantId, params, res => {
                 if (res.code === 1) {
                   this.dialogFormVisible = false
@@ -210,8 +208,8 @@
                   })
                 }
               })
-            }else{
-              this.$_HTTP.post(this.$_API.addGoodstype,childParams, res => {
+            } else {
+              this.$_HTTP.post(this.$_API.addGoodstype, childParams, res => {
                 if (res.code === 1) {
                   this.dialogFormVisible = false
                   this.$message({

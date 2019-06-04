@@ -23,7 +23,6 @@
         <el-table-column align="center" prop="name" label="分类名"/>
         <el-table-column align="center" prop="sort" label="排序"/>
         <el-table-column align="center" label="状态">
-          <!--<template slot-scope="scope">{{ statusCode[scope.row.businessTypeState] }}</template>-->
           <template slot-scope="scope">
             <el-switch active-color="#13ce66" active-value="0" inactive-value="1"
                        v-model="scope.row.businessTypeState" @change='change(scope.row,scope.row.businessTypeState)'/>
@@ -60,6 +59,12 @@
         <el-form-item label="分类名" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off"/>
         </el-form-item>
+        <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
+          <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
+            <el-option label="显示" value="0"/>
+            <el-option label="隐藏" value="1"/>
+          </el-select>
+        </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="addClass('form')">添加</el-button>
@@ -70,20 +75,19 @@
 </template>
 
 <script>
-  import goodCode from '@/libs/goodCode'
 
   export default {
     name: 'MerchantType',
     data() {
       return {
         parentId: '',
-        statusCode: goodCode,
         merchantId: '',
         title: '添加商户分类',
         formLabelWidth: '100px',
         form: {
           name: '',
           sort: '',
+          status:''
         },
         rules: {
           name: [
@@ -91,6 +95,9 @@
           ],
           sort: [
             {required: true, message: '请输入商户排序', trigger: 'blur'}
+          ],
+          status: [
+            {required: true, message: '请选择商户状态', trigger: 'blur'}
           ],
         },
         dialogFormVisible: false,
@@ -169,11 +176,13 @@
             const params = {
               name: this.form.name,
               sort: this.form.sort,
+              businessTypeState:this.form.status
             }
             const childParams = {
               name: this.form.name,
               sort: this.form.sort,
-              parentId: this.parentId
+              parentId: this.parentId,
+              businessTypeState:this.form.status
             }
             if (this.title === '添加商户分类') {
               this.$_HTTP.post(this.$_API.addBusinesstype, params, res => {

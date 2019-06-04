@@ -96,15 +96,6 @@
           </el-select>
         </el-form-item>
         <el-form-item label="类型" :label-width="formLabelWidth" prop="className">
-          <!--<SelectTree-->
-            <!--:props="props"-->
-            <!--:options="data"-->
-            <!--:value="valueId"-->
-            <!--:clearable="isClearable"-->
-            <!--:accordion="isAccordion"-->
-            <!--style="width: 100%"-->
-            <!--@getValue="getValue($event)"-->
-          <!--/>-->
           <el-input ref="input" v-model="form.className" autocomplete="off" @focus="clickInput"/>
         </el-form-item>
         <el-form-item label="定价" :label-width="formLabelWidth" prop="price">
@@ -130,7 +121,9 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="好评率" :label-width="formLabelWidth" prop="rate">
-          <el-input v-model="form.rate" autocomplete="off"/>
+          <el-input v-model="form.rate" autocomplete="off">
+            <template slot="append">%</template>
+          </el-input>
         </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -232,7 +225,7 @@
           scheduledTime:'',
           status: '',
           name: '',
-          rate:'',
+          rate:'99.9',
           price:'',
           className:''
         },
@@ -327,7 +320,6 @@
         this.form.name = ''
         this.form.scheduledTime = ''
         this.form.week = []
-        this.form.rate = ''
         this.form.price = ''
         this.imageUrl = ''
         this.title = '添加商品'

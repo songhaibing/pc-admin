@@ -354,7 +354,7 @@ export default {
             deptId: this.id
           }
           if (this.title === '添加角色') {
-            this.$_HTTP.post(this.$_API.addRole, data, res => {
+            this.$_HTTP.post(this.$_API.addRoleMsg, data, res => {
               if (res.code === 1) {
                 this.dialogFormVisible = false
                 this.findDept(this.id)
