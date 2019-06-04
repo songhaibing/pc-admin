@@ -2,7 +2,7 @@
 <template>
   <!--账单资金-->
   <div style="padding: 20px">
-    <div style="display: flex;justify-content: space-between;margin-left: 10px">
+    <div style="margin-left: 10px">
       <div style="display: flex;flex-direction: column;">
         <div>
           <span>账户归属</span>
@@ -30,6 +30,12 @@
           </el-button>
         </div>
       </div>
+      <el-tabs v-model="activeName" style="margin-top: 20px">
+        <el-tab-pane label="全部订单" name="first"></el-tab-pane>
+        <el-tab-pane label="已支付" name="second"></el-tab-pane>
+        <el-tab-pane label="未支付" name="third"></el-tab-pane>
+        <el-tab-pane label="已取消" name="fourth"></el-tab-pane>
+      </el-tabs>
     </div>
     <el-card class="box-card">
       <el-table
@@ -100,6 +106,7 @@
     name: 'FundBill',
     data() {
       return {
+        activeName:'first',
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -135,7 +142,7 @@
 
 <style scoped>
   .box-card{
-    margin-top: 20px;
+
   }
 </style>
 

@@ -1,28 +1,43 @@
+
 <template>
-  <!--退款订单-->
+  <!--退款查询-->
   <div style="padding: 20px">
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <div slot="header" class="clearfix">
-          <el-button
-            style="float: right"
-            type="success"
-          >查询
-          </el-button>
-          <el-input v-model="number" style="width: 150px;float: right;margin-right: 5px" placeholder="请输入交易单号" />
+    <div style="margin-left: 10px">
+      <div style="display: flex;flex-direction: column;">
+        <div>
+          <span>账户归属</span>
+          <el-select placeholder="请选择" style="width: 300px;margin-left: 20px">
+
+          </el-select>
+        </div>
+        <div style="margin-top: 20px">
+          <span>查询日期</span>
           <el-date-picker
             v-model="value"
+            style="margin-left: 20px"
             type="daterange"
             align="right"
-            style="float: right;margin-right: 5px"
             unlink-panels
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             :picker-options="pickerOptions"
           />
+          <el-button
+            type="success"
+            style="margin-left: 10px"
+          >查询
+          </el-button>
         </div>
       </div>
+      <el-tabs v-model="activeName" style="margin-top: 20px">
+        <el-tab-pane label="全部订单" name="first"></el-tab-pane>
+        <el-tab-pane label="已处理" name="second"></el-tab-pane>
+        <el-tab-pane label="待处理" name="third"></el-tab-pane>
+        <el-tab-pane label="已拒绝" name="fourth"></el-tab-pane>
+      </el-tabs>
+    </div>
+    <el-card class="box-card">
       <el-table
         v-loading="loading"
         :data="tableData"
@@ -92,44 +107,47 @@
 </template>
 
 <script>
-export default {
-  name: 'RefundOrder',
-  data() {
-    return {
-      number: '',
-      pickerOptions: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '最近三个月',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-            picker.$emit('pick', [start, end])
-          }
-        }]
-      },
-      value: ''
+  export default {
+    name: 'FundBill',
+    data() {
+      return {
+        activeName:'first',
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
+            }
+          }]
+        },
+        value: ''
+      }
     }
   }
-}
 </script>
 
 <style scoped>
+  .box-card{
 
+  }
 </style>
+

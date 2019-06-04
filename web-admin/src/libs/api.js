@@ -20,7 +20,7 @@ const API = {
   editAvatar: adminIp + 'user/edit/', // 用户头像修改
   deptTree: adminIp + 'dept/tree', // 获取树状部门结构数据
   findDept: adminIp + 'role/find/dept/', // 查询部门下全部的角色
-  addRoleMsg: adminIp + 'role/add', // 创建用户角色
+  addRoleMsg: adminIp + 'role/addrole', // 创建用户角色
   editRole: adminIp + 'role/edit/', // 修改用户角色信息
   deleteRole: adminIp + 'role/delete/', // 通过ID删除角色
   getAuthorities: adminIp + 'role/authorities', // 获取当前用户权限信息
