@@ -298,7 +298,6 @@
       },
       handleNodeClick(data) {
         this.isShow = false
-        console.log(data)
         this.singleData = data
         this.menuId = data.id
         this.getData()

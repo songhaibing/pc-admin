@@ -22,7 +22,14 @@
         <el-table-column align="center" prop="name" label="分类名"/>
         <el-table-column align="center" prop="sort" label="排序"/>
         <el-table-column align="center" prop="sort" label="状态">
-          <template slot-scope="scope">{{ statusCode[scope.row.goodsTypeState] }}</template>
+          <!--<template slot-scope="scope">{{ statusCode[scope.row.goodsTypeState] }}</template>-->
+          <template slot-scope="scope">
+            <el-switch  active-value="0" inactive-value="1"
+                        class="switchStyle"
+                       active-text="显示"
+                       inactive-text="隐藏"
+                       v-model="scope.row.goodsTypeState" @change='change(scope.row,scope.row.goodsTypeState)'/>
+          </template>
         </el-table-column>
         <el-table-column align="center" prop="createTime" label="创建时间"/>
         <el-table-column align="center" label="操作">
@@ -133,6 +140,10 @@
         this.form.status = row.goodsTypeState
         this.merchantId = row.id
         this.dialogFormVisible = true
+      },
+      change(row,data){
+        this.$_HTTP.put(this.$_API.editGoodstype + row.id, {businessTypeState:data}, res => {
+        })
       },
       handleDelete(index, row) {
         this.$confirm('此操作将永久删除该商户分类, 是否继续?', '提示', {
