@@ -28,7 +28,6 @@
           type="selection"
           width="55">
         </el-table-column>
-        <el-table-column align="center" label="序号" type="index" width="50"/>
         <el-table-column label="ID" prop="id" align="center" width="50"/>
         <el-table-column align="center" label="图片">
           <template scope="scope">
@@ -48,7 +47,7 @@
         <el-table-column align="center" prop="price" label="定价"/>
         <el-table-column align="center" prop="optionalDate" label="可选日期"/>
         <el-table-column align="center" prop="dueDate" label="预定时间"/>
-        <el-table-column align="center" prop="rate" label="好评率" width="50"/>
+        <el-table-column align="center" prop="rate" label="好评率" />
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
             <el-button size="mini" type="text"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -96,7 +95,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="类型" :label-width="formLabelWidth" prop="className">
-          <el-input ref="input" v-model="form.className" autocomplete="off" @focus="clickInput"/>
+          <el-input ref="input" placeholder="请选择商品类型" v-model="form.className" autocomplete="off" @focus="clickInput"/>
         </el-form-item>
         <el-form-item label="定价" :label-width="formLabelWidth" prop="price">
           <el-input v-model="form.price" autocomplete="off"/>

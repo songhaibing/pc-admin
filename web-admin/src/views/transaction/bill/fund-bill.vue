@@ -3,46 +3,55 @@
   <div style="padding: 20px">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <el-button
-          style="padding: 6px;margin-right: 6px"
-          type="primary"
-          icon="el-icon-download"
-        >批量下载明细
-        </el-button>
-        <el-button
-          style="padding: 6px;margin-right: 6px"
-          type="primary"
-          icon="el-icon-download"
-        >批量下载汇总
-        </el-button>
-        <el-button
-          style="float: right"
-          type="success"
-        >查询
-        </el-button>
-        <el-date-picker
-          v-model="value"
-          type="daterange"
-          align="right"
-          style="float: right"
-          unlink-panels
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :picker-options="pickerOptions"
-        />
+        <div style="display: flex;justify-content: space-between">
+          <div style="display: flex;flex-direction: column;">
+            <div>
+              <span>账户归属</span>
+              <el-select  placeholder="请选择" style="width: 300px">
 
+              </el-select>
+            </div>
+            <div style="margin-top: 10px">
+              <span>日期</span>
+              <el-date-picker
+                v-model="value"
+                type="daterange"
+                align="right"
+                unlink-panels
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :picker-options="pickerOptions"
+              />
+              <el-button
+                type="success"
+                style="margin-left: 10px"
+              >查询
+              </el-button>
+            </div>
+          </div>
+          <div style="margin-top: 40px">
+            <el-button
+              style="margin-right: 6px;float: right"
+              type="text"
+              icon="el-icon-download"
+            >批量下载明细
+            </el-button>
+            <el-button
+              style="margin-right: 6px;float: right"
+              type="text"
+              icon="el-icon-download"
+            >批量下载汇总
+            </el-button>
+          </div>
+
+        </div>
       </div>
       <el-table
         v-loading="loading"
         :data="tableData"
         style="width: 100%"
       >
-        <el-table-column
-          align="center"
-          label="序号"
-          type="index"
-        />
         <el-table-column
           label="日期"
           align="center"
@@ -99,41 +108,41 @@
 </template>
 
 <script>
-export default {
-  name: 'FundBill',
-  data() {
-    return {
-      pickerOptions: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '最近三个月',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-            picker.$emit('pick', [start, end])
-          }
-        }]
-      },
-      value: ''
+  export default {
+    name: 'FundBill',
+    data() {
+      return {
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
+            }
+          }]
+        },
+        value: ''
+      }
     }
   }
-}
 </script>
 
 <style scoped>
