@@ -15,7 +15,7 @@
           style="float: right;padding: 6px;margin-right: 6px"
           type="danger"
           icon="el-icon-delete"
-          @click="addButton"
+          @click="delMore"
         >批量删除
         </el-button>
       </div>
@@ -149,12 +149,11 @@
 </template>
 
 <script>
-  import SelectTree from '@/components/treeSelect/treeSelect.vue'
   import mixins from '@/mixins/user'
+  import qs from 'qs'
   export default {
     name: 'CommodityList',
     mixins: [mixins],
-    components: { SelectTree },
     watch: {
       filterText(val) {
         this.$refs.tree2.filter(val);
@@ -256,12 +255,12 @@
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
-        let ids = []
+        let idArr = []
         this.multipleSelection.map((item)=> {
-          ids.push(item.id)
+          idArr.push(`ids=${item.id}`)
         })
-        this.selectedIDs = ids
-        console.log('多选',this.selectedIDs.join('&'))
+        this.selectedIDs = idArr.join('&')
+        console.log('多选',this.selectedIDs)
       },
       handleNodeClick(data) {
         this.form.className=data.name
@@ -320,6 +319,26 @@
         this.imageUrl = ''
         this.title = '添加商品'
         this.dialogFormVisible = true
+      },
+      delMore(){
+        this.$confirm('此操作将永久删除选中的商品, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          console.log('selectedIDs',this.selectedIDs)
+          this.$_HTTP.delete(this.$_API.delMoreGoods+this.selectedIDs,{},res => {
+            if (res.code === 1) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.init()
+            }
+          })
+        }).catch(() => {
+
+        })
       },
       handleEdit(index,row){
         this.goodId = row.id

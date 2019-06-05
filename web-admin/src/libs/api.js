@@ -6,7 +6,7 @@ const API = {
   // 退出登陆
   logout: logoutIp + 'token/logout',
   // 用户管理
-  menu: adminIp + 'menu/tree/current', // 获取当前用户菜单
+  menu: adminIp + 'menu/tree', // 获取当前用户菜单
   userList: adminIp + 'user/list', // 获取用户列表
   userExits: adminIp + 'user/exits/', // 检测用户名是否存在
   addUser: adminIp + 'user/add', // 添加用户
@@ -31,7 +31,7 @@ const API = {
   editDict: adminIp + 'dict/edit/', // 编辑字典信息
   deleteDict: adminIp + 'dict/delete/', // 删除字典信息
   // 菜单管理
-  getMenu: adminIp + 'menu/tree/current', // 获取当前用户的树状菜单
+  getMenu: adminIp + 'menu/tree', // 获取当前用户的树状菜单
   addMenu: adminIp + 'menu/add', // 添加系统菜单
   deleteMenu: adminIp + 'menu/delete/', // 删除系统菜单
   editMenu: adminIp + 'menu/edit/', // 修改系统菜单
@@ -63,7 +63,7 @@ const API = {
   addGoods:smartcardIp +'goods/add',//添加一个商品
   delGoods:smartcardIp +'goods/delete/',//删除商品
   editGoods:smartcardIp +'goods/update/',//修改商品
-  delMoreGoods:smartcardIp +'goods/delete',//删除多个商品
+  delMoreGoods:smartcardIp +'goods/delete?',//删除多个商品
   //商品管理-商品分类
   goodsAllTree:smartcardIp +'goodstype/allTree',//查询商品所有分类
   goodstypeList:smartcardIp +'goodstype/tree',//分页查询商品分类列表

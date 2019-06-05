@@ -21,8 +21,8 @@
         <el-table-column align="center" label="序号" type="index"/>
         <el-table-column label="ID" align="center" prop="id"/>
         <el-table-column align="center" prop="name" label="分类名"/>
-        <el-table-column align="center" prop="businessTypeId.name" label="商户分类"/>
-        <el-table-column align="center" prop="businessTypeId. createTime" label="创建时间"/>
+        <el-table-column align="center" prop="businessType.name" label="商户分类"/>
+        <el-table-column align="center" prop="createTime" label="创建时间"/>
         <el-table-column align="center" label="操作" >
           <template slot-scope="scope">
             <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -146,8 +146,8 @@
       handleEdit(index,row){
         console.log(row)
         this.title='编辑钱包分类'
-        this.classId=row.businessTypeId.id
-        this.form.className=row.businessTypeId.name
+        this.classId=row.businessType.id
+        this.form.className=row.businessType.name
         this.form.name = row.name
         this.merchantId=row.id
         this.dialogFormVisible = true
@@ -248,6 +248,7 @@
         this.init()
       },
       addButton(){
+        this.title='添加钱包分类'
         this.form.name=''
         this.form.className=''
         this.dialogFormVisible=true
