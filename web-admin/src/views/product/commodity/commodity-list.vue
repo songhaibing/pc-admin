@@ -16,6 +16,7 @@
           type="danger"
           icon="el-icon-delete"
           @click="delMore"
+          :disabled="delDisabled"
         >批量删除
         </el-button>
       </div>
@@ -150,7 +151,6 @@
 
 <script>
   import mixins from '@/mixins/user'
-  import qs from 'qs'
   export default {
     name: 'CommodityList',
     mixins: [mixins],
@@ -161,9 +161,11 @@
     },
     data() {
       return {
+        delDisabled:true,
         selectedIDs:[],
         filterText: '',
         classId:'',
+        multipleSelection:[],
         dialogFormTree:false,
         dataTree:[],
         titleTree:'请选择',
@@ -259,8 +261,12 @@
         this.multipleSelection.map((item)=> {
           idArr.push(`ids=${item.id}`)
         })
+        if(this.multipleSelection.length===0){
+          this.delDisabled=true
+        }else{
+          this.delDisabled=false
+        }
         this.selectedIDs = idArr.join('&')
-        console.log('多选',this.selectedIDs)
       },
       handleNodeClick(data) {
         this.form.className=data.name
@@ -326,7 +332,6 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          console.log('selectedIDs',this.selectedIDs)
           this.$_HTTP.delete(this.$_API.delMoreGoods+this.selectedIDs,{},res => {
             if (res.code === 1) {
               this.$message({

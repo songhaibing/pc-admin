@@ -22,6 +22,7 @@
         />
         <el-table-column
           label="账户ID"
+          prop="id"
           align="center"
         >
         </el-table-column>
@@ -70,6 +71,19 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="block">
+        <el-pagination
+          background
+          :current-page.sync="currentPage"
+          :page-sizes="[10, 20, 30]"
+          :page-size="size"
+          style="float: right;margin: 10px 0"
+          layout="sizes, prev, pager, next"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
     </el-card>
   </div>
 </template>
@@ -79,9 +93,38 @@
     name: "administrator-list",
     data(){
       return{
-        tableData:[]
+        loading:true,
+        tableData:[],
+        currentPage: 1, // 当前多少页
+        size: 10, // 每页多少条数据
+        total: 0, // 总共多少数据
       }
-    }
+    },
+    created(){
+      this.init()
+    },
+    methods:{
+      // 初始化分页
+      init() {
+        this.loading = true
+        this.$_HTTP.get(this.$_API.roleList, {size: this.size, current: this.currentPage}, res => {
+          this.tableData = res.records
+          this.total = res.total
+          this.loading = false
+        })
+        this.$_HTTP.get(this.$_API.businessAllTree, {}, res => {
+          this.dataTree = res
+        })
+      },
+    },
+    handleSizeChange(val) {
+      this.size = val
+      this.init()
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.init()
+    },
   }
 </script>
 

@@ -50,11 +50,8 @@ const API = {
   addBusinesstype:smartcardIp +'businesstype/add',//添加商户分类类型
   editBusinesstype:smartcardIp +'businesstype/update/',//修改商户分类类型
   delBusinesstype:smartcardIp +'businesstype/delete/',//删除商户分类类型
-  // 终端管理-终端设备列表
-  airportDeviceList:smartcardIp +'airportDevice/list',//分页查询设备列表
-  addAirportDevice:smartcardIp +'airportDevice/add',//添加设备信息
-  delAirportDevice:smartcardIp +'airportDevice/delete/',//删除设备信息
-  editAirportDevice:smartcardIp +'airportDevice/edit/',//修改设备信息
+  // 角色管理-管理员列表
+  roleList:adminIp +'role/list',//分页查询管理员列表
   /**
    *  产品中心API
    */
@@ -70,6 +67,11 @@ const API = {
   addGoodstype:smartcardIp +'goodstype/add',//添加商品分类类型
   editGoodstype:smartcardIp +'goodstype/update/',//修改商品分类类型
   delGoodstype:smartcardIp +'goodstype/delete/',//删除商品分类类型
+  // 终端管理-终端设备列表
+  airportDeviceList:smartcardIp +'airportDevice/list',//分页查询设备列表
+  addAirportDevice:smartcardIp +'airportDevice/add',//添加设备信息
+  delAirportDevice:smartcardIp +'airportDevice/delete/',//删除设备信息
+  editAirportDevice:smartcardIp +'airportDevice/edit/',//修改设备信息
   /**
    *  交易中心API
    */

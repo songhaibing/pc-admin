@@ -26,7 +26,7 @@
           <template slot-scope="scope">{{ scope.row.businessState==='0'?'营业中':'已清退' }}</template>
         </el-table-column>
         <el-table-column align="center" label="商户负责人" prop="head"/>
-        <el-table-column align="center" label="归属单位" prop=""/>
+        <el-table-column align="center" label="归属单位" prop="dept.name"/>
         <el-table-column align="center" label="联系电话" prop="phoneNumber"/>
         <el-table-column align="center" label="设备数" prop="deviceNumber"/>
         <el-table-column align="center" label="到期时间" prop="expireTime"/>
