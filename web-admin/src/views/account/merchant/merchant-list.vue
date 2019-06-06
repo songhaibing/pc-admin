@@ -63,7 +63,7 @@
           <el-input v-model="form.category" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="所属单位"   :label-width="formLabelWidth" prop="unit">
-          <el-input ref="input" v-model="form.unit"  placeholder="请选择所属单位" autocomplete="off" @focus="clickInput"/>
+          <el-input ref="inputUnit" v-model="form.unit"  placeholder="请选择所属单位" autocomplete="off" @focus="clickUnit"/>
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
           <el-select v-model="form.status" placeholder="请选择状态" style="width: 100%">
@@ -109,6 +109,20 @@
         ref="tree2">
       </el-tree>
     </el-dialog>
+    <el-dialog :title="titleTree" width="600px" :visible.sync="dialogUnitTree">
+      <el-input
+        placeholder="输入关键字进行过滤"
+        v-model="filterTextUnit">
+      </el-input>
+      <el-tree
+        class="filter-tree"
+        :data="unitTree"
+        :props="defaultProps"
+        :filter-node-method="filterNodeUnit"
+        @node-click="handleNodeClickUnit"
+        ref="treeUnit">
+      </el-tree>
+    </el-dialog>
   </div>
 </template>
 
@@ -122,10 +136,16 @@
     watch: {
       filterText(val) {
         this.$refs.tree2.filter(val);
+      },
+      filterTextUnit(val){
+        this.$refs.treeUnit.filter(val);
       }
     },
     data() {
       return {
+        unitId:'',
+        filterTextUnit:'',
+        unitTree:[],
         filterText: '',
         dataTree:[],
         defaultProps: {
@@ -133,6 +153,7 @@
           label: 'name'
         },
         classId:'',
+        dialogUnitTree:false,
         data: [],
         titleTree:'请选择分类',
         dialogFormTree:false,
@@ -169,9 +190,9 @@
           status: [
             {required: true, message: '请选择类型', trigger: 'blur'}
           ],
-          unit: [
-            {required: true, message: '请选择所属单位', trigger: 'blur'}
-          ],
+          // unit: [
+          //   {required: true, message: '请选择所属单位', trigger: 'blur'}
+          // ],
           name: [
             {required: true, message: '请输入商户名称', trigger: 'blur'}
           ],
@@ -198,10 +219,18 @@
     },
     methods: {
       handleNodeClick(data) {
-        console.log(data)
         this.form.className=data.name
         this.classId=data.id
         this.dialogFormTree=false
+      },
+      handleNodeClickUnit(data) {
+        this.form.unit=data.name
+        this.unitId=data.id
+        this.dialogUnitTree=false
+      },
+      filterNodeUnit(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
       },
       filterNode(value, data) {
         if (!value) return true;
@@ -211,6 +240,12 @@
         this.dialogFormTree=true
         setTimeout(()=>{
           this.$refs.input.blur()
+        },500)
+      },
+      clickUnit(){
+        this.dialogUnitTree=true
+        setTimeout(()=>{
+          this.$refs.inputUnit.blur()
         },500)
       },
       getValue(value) {
@@ -226,6 +261,9 @@
         })
         this.$_HTTP.get(this.$_API.businessAllTree, {}, res => {
           this.dataTree = res
+        })
+        this.$_HTTP.get(this.$_API.deptTree, {}, res => {
+          this.unitTree=res
         })
       },
       handleSizeChange(val) {

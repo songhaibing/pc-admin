@@ -234,9 +234,6 @@
           status: [
             {required: true, message: '请选择状态', trigger: 'blur'}
           ],
-          num: [
-            {required: true, message: '请输入设备数', trigger: 'blur'}
-          ],
           dockingPeople: [
             {required: true, message: '请输入对接人', trigger: 'blur'}
           ],
