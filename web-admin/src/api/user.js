@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-const API='http://106.75.178.9:8080'
+const API='http://106.75.178.9:80'
 export function login(data) {
   return request({
     url: API+`/oauth/token?grant_type=password&username=${data.username}&password=${data.password}`,
