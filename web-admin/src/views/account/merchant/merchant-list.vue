@@ -17,7 +17,7 @@
         :data="tableData"
         style="width: 100%"
       >
-        <el-table-column align="center" label="序号" type="index" width="50"/>
+        <!--<el-table-column align="center" label="序号" type="index" width="50"/>-->
         <el-table-column label="ID" align="center" prop="id" width="50"/>
         <el-table-column align="center" prop="name" label="商户名称"/>
         <el-table-column align="center" prop="categories" label="主营类目"/>

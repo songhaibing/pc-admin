@@ -1,7 +1,7 @@
 'use strict'
-const adminIp = 'http://106.75.178.9:8080/admin/'
-const logoutIp = 'http://106.75.178.9:8080/'
-const smartcardIp = 'http://106.75.178.9:8080/smartcard/'
+const adminIp = 'http://106.75.178.9:80/admin/'
+const logoutIp = 'http://106.75.178.9:80/'
+const smartcardIp = 'http://106.75.178.9:80/smartcard/'
 const API = {
   // 退出登陆
   logout: logoutIp + 'token/logout',
@@ -39,6 +39,10 @@ const API = {
   /**
    *  账户中心API
    */
+  // 单位管理-单位列表
+   unitList: adminIp +'dept/list',//分页查询单位列表
+   addUnit:adminIp+'dept/add',//添加单位
+   delUnit:adminIp+'/dept/delete/',//通过ID删除单位
   // 商户管理-商户列表
   addBusiness: smartcardIp + 'business/add', // 添加商户
   businessList: smartcardIp + 'business/list',// 分页查询商户列表
