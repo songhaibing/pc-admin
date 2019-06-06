@@ -1,35 +1,26 @@
 <template>
   <div>
     <el-row>
-      <el-col>
-        <div class="left-main">
-          <div class="boxLeftTop">
-            <span class="menu_title">所属部门</span>
-          </div>
-          <el-tree
-            :highlight-current="true"
-            class="single-content"
-            :data="data"
-            :props="defaultProps"
-            @node-click="handleNodeClick"
-          />
-        </div>
-      </el-col>
-      <el-col v-if="isShow">
-        <tip-message />
-      </el-col>
-      <div v-else style="padding:20px;margin-left: 200px;">
+      <div style="padding:20px;">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <i class="el-icon-menu" />
-            <span>角色列表</span>
+            <span>权限分配</span>
             <el-button
-              style="float: right;padding: 6px;margin-right: 6px"
+              style="float: right;margin-left: 10px"
               type="primary"
               icon="el-icon-plus"
               @click="addButton"
             >添加
             </el-button>
+            <el-select v-model="valueSelect" placeholder="请选择" style="float: right;" @change="change">
+              <el-option
+                v-for="item in options"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
           </div>
           <el-table
             v-loading="loading"
@@ -101,10 +92,21 @@
           </div>
         </el-card>
       </div>
-      <el-dialog :title="title" width="500px" :visible.sync="dialogFormVisible">
+      <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
         <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
           <el-form-item label="姓名" :label-width="formLabelWidth" prop="Name">
             <el-input v-model="form.Name" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="单位" :label-width="formLabelWidth" v-if="title==='添加角色'">
+            <!--<el-input ref="input" placeholder="请选择单位" v-model="form.className" autocomplete="off" />-->
+            <el-select v-model="selectId" placeholder="请选择" @change="changeSelect" style="width: 100%">
+              <el-option
+                v-for="item in options"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="code" :label-width="formLabelWidth" prop="Code">
             <el-input v-model="form.Code" autocomplete="off" />
@@ -132,6 +134,20 @@
           <el-button type="primary" @click="()=>getCheckedKeys()">确 定</el-button>
         </span>
       </el-dialog>
+      <el-dialog :title="titleTree" width="600px" :visible.sync="dialogFormTree">
+        <el-input
+          placeholder="输入关键字进行过滤"
+          v-model="filterText">
+        </el-input>
+        <el-tree
+          class="filter-tree"
+          :data="dataTree"
+          :props="defaultProps"
+          :filter-node-method="filterNode"
+          @node-click="handleNodeClick"
+          ref="tree2">
+        </el-tree>
+      </el-dialog>
     </el-row>
   </div>
 </template>
@@ -142,10 +158,27 @@
   export default {
     name: 'Role',
     components: { TipMessage },
+    watch: {
+      filterText(val) {
+        this.$refs.tree2.filter(val);
+      }
+    },
     data() {
       return {
+        selectId:'',
+        valueId:'',
+        dataTree:[],
+        filterText:'',
+        titleTree:'请选择',
+        dialogFormTree:false,
+        options: [],
+        valueSelect:1,
         isExpand: true,
         permissionId: '',
+        defaultProps: {
+          children: 'children',
+          label: 'name'
+        },
         data1: [{
           id: 1,
           permission: '平台系统管理',
@@ -277,11 +310,11 @@
         size: 10,
         currentPage: 1,
         total: 0,
-        data: [],
-        defaultProps: {
-          children: 'children',
-          label: 'name'
-        },
+        // data: [],
+        // defaultProps: {
+        //   children: 'children',
+        //   label: 'name'
+        // },
         form: {
           Name: '',
           Code: '',
@@ -299,15 +332,32 @@
           ]
         },
         tableData: [],
-        formLabelWidth: '80px'
+        formLabelWidth: '100px'
       }
     },
     created() {
       this.$_HTTP.get(this.$_API.deptTree, {}, res => {
-        this.data = res
+        // this.data = res
+        this.dataTree=res
+        this.options=res
       })
+      this.selectId=this.valueSelect
+      this.findDept(this.valueSelect)
     },
     methods: {
+      changeSelect(val){
+        console.log(val)
+      },
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
+      handleNodeClick(data) {
+        console.log(data)
+        this.form.className=data.name
+        this.valueId=data.id
+        this.dialogFormTree=false
+      },
       getCheckedKeys() {
         const data = this.$refs.tree.getCheckedNodes(false, true).map(item => {
           return item.permission
@@ -322,18 +372,17 @@
           }
         })
       },
+      change(val){
+        this.selectId=val
+        this.findDept(val)
+      },
       addButton() {
         this.dialogFormVisible = true
         this.title = '添加角色'
+        this.selectId=''
         this.form.Name = ''
         this.form.Code = ''
         this.form.des = ''
-      },
-      handleNodeClick(data) {
-        this.isShow = false
-        const id = data.id
-        this.id = id
-        this.findDept(id)
       },
       // 初始化角色列表分页
       findDept(id) {
@@ -351,20 +400,20 @@
               name: this.form.Name,
               code: this.form.Code,
               description: this.form.des,
-              deptId: this.id
+              deptId: this.selectId
             }
             if (this.title === '添加角色') {
               this.$_HTTP.post(this.$_API.addRoleMsg, data, res => {
                 if (res.code === 1) {
                   this.dialogFormVisible = false
-                  this.findDept(this.id)
+                  this.findDept(this.valueSelect)
                 }
               })
             } else {
               this.$_HTTP.put(this.$_API.editRole + this.roleId, data, res => {
                 if (res.code === 1) {
                   this.dialogFormVisible = false
-                  this.findDept(this.id)
+                  this.findDept(this.valueSelect)
                 }
               })
             }
@@ -380,6 +429,7 @@
         this.findDept(this.id)
       },
       handleEdit(index, row) {
+        console.log(row)
         this.roleId = row.id
         this.title = '编辑角色'
         this.dialogFormVisible = true
@@ -399,7 +449,7 @@
                 type: 'success',
                 message: '删除成功!'
               })
-              this.findDept(this.id)
+              this.findDept(this.valueSelect)
             }
           })
         }).catch(() => {

@@ -40,7 +40,7 @@
               <template scope="scope">
                 <img
                   v-if="scope.row.avatar"
-                  :src="'http://106.75.178.9:8080/resource/'+scope.row.avatar"
+                  :src="'http://106.75.178.9:80/resource/'+scope.row.avatar"
                   class="head_pic"
                 >
                 <img v-else src="@/assets/avatar/mieba.png" class="head_pic">
@@ -125,7 +125,7 @@
             <el-form-item label="头像上传" :label-width="formLabelWidth">
               <el-upload
                 class="avatar-uploader"
-                action="http://106.75.178.9:8080/file/upload/file/avatar"
+                action="http://106.75.178.9:80/file/upload/file/avatar"
                 :headers="{token}"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
@@ -144,8 +144,8 @@
             <el-form-item label="昵称" :label-width="formLabelWidth" prop="nickName">
               <el-input v-model="form.nickName" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="部门" :label-width="formLabelWidth">
-              <el-input ref="input" placeholder="请选择部门" v-model="form.className" autocomplete="off" @focus="clickInput"/>
+            <el-form-item label="单位" :label-width="formLabelWidth">
+              <el-input ref="input" placeholder="请选择单位" v-model="form.className" autocomplete="off" @focus="clickInput"/>
             </el-form-item>
             <el-form-item label="邮箱" :label-width="formLabelWidth" prop="Email">
               <el-input v-model="form.Email" autocomplete="off" />
@@ -359,7 +359,7 @@
         this.valueId = row.dept.id
         console.log(row)
         if (row.avatar) {
-          this.imageUrl = 'http://106.75.178.9:8080/resource/' + row.avatar
+          this.imageUrl = 'http://106.75.178.9:80/resource/' + row.avatar
         } else {
           this.imageUrl = this.avatar
         }
@@ -495,74 +495,6 @@
 </script>
 
 <style lang="scss" scoped>
-  .left-main {
-    position: fixed;
-    height: 100%;
-    width: 200px;
-    border-right: 1px solid #e0e1e3;
 
-    .boxLeftTop {
-      .menu_title {
-        padding-left: 16px;
-        background-color: #f8f8f8;
-        font-size: 16px;
-        line-height: 55px;
-      }
-    }
-
-    .single-content {
-      cursor: pointer;
-      padding: 10px 0 0 16px;
-
-      .title {
-        font-size: 12px;
-        font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
-      }
-    }
-
-  }
-
-  .dialog-footer {
-    text-align: center;
-  }
-
-  .box-card {
-    width: 100%;
-  }
-
-  .avatar-uploader {
-    width: 100px;
-    height: 100px;
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .avatar-uploader:hover {
-    border-color: #409EFF;
-  }
-
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 100px;
-    line-height: 100px;
-    text-align: center;
-  }
-
-  .avatar {
-    width: 100px;
-    height: 100px;
-    display: block;
-  }
-
-  .head_pic {
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
-  }
 </style>
 

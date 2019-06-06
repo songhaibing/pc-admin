@@ -133,7 +133,7 @@
             <el-form-item label="头像上传" :label-width="formLabelWidth">
               <el-upload
                 class="avatar-uploader"
-                action="http://106.75.178.9:8080/file/upload/file/avatar"
+                action="http://106.75.178.9:80/file/upload/file/avatar"
                 :headers="{token}"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
