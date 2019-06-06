@@ -25,9 +25,17 @@
         </el-table-column>
         <el-table-column
           align="center"
-          prop="username"
           label="单位logo"
-        />
+        >
+          <template scope="scope">
+            <img
+              v-if="scope.row.logo"
+              :src="'http://106.75.178.9:80/resource/'+scope.row.logo"
+              class="head_pic"
+            >
+            <img v-else src="@/assets/avatar/mieba.png" class="head_pic">
+          </template>
+        </el-table-column>
         <el-table-column
           align="center"
           prop="name"
@@ -108,7 +116,7 @@
         <el-form-item label="单位logo" :label-width="formLabelWidth">
           <el-upload
             class="avatar-uploader"
-            action="http://106.75.178.9:8080/file/upload/file/avatar"
+            action="http://106.75.178.9:80/file/upload/file/avatar"
             :headers="{token}"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
@@ -141,16 +149,24 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
-          <el-input v-model="form.status" autocomplete="off"/>
+          <!--<el-input v-model="form.status" autocomplete="off"/>-->
+          <el-select v-model="form.status" placeholder="请选择" style="width: 100%" @change="change">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="设备数" :label-width="formLabelWidth" prop="num">
           <el-input v-model="form.num" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="对接人" :label-width="formLabelWidth" prop="dockingPeople">
-          <el-input v-model="form.dockingPeople" autocomplete="off" />
+          <el-input v-model="form.dockingPeople" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="联系电话" :label-width="formLabelWidth" prop="mobile">
-          <el-input v-model="form.mobile" autocomplete="off" />
+          <el-input v-model="form.mobile" autocomplete="off"/>
         </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -162,12 +178,20 @@
 </template>
 
 <script>
+  import mixins from '@/mixins/user'
+
   export default {
+    mixins: [mixins],
     name: "unit-list",
     data() {
       return {
+        unitId: '',
+        selectId: '',
+        imageUrl: '',
+        base64: '',
+        avatar: require('@/assets/avatar/mieba.png'),
         token: localStorage.getItem('token'),
-        formLabelWidth:'100px'  ,
+        formLabelWidth: '100px',
         title: '添加单位',
         dialogFormVisible: false,
         loading: true,
@@ -175,14 +199,24 @@
         currentPage: 1, // 当前多少页
         size: 10, // 每页多少条数据
         total: 0, // 总共多少数据
+        options: [{
+          value: 0,
+          label: '正常'
+        }, {
+          value: 1,
+          label: '已到期'
+        }, {
+          value: 9,
+          label: '禁用'
+        }],
         form: {
           unitName: '',
           mobile: '',
           openingTime: '',
           stopTime: '',
           status: '',
-          num:'',
-          dockingPeople:''
+          num: '',
+          dockingPeople: ''
         },
         rules: {
           unitName: [
@@ -222,22 +256,81 @@
           this.loading = false
         })
       },
+      change(val) {
+        this.selectId = val
+        console.log(val)
+      },
       handleSizeChange(val) {
         this.size = val
         this.init()
+      },
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw)
+        this.getBase64(file.raw).then(res => {
+          this.base64 = res
+        })
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg'
+        const isLt2M = file.size / 1024 / 1024 < 2
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!')
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!')
+        }
+        return isJPG && isLt2M
+      },
+      handleEdit(index, row) {
+        this.unitId = row.id
+        if (row.logo) {
+          this.imageUrl = 'http://106.75.178.9:80/resource/' + row.logo
+        } else {
+          this.imageUrl = this.avatar
+        }
+          this.title = '编辑单位'
+          this.form.unitName = row.name,
+          this.form.mobile = row.phone,
+          this.form.num = row.deviceNum,
+          this.form.openingTime = row.startTime,
+          this.form.stopTime = row.endTime,
+          this.selectId = row.deptState,
+          this.form.dockingPeople = row.username,
+          this.dialogFormVisible = true
+        console.log(index, row)
+      },
+      deleteUser(index, row) {
+        this.$confirm('此操作将永久删除该单位, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$_HTTP.delete(this.$_API.delUnit + row.id, {}, res => {
+            if (res.code === 1) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.init()
+            }
+          })
+        }).catch(() => {
+
+        })
       },
       addUser(form) {
         this.$refs[form].validate((valid) => {
           if (valid) {
             const params = {
               name: this.form.unitName,
-              businessState: this.form.status,
-              categories: this.form.category,
-              deviceNumber: this.form.num,
-              expireTime: this.form.time,
-              head: this.form.principal,
-              phoneNumber: this.form.phone,
-              businessTypeId:this.classId
+              logo: this.base64,
+              phone: this.form.mobile,
+              deviceNum: this.form.num,
+              startTime: this.form.openingTime,
+              endTime: this.form.stopTime,
+              deptState: this.selectId,
+              username: this.form.dockingPeople,
             }
             if (this.title === '添加单位') {
               this.$_HTTP.post(this.$_API.addUnit, params, res => {
@@ -256,7 +349,7 @@
                 }
               })
             } else {
-              this.$_HTTP.put(this.$_API.delUnit + this.merchantId, params, res => {
+              this.$_HTTP.put(this.$_API.editUnit + this.unitId, params, res => {
                 if (res.code === 1) {
                   this.dialogFormVisible = false
                   this.$message({
@@ -266,7 +359,7 @@
                   this.init()
                 } else {
                   this.$message({
-                    message: '修改商户失败',
+                    message: '修改单位失败',
                     type: 'error'
                   })
                 }
@@ -280,6 +373,14 @@
         this.init()
       },
       addButton() {
+        this.form.unitName = ''
+        this.imageUrl = ''
+        this.form.mobile = ''
+        this.form.num = ''
+        this.form.openingTime = ''
+        this.form.stopTime = ''
+        this.form.status = ''
+        this.form.dockingPeople = ''
         this.title = '添加单位'
         this.dialogFormVisible = true
       },
@@ -314,6 +415,7 @@
     }
 
   }
+
   .dialog-footer {
     text-align: center;
   }

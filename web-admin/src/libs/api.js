@@ -42,7 +42,8 @@ const API = {
   // 单位管理-单位列表
    unitList: adminIp +'dept/list',//分页查询单位列表
    addUnit:adminIp+'dept/add',//添加单位
-   delUnit:adminIp+'/dept/delete/',//通过ID删除单位
+   delUnit:adminIp+'dept/delete/',//通过ID删除单位
+   editUnit:adminIp+'dept/edit/',//通过ID删除单位
   // 商户管理-商户列表
   addBusiness: smartcardIp + 'business/add', // 添加商户
   businessList: smartcardIp + 'business/list',// 分页查询商户列表

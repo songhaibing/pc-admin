@@ -531,8 +531,8 @@
   }
 
   .avatar-uploader {
-    width: 178px;
-    height: 178px;
+    width: 100px;
+    height: 100px;
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     cursor: pointer;
@@ -548,14 +548,14 @@
     font-size: 28px;
     color: #8c939d;
     width: 178px;
-    height: 178px;
-    line-height: 178px;
+    height: 100px;
+    line-height: 100px;
     text-align: center;
   }
 
   .avatar {
-    width: 178px;
-    height: 178px;
+    width: 100px;
+    height: 100px;
     display: block;
   }
 

@@ -48,7 +48,7 @@
               <template scope="scope">
                 <img
                   v-if="scope.row.avatar"
-                  :src="'http://106.75.178.9:8080/resource/'+scope.row.avatar"
+                  :src="'http://106.75.178.9:80/resource/'+scope.row.avatar"
                   class="head_pic"
                 >
                 <img v-else src="@/assets/avatar/mieba.png" class="head_pic">
@@ -350,7 +350,7 @@ export default {
       this.valueId = row.dept.id
       console.log(row.dept.id)
       if (row.avatar) {
-        this.imageUrl = 'http://106.75.178.9:8080/resource/' + row.avatar
+        this.imageUrl = 'http://106.75.178.9:80/resource/' + row.avatar
       } else {
         this.imageUrl = this.avatar
       }
