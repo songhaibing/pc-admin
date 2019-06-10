@@ -33,6 +33,7 @@
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="text" >禁用</el-button>
             <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -65,7 +66,7 @@
         <el-form-item label="所属单位"   :label-width="formLabelWidth" prop="unit">
           <el-input ref="inputUnit" v-model="form.unit"  placeholder="请选择所属单位" autocomplete="off" @focus="clickUnit"/>
         </el-form-item>
-        <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
+        <el-form-item label="状态" :label-width="formLabelWidth" prop="status" v-if="title==='编辑商户'">
           <el-select v-model="form.status" placeholder="请选择状态" style="width: 100%">
             <el-option label="营业中" value="0"/>
             <el-option label="已清退" value="1"/>
@@ -77,8 +78,8 @@
         <el-form-item label="联系电话" :label-width="formLabelWidth" prop="phone">
           <el-input v-model="form.phone" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="设备数" :label-width="formLabelWidth" prop="num">
-          <el-input v-model="form.num" autocomplete="off"/>
+        <el-form-item label="设备数" :label-width="formLabelWidth" prop="num" v-if="title==='编辑商户'">
+          <el-input v-model="form.num" autocomplete="off" disabled/>
         </el-form-item>
         <el-form-item label="到期时间" :label-width="formLabelWidth" prop="time">
           <el-date-picker
@@ -184,12 +185,9 @@
           phone: '',
           num: 0,
           time: '',
-          className:'未分类'
+          className:''
         },
         rules: {
-          status: [
-            {required: true, message: '请选择类型', trigger: 'blur'}
-          ],
           // unit: [
           //   {required: true, message: '请选择所属单位', trigger: 'blur'}
           // ],

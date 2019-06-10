@@ -133,8 +133,8 @@
           <el-date-picker
             style="width: 100%"
             v-model="form.openingTime"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
+            value-format="yyyy-MM-dd"
+            type="date"
             placeholder="选择开通时间">
           </el-date-picker>
         </el-form-item>
@@ -142,13 +142,13 @@
           <!--<el-input  placeholder="请选择终止时间" v-model="form.stopTime" autocomplete="off"/>-->
           <el-date-picker
             style="width: 100%"
+            type="date"
             v-model="form.stopTime"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
+            value-format="yyyy-MM-dd"
             placeholder="请选择终止时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
+        <el-form-item label="状态" :label-width="formLabelWidth" prop="status" v-if="title==='编辑单位'">
           <!--<el-input v-model="form.status" autocomplete="off"/>-->
           <el-select v-model="form.status" placeholder="请选择" style="width: 100%" @change="change">
             <el-option
@@ -159,8 +159,8 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="设备数" :label-width="formLabelWidth" prop="num">
-          <el-input v-model="form.num" autocomplete="off"/>
+        <el-form-item label="设备数" :label-width="formLabelWidth" prop="num"  v-if="title==='编辑单位'">
+          <el-input v-model="form.num" autocomplete="off" disabled/>
         </el-form-item>
         <el-form-item label="对接人" :label-width="formLabelWidth" prop="dockingPeople">
           <el-input v-model="form.dockingPeople" autocomplete="off"/>
@@ -230,9 +230,6 @@
           ],
           openingTime: [
             {required: true, message: '请输入开通时间', trigger: 'blur'}
-          ],
-          status: [
-            {required: true, message: '请选择状态', trigger: 'blur'}
           ],
           dockingPeople: [
             {required: true, message: '请输入对接人', trigger: 'blur'}

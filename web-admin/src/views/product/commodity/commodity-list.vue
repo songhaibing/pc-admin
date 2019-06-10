@@ -35,7 +35,7 @@
           <template scope="scope">
             <img
               v-if="scope.row.picture"
-              :src="'http://106.75.178.9:8080/resource/'+scope.row.picture"
+              :src="'http://106.75.178.9:80/resource/'+scope.row.picture"
               class="head_pic"
             >
             <img v-else src="@/assets/other/caomei.jpg" class="head_pic">
@@ -77,7 +77,7 @@
         <el-form-item label="图片上传" :label-width="formLabelWidth">
           <el-upload
             class="avatar-uploader"
-            action="http://106.75.178.9:8080/file/upload/file/avatar"
+            action="http://106.75.178.9:80/file/upload/file/avatar"
             :headers="{token}"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"

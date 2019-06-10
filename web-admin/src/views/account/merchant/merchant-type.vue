@@ -19,12 +19,19 @@
         :data="tableData"
         style="width: 100%"
       >
-        <el-table-column label="ID" prop="id" align="center"/>
         <el-table-column align="center" prop="name" label="分类名"/>
-        <el-table-column align="center" prop="sort" label="排序"/>
+        <el-table-column align="center" prop="sort" label="排序"  width="100">
+          <template slot-scope="scope">
+            <el-form :model="scope.row" >
+                <el-input ref="inputValue"  @input="changeInput" v-model="scope.row.sort" placeholder="请输入排序" @focus="focus(scope.row)" @blur="blur(scope.row)"/>
+            </el-form>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="状态">
           <template slot-scope="scope">
             <el-switch active-color="#13ce66" active-value="0" inactive-value="1"
+                       active-text="显示"
+                       inactive-text="隐藏"
                        v-model="scope.row.businessTypeState" @change='change(scope.row,scope.row.businessTypeState)'/>
           </template>
         </el-table-column>
@@ -54,17 +61,17 @@
     <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
-          <el-input v-model="form.sort" autocomplete="off"/>
+          <el-input v-model="form.sort" autocomplete="off" />
         </el-form-item>
         <el-form-item label="分类名" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
-          <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
-            <el-option label="显示" value="0"/>
-            <el-option label="隐藏" value="1"/>
-          </el-select>
-        </el-form-item>
+        <!--<el-form-item label="状态" :label-width="formLabelWidth" prop="status">-->
+          <!--<el-select v-model="form.status" placeholder="请选择" style="width: 100%">-->
+            <!--<el-option label="显示" value="0"/>-->
+            <!--<el-option label="隐藏" value="1"/>-->
+          <!--</el-select>-->
+        <!--</el-form-item>-->
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="addClass('form')">添加</el-button>
@@ -80,6 +87,7 @@
     name: 'MerchantType',
     data() {
       return {
+        sortId:'',
         parentId: '',
         merchantId: '',
         title: '添加商户分类',
@@ -87,7 +95,7 @@
         form: {
           name: '',
           sort: '',
-          status:''
+          status:0
         },
         rules: {
           name: [
@@ -112,6 +120,9 @@
       this.init()
     },
     methods: {
+      changeInput(){
+        console.log(this.$refs.inputValue.value)
+      },
       // 初始化分页
       init() {
         this.loading = true
@@ -122,8 +133,15 @@
           this.loading = false
         })
       },
+      focus(row){
+        this.sortId=row.id
+      },
+      blur(row){
+        this.$_HTTP.put(this.$_API.editBusinesstype +this.sortId, {sort: row.sort}, res => {
+        })
+      },
       change(row,data){
-        this.$_HTTP.put(this.$_API.editBusinesstype + row.id, {businessTypeState:data}, res => {
+        this.$_HTTP.put(this.$_API.editBusinesstype +this.sortId, {businessTypeState:data}, res => {
         })
         },
       addSubclass(index, row) {

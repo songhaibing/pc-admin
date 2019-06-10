@@ -128,7 +128,7 @@
             />
           </div>
         </el-card>
-        <el-dialog :title="title" width="500px" :visible.sync="dialogFormVisible">
+        <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible"  center="true">
           <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
             <el-form-item label="头像上传" :label-width="formLabelWidth">
               <el-upload
@@ -144,7 +144,7 @@
               </el-upload>
             </el-form-item>
             <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
-              <el-input v-model="form.userName" autocomplete="off" />
+              <el-input v-model="form.userName" autocomplete="off"  :disabled="disabled"/>
             </el-form-item>
             <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realName">
               <el-input v-model="form.realName" autocomplete="off" />
@@ -152,16 +152,8 @@
             <el-form-item label="昵称" :label-width="formLabelWidth" prop="nickName">
               <el-input v-model="form.nickName" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="部门" :label-width="formLabelWidth">
-              <SelectTree
-                :props="props"
-                :options="data"
-                :value="valueId"
-                :clearable="isClearable"
-                :accordion="isAccordion"
-                style="width: 100%"
-                @getValue="getValue($event)"
-              />
+            <el-form-item label="单位" :label-width="formLabelWidth">
+              <el-input ref="input" placeholder="请选择单位" v-model="form.className" autocomplete="off" @focus="clickInput"/>
             </el-form-item>
             <el-form-item label="邮箱" :label-width="formLabelWidth" prop="Email">
               <el-input v-model="form.Email" autocomplete="off" />
@@ -197,6 +189,20 @@
         </el-dialog>
       </div>
     </el-row>
+    <el-dialog :title="titleTree" width="600px" :visible.sync="dialogFormTree">
+      <el-input
+        placeholder="输入关键字进行过滤"
+        v-model="filterText">
+      </el-input>
+      <el-tree
+        class="filter-tree"
+        :data="dataTree"
+        :props="defaultProps"
+        :filter-node-method="filterNode"
+        @node-click="handleNodeClick1"
+        ref="tree2">
+      </el-tree>
+    </el-dialog>
   </div>
 </template>
 
@@ -204,11 +210,10 @@
 import TipMessage from '../../../components/tipMessage/tipMessage'
 import { checkPhone, checkEmail, checkPw, checkRenewPw } from '@/libs/regular.js'
 import mixins from '@/mixins/user'
-import SelectTree from '@/components/treeSelect/treeSelect.vue'
 
 export default {
   name: 'User',
-  components: { TipMessage, SelectTree },
+  components: { TipMessage },
   mixins: [mixins],
   data() {
     const checkUserName = (rule, value, callback) => {
@@ -240,14 +245,11 @@ export default {
       }
     }
     return {
-      isClearable: true, // 可清空（可选）
-      isAccordion: true, // 可收起（可选）
+      disabled:false,
+      dataTree:[],
+      filterText:'',
+      titleTree:'请选择',
       valueId: '', // 初始ID（可选）
-      props: { // 配置项（必选）
-        value: 'id',
-        label: 'name',
-        children: 'children'
-      },
       token: localStorage.getItem('token'),
       loading: true,
       data: [],
@@ -258,6 +260,7 @@ export default {
       id: '',
       isShow: true,
       tableData: [],
+      dialogFormTree:false,
       currentPage: 1, // 当前多少页
       size: 10, // 每页多少条数据
       total: 0, // 总共多少数据
@@ -324,9 +327,32 @@ export default {
   created() {
     this.$_HTTP.get(this.$_API.deptTree, {}, res => {
       this.data = res
+      this.options=res
+      this.dataTree=res
     })
   },
+  watch: {
+    filterText(val) {
+      this.$refs.tree2.filter(val);
+    }
+  },
   methods: {
+    clickInput(){
+      this.dialogFormTree=true
+      setTimeout(()=>{
+        this.$refs.input.blur()
+      },500)
+    },
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.name.indexOf(value) !== -1;
+    },
+    handleNodeClick1(data) {
+      console.log(data)
+      this.form.className=data.name
+      this.valueId=data.id
+      this.dialogFormTree=false
+    },
     getValue(value) {
       this.valueId = value
       console.log(this.valueId)
@@ -347,8 +373,10 @@ export default {
     },
     // 编辑
     handleEdit(index, row) {
+      this.disabled=true
       this.valueId = row.dept.id
-      console.log(row.dept.id)
+      this.form.className=row.dept.name
+      console.log(row)
       if (row.avatar) {
         this.imageUrl = 'http://106.75.178.9:80/resource/' + row.avatar
       } else {
@@ -387,6 +415,7 @@ export default {
       this.userName = row.username
     },
     addButton() {
+      this.disabled=false
       this.form.userName = ''
       this.form.realName = ''
       this.form.mobile = ''
@@ -481,73 +510,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .left-main {
-    position: fixed;
-    height: 100%;
-    width: 200px;
-    border-right: 1px solid #e0e1e3;
 
-    .boxLeftTop {
-      .menu_title {
-        padding-left: 16px;
-        background-color: #f8f8f8;
-        font-size: 16px;
-        line-height: 55px;
-      }
-    }
-
-    .single-content {
-      cursor: pointer;
-      padding: 10px 0 0 16px;
-
-      .title {
-        font-size: 12px;
-        font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
-      }
-    }
-
-  }
-
-  .dialog-footer {
-    text-align: center;
-  }
-
-  .box-card {
-    width: 100%;
-  }
-
-  .avatar-uploader {
-    width: 178px;
-    height: 178px;
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .avatar-uploader:hover {
-    border-color: #409EFF;
-  }
-
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
-
-  .head_pic {
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
-  }
 </style>

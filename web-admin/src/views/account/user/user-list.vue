@@ -1,27 +1,35 @@
-<!--用户列表-->
 <template>
   <div>
     <el-row>
-      <div  style="padding:20px;">
+      <el-col>
+        <div class="left-main">
+          <div class="boxLeftTop">
+            <span class="menu_title">所属单位</span>
+          </div>
+          <el-tree
+            :highlight-current="true"
+            class="single-content"
+            :data="data"
+            :props="defaultProps"
+            @node-click="handleNodeClick"
+          />
+        </div>
+      </el-col>
+      <el-col v-if="isShow">
+        <tip-message />
+      </el-col>
+      <div v-else style="padding:20px;margin-left: 200px;">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <i class="el-icon-menu" />
             <span>用户列表</span>
             <el-button
-              style="float: right;margin-left: 10px"
+              style="float: right;padding: 6px;margin-right: 6px"
               type="primary"
               icon="el-icon-plus"
               @click="addButton"
             >添加
             </el-button>
-            <el-select v-model="valueSelect" placeholder="请选择" style="float: right;" @change="change">
-              <el-option
-                v-for="item in options"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
           </div>
           <el-table
             v-loading="loading"
@@ -136,7 +144,7 @@
               </el-upload>
             </el-form-item>
             <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
-              <el-input v-model="form.userName" autocomplete="off" />
+              <el-input v-model="form.userName" autocomplete="off"  :disabled="disabled"/>
             </el-form-item>
             <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realName">
               <el-input v-model="form.realName" autocomplete="off" />
@@ -191,7 +199,7 @@
         :data="dataTree"
         :props="defaultProps"
         :filter-node-method="filterNode"
-        @node-click="handleNodeClick"
+        @node-click="handleNodeClick1"
         ref="tree2">
       </el-tree>
     </el-dialog>
@@ -199,9 +207,13 @@
 </template>
 
 <script>
+  import TipMessage from '../../../components/tipMessage/tipMessage'
   import { checkPhone, checkEmail, checkPw, checkRenewPw } from '@/libs/regular.js'
   import mixins from '@/mixins/user'
+
   export default {
+    name: 'User',
+    components: { TipMessage },
     mixins: [mixins],
     data() {
       const checkUserName = (rule, value, callback) => {
@@ -233,13 +245,10 @@
         }
       }
       return {
+        disabled:false,
         dataTree:[],
-        filterText: '',
+        filterText:'',
         titleTree:'请选择',
-        valueSelect:1,
-        classId:'',
-        dialogFormTree:false,
-        options: [],
         valueId: '', // 初始ID（可选）
         token: localStorage.getItem('token'),
         loading: true,
@@ -248,9 +257,10 @@
           children: 'children',
           label: 'name'
         },
-        id: 1,
+        id: '',
         isShow: true,
         tableData: [],
+        dialogFormTree:false,
         currentPage: 1, // 当前多少页
         size: 10, // 每页多少条数据
         total: 0, // 总共多少数据
@@ -276,7 +286,7 @@
           newPassword: '',
           repeatPassword: ''
         },
-        formLabelWidth: '100px',
+        formLabelWidth: '80px',
         rulesPw: {
           password: [
             { required: true, message: '请输入密码', trigger: 'blur' },
@@ -316,11 +326,9 @@
     },
     created() {
       this.$_HTTP.get(this.$_API.deptTree, {}, res => {
-        this.options=res
         this.data = res
+        this.options=res
         this.dataTree=res
-        console.log('res',res)
-        this.init(this.valueSelect)
       })
     },
     watch: {
@@ -339,11 +347,15 @@
         if (!value) return true;
         return data.name.indexOf(value) !== -1;
       },
-      handleNodeClick(data) {
+      handleNodeClick1(data) {
         console.log(data)
         this.form.className=data.name
         this.valueId=data.id
         this.dialogFormTree=false
+      },
+      getValue(value) {
+        this.valueId = value
+        console.log(this.valueId)
       },
       // 初始化分页
       init(id) {
@@ -354,9 +366,16 @@
           this.loading = false
         })
       },
+      handleNodeClick(data) {
+        this.isShow = false
+        this.id = data.id
+        this.init(data.id)
+      },
       // 编辑
       handleEdit(index, row) {
+        this.disabled=true
         this.valueId = row.dept.id
+        this.form.className=row.dept.name
         console.log(row)
         if (row.avatar) {
           this.imageUrl = 'http://106.75.178.9:80/resource/' + row.avatar
@@ -365,7 +384,6 @@
         }
         this.title = '编辑用户'
         this.dialogFormVisible = true
-        this.form.className=row.dept.name
         this.form.userName = row.username
         this.form.realName = row.realname
         this.form.mobile = row.phone
@@ -392,15 +410,12 @@
 
         })
       },
-      change(val){
-        this.init(val)
-        this.id=val
-      },
       changePassword(index, row) {
         this.dialogPwVisible = true
         this.userName = row.username
       },
       addButton() {
+        this.disabled=false
         this.form.userName = ''
         this.form.realName = ''
         this.form.mobile = ''
@@ -488,7 +503,7 @@
       },
       handleCurrentChange(val) {
         this.currentPage = val
-        this.init(this.id)
+        this.init()
       }
     }
   }
@@ -497,4 +512,3 @@
 <style lang="scss" scoped>
 
 </style>
-

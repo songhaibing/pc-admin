@@ -1,17 +1,3 @@
-<!--<template>-->
-    <!--<div>补助发放</div>-->
-<!--</template>-->
-
-<!--<script>-->
-    <!--export default {-->
-        <!--name: "subsidy-grant"-->
-    <!--}-->
-<!--</script>-->
-
-<!--<style scoped>-->
-
-<!--</style>-->
-
 
 <template>
   <!--补助发放-->
@@ -19,10 +5,19 @@
     <div style="margin-left: 10px">
       <div style="display: flex;flex-direction: column;">
         <div>
-          <span>账户归属</span>
-          <el-select placeholder="请选择" style="width: 300px;margin-left: 20px">
-
-          </el-select>
+          <span>搜索查询</span>
+          <el-input v-model="input" placeholder="按交易单号或姓名筛选" style="width: 300px;margin-left: 20px"></el-input>
+          <el-button
+            type="success"
+            style="margin-left: 10px"
+          >查询
+          </el-button>
+          <el-input v-model="input" placeholder="按单位筛选" style="width: 300px;margin-left: 20px"></el-input>
+          <el-button
+            type="success"
+            style="margin-left: 10px"
+          >查询
+          </el-button>
         </div>
         <div style="margin-top: 20px">
           <span>查询日期</span>
@@ -41,6 +36,26 @@
             type="success"
             style="margin-left: 10px"
           >查询
+          </el-button>
+        </div>
+        <div style="margin-top: -30px">
+          <el-button
+            style="margin-right: 6px;float: right"
+            type="text"
+            icon="el-icon-download"
+          >导入名单
+          </el-button>
+          <el-button
+            style="margin-right: 6px;float: right"
+            type="text"
+            icon="el-icon-download"
+          >一键发放
+          </el-button>
+          <el-button
+            style="margin-right: 6px;float: right"
+            type="text"
+            icon="el-icon-download"
+          >导出补助名单
           </el-button>
         </div>
       </div>
@@ -62,38 +77,38 @@
           type="index"
         />
         <el-table-column
-          label="创建时间"
+          label="交易流水号"
           align="center"
         />
         <el-table-column
           align="center"
           prop="username"
-          label="交易单号"
+          label="姓名"
         />
         <el-table-column
           align="center"
           prop="realname"
-          label="商户流水号"
+          label="身份证号"
         />
         <el-table-column
           align="center"
           prop="nickname"
-          label="退款金额"
+          label="归属单位"
         />
         <el-table-column
           align="center"
           prop="phone"
-          label="申请人"
+          label="补助金额"
         />
         <el-table-column
           align="center"
           prop="phone"
-          label="支付场景"
+          label="发放时间"
         />
         <el-table-column
           align="center"
           prop="phone"
-          label="退款状态"
+          label="状态"
         />
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
@@ -102,6 +117,22 @@
               type="text"
               @click="handleEdit(scope.$index, scope.row)"
             >查看
+            </el-button>
+          </template>
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="text"
+              @click="handleEdit(scope.$index, scope.row)"
+            >修改
+            </el-button>
+          </template>
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="text"
+              @click="handleEdit(scope.$index, scope.row)"
+            >撤回补助
             </el-button>
           </template>
         </el-table-column>
@@ -115,6 +146,7 @@
     name: 'subsidy-grant',
     data() {
       return {
+        input:'',
         activeName:'first',
         pickerOptions: {
           shortcuts: [{
