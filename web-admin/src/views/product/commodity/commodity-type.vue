@@ -18,13 +18,20 @@
         :data="tableData"
         style="width: 100%"
       >
-        <el-table-column label="ID" align="center" prop="id"/>
         <el-table-column align="center" prop="name" label="分类名"/>
-        <el-table-column align="center" prop="sort" label="排序"/>
+        <el-table-column align="center" prop="sort" label="排序" width="100">
+          <template slot-scope="scope">
+            <el-form :model="scope.row" >
+              <el-input ref="inputValue"   v-model="scope.row.sort" placeholder="排序" @focus="focus(scope.row)" @blur="blur(scope.row)"/>
+            </el-form>
+          </template>
+        </el-table-column>
         <el-table-column align="center" prop="sort" label="状态">
           <template slot-scope="scope">
             <el-switch active-value="0" inactive-value="1"
                        active-color="#13ce66"
+                       active-text="显示"
+                       inactive-text="隐藏"
                        v-model="scope.row.goodsTypeState" @change='change(scope.row,scope.row.goodsTypeState)'/>
           </template>
         </el-table-column>
@@ -53,17 +60,8 @@
     </el-card>
     <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
-          <el-input v-model="form.sort" autocomplete="off"/>
-        </el-form-item>
         <el-form-item label="分类名" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off"/>
-        </el-form-item>
-        <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
-          <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
-            <el-option label="显示" value="0"/>
-            <el-option label="隐藏" value="1"/>
-          </el-select>
         </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -80,6 +78,7 @@
     name: 'Commodity-type',
     data() {
       return {
+        sortId:'',
         parentId: '',
         merchantId: '',
         formLabelWidth: '100px',
@@ -91,19 +90,11 @@
         dialogFormVisible: false,
         form: {
           name: '',
-          sort: '',
-          status: ''
         },
         rules: {
           name: [
             {required: true, message: '请输入商品分类', trigger: 'blur'}
           ],
-          sort: [
-            {required: true, message: '请输入商品排序', trigger: 'blur'}
-          ],
-          status: [
-            {required: true, message: '请选择分类状态', trigger: 'blur'}
-          ]
         }
       }
     },
@@ -120,20 +111,23 @@
           this.loading = false
         })
       },
+      focus(row){
+        this.sortId=row.id
+      },
+      blur(row){
+        this.$_HTTP.put(this.$_API.editGoodstype +this.sortId, {sort: row.sort}, res => {
+        })
+      },
       addSubclass(index, row) {
         this.parentId = row.id
         this.title = '添加商品子类'
         this.form.name = ''
-        this.form.sort = ''
-        this.form.status = ''
         this.merchantId = row.id
         this.dialogFormVisible = true
       },
       handleEdit(index, row) {
         this.title = '编辑商品分类'
         this.form.name = row.name
-        this.form.sort = row.sort
-        this.form.status = row.goodsTypeState
         this.merchantId = row.id
         this.dialogFormVisible = true
       },
@@ -165,14 +159,10 @@
           if (valid) {
             const params = {
               name: this.form.name,
-              sort: this.form.sort,
-              goodsTypeState: this.form.status
             }
             const childParams = {
               parentId: this.parentId,
               name: this.form.name,
-              sort: this.form.sort,
-              goodsTypeState: this.form.status
             }
             if (this.title === '添加商品分类') {
               this.$_HTTP.post(this.$_API.addGoodstype, params, res => {

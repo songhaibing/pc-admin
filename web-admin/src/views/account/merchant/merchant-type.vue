@@ -23,7 +23,7 @@
         <el-table-column align="center" prop="sort" label="排序"  width="100">
           <template slot-scope="scope">
             <el-form :model="scope.row" >
-                <el-input ref="inputValue"  @input="changeInput" v-model="scope.row.sort" placeholder="请输入排序" @focus="focus(scope.row)" @blur="blur(scope.row)"/>
+                <el-input ref="inputValue"  @input="changeInput" v-model="scope.row.sort" placeholder="排序" @focus="focus(scope.row)" @blur="blur(scope.row)"/>
             </el-form>
           </template>
         </el-table-column>
@@ -60,9 +60,6 @@
     </el-card>
     <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
-          <el-input v-model="form.sort" autocomplete="off" />
-        </el-form-item>
         <el-form-item label="分类名" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off"/>
         </el-form-item>
@@ -120,9 +117,6 @@
       this.init()
     },
     methods: {
-      changeInput(){
-        console.log(this.$refs.inputValue.value)
-      },
       // 初始化分页
       init() {
         this.loading = true

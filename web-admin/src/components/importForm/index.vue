@@ -1,152 +1,139 @@
-<!--<template>-->
-    <!--<div>黑名单</div>-->
-<!--</template>-->
+<style lang="scss" scoped>
+  * {
+    margin: 0;
+    padding: 0;
+  }
 
-<!--<script>-->
-    <!--export default {-->
-        <!--name: "blacklist"-->
-    <!--}-->
-<!--</script>-->
+  li {
+    list-style: none;
+  }
+  .iconfont {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-<!--<style scoped>-->
-
-<!--</style>-->
-  <style lang="scss" scoped>
-    * {
-      margin: 0;
-      padding: 0;
-    }
-
-    li {
-      list-style: none;
-    }
-    .iconfont {
-      font-family: "iconfont" !important;
-      font-size: 16px;
-      font-style: normal;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    .icon-shangchuan:before {
-      content: "\e632";
-    }
+  .icon-shangchuan:before {
+    content: "\e632";
+  }
 
 
-    .iconfont {
-      font-family: "iconfont";
-      font-size: 18px;
-      font-style: normal;
-      -webkit-font-smoothing: antialiased;
-      -webkit-text-stroke-width: 0.2px;
-      -moz-osx-font-smoothing: grayscale;
-      padding-left: 20px
-    }
+  .iconfont {
+    font-family: "iconfont";
+    font-size: 18px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+    padding-left: 20px
+  }
 
-    .uploadBox {
-      width: 400px;
-      border: 1px solid #ccc;
-      margin: 100px auto;
-    }
+  .uploadBox {
+    width: 400px;
+    border: 1px solid #ccc;
+    margin: 60px auto;
+  }
 
-    .fileBox,
-    .fileInfo {
-      margin: 16px;
-      height: 60px;
-      line-height: 60px;
-      border: 1px solid #ccc;
-      padding-left: 16px;
-      font-size: 16px;
-    }
+  .fileBox,
+  .fileInfo {
+    margin: 16px;
+    height: 60px;
+    line-height: 60px;
+    border: 1px solid #ccc;
+    padding-left: 16px;
+    font-size: 16px;
+  }
 
-    .inputfile {
-      width: 0.1px;
-      height: 0.1px;
-      opacity: 0;
-      overflow: hidden;
-      position: absolute;
-      z-index: -1;
-    }
+  .inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
 
-    /*E + F 毗邻元素选择器，匹配所有紧随E元素之后的同级元素F*/
+  /*E + F 毗邻元素选择器，匹配所有紧随E元素之后的同级元素F*/
 
-    .inputfile+label {
-      color: #3e97df;
-      display: inline-block;
-    }
+  .inputfile+label {
+    color: #3e97df;
+    display: inline-block;
+  }
 
-    .inputfile:focus+label,
-    .inputfile+label:hover {
-      color: #0c89f0;
-    }
+  .inputfile:focus+label,
+  .inputfile+label:hover {
+    color: #0c89f0;
+  }
 
-    h3 {
-      padding: 10px 0 0 16px;
-      font-weight: normal;
-      font-size: 18px;
-      color: #666;
-    }
+  h3 {
+    padding: 10px 0 0 16px;
+    font-weight: normal;
+    font-size: 18px;
+    color: #666;
+  }
 
-    .filePart {
-      line-height: 30px;
-      overflow: hidden;
-      float: left;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      font-size: 12px;
-      height: 30px;
-    }
+  .filePart {
+    line-height: 30px;
+    overflow: hidden;
+    float: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    height: 30px;
+  }
 
-    .fileStatus {
-      overflow: hidden;
-      float: left;
-      height: 20px;
-      font-size: 10px;
-      line-height: 20px;
-    }
+  .fileStatus {
+    overflow: hidden;
+    float: left;
+    height: 20px;
+    font-size: 10px;
+    line-height: 20px;
+  }
 
-    .ml10 {
-      margin-left: 10px;
-    }
+  .ml10 {
+    margin-left: 10px;
+  }
 
-    .fileName {
-      width: 200px;
-    }
+  .fileName {
+    width: 200px;
+  }
 
-    .fileSize {
-      width: 120px;
-      text-align: center;
-    }
+  .fileSize {
+    width: 120px;
+    text-align: center;
+  }
 
-    .uploadFail {
-      color: #ff0800d3;
-    }
+  .uploadFail {
+    color: #ff0800d3;
+  }
 
-    .uploadSuccess {
-      color: #2c832c;
-    }
+  .uploadSuccess {
+    color: #2c832c;
+  }
 
-    /*对应CSS*/
+  /*对应CSS*/
 
-    .progress {
-      position: relative;
-      width: 80%;
-      height: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      overflow: hidden;
-      /*注意这里*/
-      box-shadow: 0 0 1px 0px #ddd inset;
-    }
+  .progress {
+    position: relative;
+    width: 80%;
+    height: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    /*注意这里*/
+    box-shadow: 0 0 1px 0px #ddd inset;
+  }
 
-    .progress span {
-      position: absolute;
-      display: inline-block;
-      width: 10%;
-      height: 100%;
-      background-color: #3e97df;
-    }
-  </style>
+  .progress span {
+    position: absolute;
+    display: inline-block;
+    width: 10%;
+    height: 100%;
+    background-color: #3e97df;
+  }
+</style>
 <template>
   <div id="app" class="m-5">
     <div class="uploadBox">
@@ -155,7 +142,7 @@
         <input type="file" id="myFile" class="inputfile" @change="handlerUpload($event)">
         <label for="myFile">
           <i class="el-icon-upload el-icon--right"></i>
-         点击上传本地文件
+          点击上传本地文件
         </label>
       </div>
       <ul class="files">
@@ -188,6 +175,7 @@
 <script>
   import axios from 'axios'
   export default {
+    name:'importForm',
     data() {
       return{
         files: [],
@@ -281,4 +269,3 @@
   }
 
 </script>
-

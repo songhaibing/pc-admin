@@ -32,7 +32,7 @@
               style="padding: 6px;margin-right: 6px"
               type="success"
               icon="el-icon-share"
-
+              @click="importUser"
             >导入用户
             </el-button>
             <el-button
@@ -221,9 +221,9 @@
         ref="tree2">
       </el-tree>
     </el-dialog>
-    <!--<el-dialog :title="titleExport" width="600px" :visible.sync="dialogFormExport">-->
-
-    <!--</el-dialog>-->
+    <el-dialog :title="titleExport" width="600px" :visible.sync="dialogFormImport">
+        <import-form></import-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -232,10 +232,10 @@
   import { checkPhone, checkEmail, checkPw, checkRenewPw } from '@/libs/regular.js'
   import mixins from '@/mixins/user'
   import exportForm from '@/mixins/exportForm'
-  import axios from 'axios'
+  import ImportForm from "../../../components/importForm/index";
   export default {
     name: 'User',
-    components: { TipMessage },
+    components: {ImportForm, TipMessage },
     mixins: [mixins,exportForm],
     data() {
       const checkUserName = (rule, value, callback) => {
@@ -267,6 +267,7 @@
         }
       }
       return {
+        dialogFormImport:false,
         titleExport:'批量导入',
         disabled:false,
         dataTree:[],
@@ -366,9 +367,9 @@
           this.$refs.input.blur()
         },500)
       },
-      // importUser(){
-      //
-      // }
+      importUser(){
+        this.dialogFormImport=true
+      },
       filterNode(value, data) {
         if (!value) return true;
         return data.name.indexOf(value) !== -1;

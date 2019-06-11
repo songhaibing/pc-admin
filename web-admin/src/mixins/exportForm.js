@@ -12,7 +12,7 @@ export default {
         'responseType': 'blob'  //设置响应的数据类型为一个包含二进制数据的 Blob 对象，必须设置！！！
       }).then(function (response) {
         const blob = new Blob([response.data]);
-        const fileName = 'xxx.xls';
+        const fileName = 'table.xls';
         const linkNode = document.createElement('a');
 
         linkNode.download = fileName; //a标签的download属性规定下载文件的名称
