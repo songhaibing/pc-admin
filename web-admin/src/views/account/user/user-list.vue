@@ -21,8 +21,20 @@
       <div v-else style="padding:20px;margin-left: 200px;">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <i class="el-icon-menu" />
-            <span>用户列表</span>
+            <el-button
+              style="padding: 6px;margin-right: 6px"
+              type="success"
+              icon="el-icon-s-promotion"
+              @click="exportTemplate"
+            >导出模版
+            </el-button>
+            <el-button
+              style="padding: 6px;margin-right: 6px"
+              type="success"
+              icon="el-icon-share"
+
+            >导入用户
+            </el-button>
             <el-button
               style="float: right;padding: 6px;margin-right: 6px"
               type="primary"
@@ -32,6 +44,7 @@
             </el-button>
           </div>
           <el-table
+            id="out-table"
             v-loading="loading"
             :data="tableData"
             style="width: 100%"
@@ -40,6 +53,11 @@
               align="center"
               label="序号"
               type="index"
+            />
+            <el-table-column
+              align="center"
+              prop="id"
+              label="用户ID"
             />
             <el-table-column
               label="头像"
@@ -54,32 +72,9 @@
                 <img v-else src="@/assets/avatar/mieba.png" class="head_pic">
               </template>
             </el-table-column>
-            <el-table-column
-              align="center"
-              prop="username"
-              label="用户名"
+            <el-table-column align="center" prop="username" label="用户名"/>
+            <el-table-column align="center" prop="realname" label="姓名"
             />
-            <el-table-column
-              align="center"
-              prop="realname"
-              label="真实姓名"
-            />
-            <el-table-column
-              align="center"
-              prop="nickname"
-              label="昵称"
-            />
-            <el-table-column
-              align="center"
-              prop="phone"
-              label="手机号码"
-            />
-            <el-table-column
-              align="center"
-              label="部门"
-            >
-              <template slot-scope="scope">{{ scope.row.dept.name }}</template>
-            </el-table-column>
             <el-table-column
               align="center"
               prop="email"
@@ -87,7 +82,30 @@
             />
             <el-table-column
               align="center"
-              label="是否禁止登陆"
+              prop=""
+              label="性别"
+            />
+            <el-table-column
+              align="center"
+              prop=""
+              label="身份证号"
+            />
+
+            <el-table-column
+              align="center"
+              prop="phone"
+              label="手机号码"
+            />
+            <el-table-column
+              align="center"
+              label="归属单位"
+            >
+              <template slot-scope="scope">{{ scope.row.dept.name }}</template>
+            </el-table-column>
+
+            <el-table-column
+              align="center"
+              label="状态"
             >
               <template slot-scope="scope">{{ scope.row.lockFlag?'是':'否' }}</template>
             </el-table-column>
@@ -203,6 +221,9 @@
         ref="tree2">
       </el-tree>
     </el-dialog>
+    <!--<el-dialog :title="titleExport" width="600px" :visible.sync="dialogFormExport">-->
+
+    <!--</el-dialog>-->
   </div>
 </template>
 
@@ -210,11 +231,12 @@
   import TipMessage from '../../../components/tipMessage/tipMessage'
   import { checkPhone, checkEmail, checkPw, checkRenewPw } from '@/libs/regular.js'
   import mixins from '@/mixins/user'
-
+  import exportForm from '@/mixins/exportForm'
+  import axios from 'axios'
   export default {
     name: 'User',
     components: { TipMessage },
-    mixins: [mixins],
+    mixins: [mixins,exportForm],
     data() {
       const checkUserName = (rule, value, callback) => {
         if (!value) {
@@ -245,6 +267,7 @@
         }
       }
       return {
+        titleExport:'批量导入',
         disabled:false,
         dataTree:[],
         filterText:'',
@@ -343,6 +366,9 @@
           this.$refs.input.blur()
         },500)
       },
+      // importUser(){
+      //
+      // }
       filterNode(value, data) {
         if (!value) return true;
         return data.name.indexOf(value) !== -1;

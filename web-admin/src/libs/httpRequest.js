@@ -88,6 +88,22 @@ HTTP.get = function(url, data, callback) {
       $Vue.$message.error(err)
     })
 }
+HTTP.get1 = function(url, data, callback) {
+  const params = { params: data }
+  instance.get(url, params)
+    .then(function(res) {
+      // 响应成功回调
+      callback(res)
+      // if (res.data.code === 1) {
+      //   callback(res.data.data)
+      // } else {
+      //   $Vue.$message.error('网络异常请刷新')
+      // }
+    })
+    .catch(function(err) {
+      $Vue.$message.error(err)
+    })
+}
 /**
  * 发送delete请求
  *

@@ -58,6 +58,8 @@ const API = {
   delBusinesstype:smartcardIp +'businesstype/delete/',//删除商户分类类型
   // 角色管理-管理员列表
   roleList:adminIp +'role/list',//分页查询管理员列表
+  // 用户管理-用户列表
+  exportTemplate:smartcardIp +'smartCard/exportInfo',//导出一个用户表格文档模板
   /**
    *  产品中心API
    */
