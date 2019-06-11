@@ -65,7 +65,7 @@
         <el-form-item label="外观图" :label-width="formLabelWidth">
           <el-upload
             class="avatar-uploader"
-            action="http://106.75.178.9:8080/file/upload/file/avatar"
+            action="http://106.75.178.9:80/file/upload/file/avatar"
             :headers="{token}"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
@@ -225,7 +225,7 @@
       handleEdit(index,row){
         this.deviceId = row.id
         if (row.img) {
-          this.imageUrl = 'http://106.75.178.9:8080/resource/' + row.img
+          this.imageUrl = 'http://106.75.178.9:80/resource/' + row.img
         } else {
           this.imageUrl = this.avatar
         }

@@ -135,7 +135,7 @@
         })
       },
       change(row,data){
-        this.$_HTTP.put(this.$_API.editBusinesstype +this.sortId, {businessTypeState:data}, res => {
+        this.$_HTTP.put(this.$_API.editBusinesstype +row.id, {businessTypeState:data}, res => {
         })
         },
       addSubclass(index, row) {

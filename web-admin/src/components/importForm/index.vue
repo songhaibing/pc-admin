@@ -183,7 +183,7 @@
       }
     },
     methods: {
-      handlerUpload: function (e) {
+      handlerUpload(e) {
         //获取选定的文件
         let tFiles = e.target.files;
         let len = tFiles.length;
@@ -249,7 +249,7 @@
         return this.formatFileSize(fileSize / 1024, ++idx);
       },
       checkFileType: function (fileType) {
-        const acceptTypes = ['xls'];
+        const acceptTypes = ['xlsx'];
         for (let i = 0; i < acceptTypes.length; i++) {
           if (fileType === acceptTypes[i]) {
             return true;
@@ -269,3 +269,4 @@
   }
 
 </script>
+

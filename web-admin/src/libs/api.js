@@ -92,6 +92,8 @@ const API = {
   addPurseType:smartcardIp +'purseType/add',//创建钱包类型
   editPurseType:smartcardIp +'purseType/edit/',//修改钱包类型信息
   delPurseType:smartcardIp +'purseType/delete/' ,//通过ID删除钱包类型
+  //资金管理-补助发放
+  exportSubsidyTemplate:smartcardIp +'subsidy/exportTemplate' ,//导出一个补贴用户模板
 }
 
 export default API
