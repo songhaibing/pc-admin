@@ -187,14 +187,14 @@
           if (valid) {
             const params = {
               name: this.form.name,
-              sort: this.form.sort,
-              businessTypeState:this.form.status
+              sort:0,
+              businessTypeState:0
             }
             const childParams = {
               name: this.form.name,
-              sort: this.form.sort,
+              sort: 0,
               parentId: this.parentId,
-              businessTypeState:this.form.status
+              businessTypeState:0
             }
             if (this.title === '添加商户分类') {
               this.$_HTTP.post(this.$_API.addBusinesstype, params, res => {

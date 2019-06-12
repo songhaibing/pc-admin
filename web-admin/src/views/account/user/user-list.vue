@@ -222,7 +222,7 @@
       </el-tree>
     </el-dialog>
     <el-dialog :title="titleExport" width="600px" :visible.sync="dialogFormImport">
-        <import-form></import-form>
+        <import-form :importApi="api"></import-form>
     </el-dialog>
   </div>
 </template>
@@ -267,6 +267,7 @@
         }
       }
       return {
+        api:'smartCard/importInfo',
         dialogFormImport:false,
         titleExport:'批量导入',
         disabled:false,

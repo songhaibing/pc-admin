@@ -13,7 +13,7 @@
               @click="addButton"
             >添加
             </el-button>
-            <el-select v-model="valueSelect" placeholder="请选择" style="float: right;" @change="change">
+            <el-select v-model="valueSelect" placeholder="根据单位查询角色" style="float: right;" @change="change">
               <el-option
                 v-for="item in options"
                 :key="item.id"
@@ -153,11 +153,8 @@
 </template>
 
 <script>
-  import TipMessage from '../../../components/tipMessage/tipMessage'
-
   export default {
     name: 'Role',
-    components: { TipMessage },
     watch: {
       filterText(val) {
         this.$refs.tree2.filter(val);
@@ -172,7 +169,7 @@
         titleTree:'请选择',
         dialogFormTree:false,
         options: [],
-        valueSelect:1,
+        valueSelect:'',
         isExpand: true,
         permissionId: '',
         defaultProps: {
@@ -310,11 +307,6 @@
         size: 10,
         currentPage: 1,
         total: 0,
-        // data: [],
-        // defaultProps: {
-        //   children: 'children',
-        //   label: 'name'
-        // },
         form: {
           Name: '',
           Code: '',
@@ -341,10 +333,19 @@
         this.dataTree=res
         this.options=res
       })
-      this.selectId=this.valueSelect
-      this.findDept(this.valueSelect)
+      this.init()
+      // this.selectId=this.valueSelect
+      // this.findDept(this.valueSelect)
     },
     methods: {
+      //分页查询角色
+      init(){
+        this.$_HTTP.get(this.$_API.roleList, {size: this.size, current: this.currentPage}, res => {
+          this.loading=true
+          this.tableData = res.records
+          this.loading=false
+        })
+      },
       changeSelect(val){
         console.log(val)
       },
@@ -422,11 +423,19 @@
       },
       handleSizeChange(val) {
         this.size = val
-        this.findDept(this.id)
+        if(this.id){
+          this.findDept(this.id)
+        }else{
+          this.init()
+        }
       },
       handleCurrentChange(val) {
         this.currentPage = val
-        this.findDept(this.id)
+        if(this.id){
+          this.findDept(this.id)
+        }else{
+          this.init()
+        }
       },
       handleEdit(index, row) {
         console.log(row)

@@ -4,6 +4,8 @@
         action="http://106.75.178.9:80/smartcard/smartCard/importInfo"
         list-type="picture-card"
         :on-preview="handlePictureCardPreview"
+        :headers="{token}"
+        :on-success="handleAvatarSuccess"
         :on-remove="handleRemove">
         <i class="el-icon-plus"></i>
       </el-upload>
@@ -18,11 +20,15 @@
         name: "blacklist",
       data() {
         return {
+          token: localStorage.getItem('token'),
           dialogImageUrl: '',
           dialogVisible: false
         };
       },
       methods: {
+        handleAvatarSuccess(res,file) {
+        console.log(res,file)
+        },
         handleRemove(file, fileList) {
           console.log(file, fileList);
         },

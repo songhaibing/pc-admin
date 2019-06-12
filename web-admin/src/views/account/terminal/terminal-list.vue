@@ -1,17 +1,91 @@
 <template>
   <div style="padding: 20px">
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <i class="el-icon-school"/>
-        <span>终端设备列表</span>
+    <!--<div style="margin-left: 10px">-->
+      <!--<div style="display: flex;flex-direction: column;">-->
+        <!--<div>-->
+          <!--<span>账户归属</span>-->
+          <!--<el-select placeholder="请选择" style="width: 300px;margin-left: 20px">-->
+
+          <!--</el-select>-->
+        <!--</div>-->
+        <!--<div style="margin-top: 20px">-->
+          <!--<span>查询日期</span>-->
+          <!--<el-date-picker-->
+            <!--v-model="value"-->
+            <!--style="margin-left: 20px"-->
+            <!--type="daterange"-->
+            <!--align="right"-->
+            <!--unlink-panels-->
+            <!--range-separator="-"-->
+            <!--start-placeholder="开始日期"-->
+            <!--end-placeholder="结束日期"-->
+            <!--:picker-options="pickerOptions"-->
+          <!--/>-->
+          <!--<el-button-->
+            <!--type="success"-->
+            <!--style="margin-left: 10px"-->
+          <!--&gt;查询-->
+          <!--</el-button>-->
+        <!--</div>-->
+        <!--<div style="margin-top: 20px">-->
+          <!--<span>全局搜索</span>-->
+          <!--<el-input v-model="value" placeholder="请输入设备ID,设备名称等进行查询" style="width: 300px;margin-left: 20px"></el-input>-->
+          <!--<el-button-->
+            <!--type="success"-->
+            <!--style="margin-left: 10px"-->
+          <!--&gt;查询-->
+          <!--</el-button>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+    <div style="display: flex;justify-content: space-between;margin-left: 10px">
+      <div style="display: flex;flex-direction: column;">
+        <div>
+          <span>账户归属</span>
+          <el-select placeholder="请选择" style="width: 300px;margin-left: 20px">
+
+          </el-select>
+        </div>
+        <div style="margin-top: 20px">
+          <span>查询日期</span>
+          <el-date-picker
+            v-model="value"
+            style="margin-left: 20px"
+            type="daterange"
+            align="right"
+            unlink-panels
+            range-separator="-"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            :picker-options="pickerOptions"
+          />
+          <el-button
+            type="success"
+            style="margin-left: 10px"
+          >查询
+          </el-button>
+        </div>
+        <div style="margin-top: 20px">
+            <span>全局搜索</span>
+            <el-input v-model="value" placeholder="请输入设备ID,设备名称等进行查询" style="width: 300px;margin-left: 20px"></el-input>
+            <el-button
+              type="success"
+              style="margin-left: 10px"
+            >查询
+            </el-button>
+        </div>
+      </div>
+      <div style="margin-top: 120px">
         <el-button
-          style="float: right;padding: 6px;margin-right: 6px"
+          style="float: right;margin-right: 6px"
           type="primary"
           icon="el-icon-plus"
           @click="addButton"
         >添加
         </el-button>
       </div>
+    </div>
+    <el-card class="box-card" style="margin-top: 20px">
       <el-table
         v-loading="loading"
         :data="tableData"

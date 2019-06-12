@@ -43,6 +43,7 @@
             style="margin-right: 6px;float: right"
             type="text"
             icon="el-icon-download"
+            @click="importUser"
           >导入名单
           </el-button>
           <el-button
@@ -145,16 +146,24 @@
         </el-table-column>
       </el-table>
     </el-card>
+    <el-dialog :title="titleExport" width="600px" :visible.sync="dialogFormImport">
+      <import-form :importApi="api"></import-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import axios from 'axios'
+  import ImportForm from "../../../components/importForm/index";
   export default {
     name: 'subsidy-grant',
+    components: {ImportForm},
     data() {
       return {
+        api:'subsidy/importSubsidyInfo',
         input:'',
+        titleExport:'批量导入',
+        dialogFormImport:false,
         activeName:'first',
         pickerOptions: {
           shortcuts: [{
@@ -212,6 +221,9 @@
         }).catch(function (error) {
           console.log(error);
         });
+      },
+      importUser(){
+        this.dialogFormImport=true
       },
     }
   }

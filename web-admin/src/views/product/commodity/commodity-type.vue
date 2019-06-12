@@ -159,10 +159,14 @@
           if (valid) {
             const params = {
               name: this.form.name,
+              goodsTypeState:0,
+              sort:0
             }
             const childParams = {
               parentId: this.parentId,
               name: this.form.name,
+              goodsTypeState:0,
+              sort:0
             }
             if (this.title === '添加商品分类') {
               this.$_HTTP.post(this.$_API.addGoodstype, params, res => {

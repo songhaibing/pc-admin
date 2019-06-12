@@ -182,6 +182,12 @@
         uploadSuccess: 0
       }
     },
+    props:{
+      importApi: {
+        type: String,
+        required: true
+      },
+    },
     methods: {
       handlerUpload(e) {
         //获取选定的文件
@@ -229,7 +235,7 @@
               item.uploadPercentage = completeProgress;
             }
           };
-          axios.post('http://106.75.178.9:80/smartcard/smartCard/importInfo', param, config).then(function (
+          axios.post('http://106.75.178.9:80/smartcard/'+this.importApi, param, config).then(function (
             response) {
             console.log(response);
             item.uploadStatus = 2;
@@ -249,7 +255,7 @@
         return this.formatFileSize(fileSize / 1024, ++idx);
       },
       checkFileType: function (fileType) {
-        const acceptTypes = ['xlsx'];
+        const acceptTypes = ['xlsx','xls'];
         for (let i = 0; i < acceptTypes.length; i++) {
           if (fileType === acceptTypes[i]) {
             return true;

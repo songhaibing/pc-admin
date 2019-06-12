@@ -1,6 +1,6 @@
 
 <template>
-  <!--账单资金-->
+  <!--交易订单-->
   <div style="padding: 20px">
     <div style="margin-left: 10px">
       <div style="display: flex;flex-direction: column;">

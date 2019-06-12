@@ -2,17 +2,15 @@
   <div style="padding: 20px">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <i class="el-icon-s-shop"/>
-        <span>商品列表</span>
         <el-button
-          style="float: right;padding: 6px;margin-right: 6px"
+          style="padding: 6px;margin-right: 6px"
           type="primary"
           icon="el-icon-plus"
           @click="addButton"
         >添加
         </el-button>
         <el-button
-          style="float: right;padding: 6px;margin-right: 6px"
+          style="padding: 6px;margin-right: 6px"
           type="danger"
           icon="el-icon-delete"
           @click="delMore"
@@ -30,7 +28,6 @@
           type="selection"
           width="55">
         </el-table-column>
-        <el-table-column label="ID" prop="id" align="center" width="50"/>
         <el-table-column align="center" label="图片">
           <template scope="scope">
             <img
@@ -113,13 +110,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="预定时间" :label-width="formLabelWidth" prop="scheduledTime">
-          <el-date-picker
+          <el-time-picker
             style="width: 100%"
             v-model="form.scheduledTime"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
+            value-format="HH:mm:ss"
             placeholder="请选择今天以后的时间">
-          </el-date-picker>
+          </el-time-picker>
         </el-form-item>
         <el-form-item label="好评率" :label-width="formLabelWidth" prop="rate">
           <el-input v-model="form.rate" autocomplete="off">
