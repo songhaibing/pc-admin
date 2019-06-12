@@ -1,6 +1,5 @@
 <template>
   <div>
-    <el-row>
       <div style="padding:20px;">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
@@ -15,7 +14,7 @@
             </el-button>
             <el-select v-model="valueSelect" placeholder="根据单位查询角色" style="float: right;" @change="change">
               <el-option
-                v-for="item in options"
+                v-for="item in optionsInquire"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id">
@@ -31,25 +30,21 @@
               align="center"
               label="序号"
               type="index"
-              width="60"
             />
             <el-table-column
               align="center"
               prop="name"
               label="姓名"
-              width="150"
             />
             <el-table-column
               align="center"
               prop="code"
               label="code"
-              width="150"
             />
             <el-table-column
               align="center"
               prop="description"
               label="描述"
-              width="400"
             />
             <el-table-column
               label="操作"
@@ -148,7 +143,6 @@
           ref="tree2">
         </el-tree>
       </el-dialog>
-    </el-row>
   </div>
 </template>
 
@@ -164,11 +158,11 @@
       return {
         selectId:'',
         valueId:'',
-        dataTree:[],
         filterText:'',
         titleTree:'请选择',
         dialogFormTree:false,
         options: [],
+        optionsInquire:[],
         valueSelect:'',
         isExpand: true,
         permissionId: '',
@@ -329,13 +323,13 @@
     },
     created() {
       this.$_HTTP.get(this.$_API.deptTree, {}, res => {
-        // this.data = res
-        this.dataTree=res
+        this.optionsInquire=res
+        this.optionsInquire.unshift({id:'',name:'全部'})
+      })
+      this.$_HTTP.get(this.$_API.deptTree, {}, res => {
         this.options=res
       })
       this.init()
-      // this.selectId=this.valueSelect
-      // this.findDept(this.valueSelect)
     },
     methods: {
       //分页查询角色
@@ -343,6 +337,7 @@
         this.$_HTTP.get(this.$_API.roleList, {size: this.size, current: this.currentPage}, res => {
           this.loading=true
           this.tableData = res.records
+          this.total = res.total
           this.loading=false
         })
       },
@@ -375,7 +370,11 @@
       },
       change(val){
         this.selectId=val
-        this.findDept(val)
+        if(val){
+          this.findDept(val)
+        }else{
+          this.init()
+        }
       },
       addButton() {
         this.dialogFormVisible = true
@@ -407,14 +406,30 @@
               this.$_HTTP.post(this.$_API.addRoleMsg, data, res => {
                 if (res.code === 1) {
                   this.dialogFormVisible = false
-                  this.findDept(this.valueSelect)
+                  if(this.selectId){
+                    this.findDept(this.selectId)
+                  }else{
+                    this.init()
+                  }
+                  this.$message({
+                    type: 'success',
+                    message: '添加角色成功!'
+                  })
                 }
               })
             } else {
               this.$_HTTP.put(this.$_API.editRole + this.roleId, data, res => {
                 if (res.code === 1) {
                   this.dialogFormVisible = false
-                  this.findDept(this.valueSelect)
+                  if(this.selectId){
+                    this.findDept(this.selectId)
+                  }else{
+                    this.init()
+                  }
+                  this.$message({
+                    type: 'success',
+                    message: '编辑角色成功!'
+                  })
                 }
               })
             }
@@ -438,7 +453,6 @@
         }
       },
       handleEdit(index, row) {
-        console.log(row)
         this.roleId = row.id
         this.title = '编辑角色'
         this.dialogFormVisible = true
@@ -458,7 +472,11 @@
                 type: 'success',
                 message: '删除成功!'
               })
-              this.findDept(this.valueSelect)
+              if(this.selectId){
+                this.findDept(this.selectId)
+              }else{
+                this.init()
+              }
             }
           })
         }).catch(() => {

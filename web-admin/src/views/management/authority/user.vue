@@ -362,6 +362,7 @@ export default {
       this.loading = true
       this.$_HTTP.get(this.$_API.userList, { deptId: id, size: this.size, current: this.currentPage }, res => {
         this.tableData = res.records
+        console.log(res)
         this.total = res.total
         this.loading = false
       })
