@@ -1,43 +1,5 @@
 <template>
   <div style="padding: 20px">
-    <!--<div style="margin-left: 10px">-->
-      <!--<div style="display: flex;flex-direction: column;">-->
-        <!--<div>-->
-          <!--<span>账户归属</span>-->
-          <!--<el-select placeholder="请选择" style="width: 300px;margin-left: 20px">-->
-
-          <!--</el-select>-->
-        <!--</div>-->
-        <!--<div style="margin-top: 20px">-->
-          <!--<span>查询日期</span>-->
-          <!--<el-date-picker-->
-            <!--v-model="value"-->
-            <!--style="margin-left: 20px"-->
-            <!--type="daterange"-->
-            <!--align="right"-->
-            <!--unlink-panels-->
-            <!--range-separator="-"-->
-            <!--start-placeholder="开始日期"-->
-            <!--end-placeholder="结束日期"-->
-            <!--:picker-options="pickerOptions"-->
-          <!--/>-->
-          <!--<el-button-->
-            <!--type="success"-->
-            <!--style="margin-left: 10px"-->
-          <!--&gt;查询-->
-          <!--</el-button>-->
-        <!--</div>-->
-        <!--<div style="margin-top: 20px">-->
-          <!--<span>全局搜索</span>-->
-          <!--<el-input v-model="value" placeholder="请输入设备ID,设备名称等进行查询" style="width: 300px;margin-left: 20px"></el-input>-->
-          <!--<el-button-->
-            <!--type="success"-->
-            <!--style="margin-left: 10px"-->
-          <!--&gt;查询-->
-          <!--</el-button>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
     <div style="display: flex;justify-content: space-between;margin-left: 10px">
       <div style="display: flex;flex-direction: column;">
         <div>
@@ -59,20 +21,12 @@
             end-placeholder="结束日期"
             :picker-options="pickerOptions"
           />
+          <el-input v-model="value" placeholder="请输入设备ID,设备名称等进行查询" style="width: 300px;margin-left: 20px"></el-input>
           <el-button
             type="success"
             style="margin-left: 10px"
           >查询
           </el-button>
-        </div>
-        <div style="margin-top: 20px">
-            <span>全局搜索</span>
-            <el-input v-model="value" placeholder="请输入设备ID,设备名称等进行查询" style="width: 300px;margin-left: 20px"></el-input>
-            <el-button
-              type="success"
-              style="margin-left: 10px"
-            >查询
-            </el-button>
         </div>
       </div>
       <div style="margin-top: 120px">
@@ -97,7 +51,7 @@
           <template scope="scope">
             <img
               v-if="scope.row.img"
-              :src="'http://106.75.178.9:8080/resource/'+scope.row.img"
+              :src="'http://106.75.178.9:80/resource/'+scope.row.img"
               class="head_pic"
             >
             <img v-else src="@/assets/other/caomei.jpg" class="head_pic">
@@ -166,15 +120,15 @@
             @getValue="getValue($event)"
           />
         </el-form-item>
-        <el-form-item label="设备位置" :label-width="formLabelWidth" prop="address">
+        <el-form-item label="归属商户" :label-width="formLabelWidth" prop="address">
           <el-input v-model="form.address" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="启用时间" :label-width="formLabelWidth" prop="time">
           <el-date-picker
             style="width: 100%"
             v-model="form.time"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
+            value-format="yyyy-MM-dd"
+            type="date"
             placeholder="请选择启用时间">
           </el-date-picker>
         </el-form-item>
@@ -260,18 +214,6 @@
           name: [
             {required: true, message: '请输入设备名称', trigger: 'blur'}
           ],
-          address: [
-            {required: true, message: '请输入设备位置', trigger: 'blur'}
-          ],
-          time: [
-            {required: true, message: '请输入启用时间', trigger: 'blur'}
-          ],
-          pw: [
-            {required: true, message: '请输入管理密码', trigger: 'blur'}
-          ],
-          status: [
-            {required: true, message: '请输入设备状态', trigger: 'blur'}
-          ]
         }
       }
     },
@@ -377,7 +319,7 @@
               name: this.form.name,
               address: this.form.address,
               deptId: this.valueId,
-              usingDate: this.form.time,
+              usingDate: this.form.time+' 00:00:00',
               password:this.form.pw,
               img:this.base64,
               deviceId:this.form.id,

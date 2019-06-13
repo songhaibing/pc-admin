@@ -9,7 +9,7 @@
     name: "cache-cleanup",
     methods: {
       cleanUp(){
-        window.open("http://106.75.178.9:8080/admin/cache/flush");
+        window.open("http://106.75.178.9:80/admin/cache/flush");
       }
     }
   }

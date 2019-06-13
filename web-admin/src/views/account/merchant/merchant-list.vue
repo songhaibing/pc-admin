@@ -194,9 +194,6 @@
           name: [
             {required: true, message: '请输入商户名称', trigger: 'blur'}
           ],
-          category: [
-            {required: true, message: '请输入主营类目', trigger: 'blur'}
-          ],
           principal: [
             {required: true, message: '请输入商户负责人', trigger: 'blur'}
           ],
@@ -324,7 +321,6 @@
               name: this.form.name,
               deptId:this.unitId,
               categories: this.form.category,
-              deviceNumber: this.form.num,
               expireTime: this.form.time,
               head: this.form.principal,
               phoneNumber: this.form.phone,
