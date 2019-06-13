@@ -135,7 +135,8 @@
             v-model="form.openingTime"
             value-format="yyyy-MM-dd"
             type="date"
-            placeholder="选择开通时间">
+            placeholder="选择开通时间"
+            :picker-options="pickerOptions">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="终止时间" :label-width="formLabelWidth" prop="stopTime">
@@ -145,7 +146,9 @@
             type="date"
             v-model="form.stopTime"
             value-format="yyyy-MM-dd"
-            placeholder="请选择终止时间">
+            placeholder="请选择终止时间"
+            :picker-options="pickerOptions"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth" prop="status" v-if="title==='编辑单位'">
@@ -209,6 +212,13 @@
           value: 9,
           label: '禁用'
         }],
+        pickerOptions: {
+          disabledDate(time) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24);
+            return time.getTime() < date;
+          }
+        },
         form: {
           unitName: '',
           mobile: '',

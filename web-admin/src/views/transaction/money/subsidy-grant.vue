@@ -6,17 +6,7 @@
         <div>
           <span>搜索查询</span>
           <el-input v-model="input" placeholder="按交易单号或姓名筛选" style="width: 300px;margin-left: 20px"></el-input>
-          <el-button
-            type="success"
-            style="margin-left: 10px"
-          >查询
-          </el-button>
           <el-input v-model="input" placeholder="按单位筛选" style="width: 300px;margin-left: 20px"></el-input>
-          <el-button
-            type="success"
-            style="margin-left: 10px"
-          >查询
-          </el-button>
         </div>
         <div style="margin-top: 20px">
           <span>查询日期</span>
@@ -39,32 +29,34 @@
         </div>
         <div style="margin-top: -30px">
           <el-button
-            style="margin-right: 6px;float: right"
-            type="success"
-            icon="el-icon-share"
-            @click="importUser"
-          >导入名单
+            style="margin-left:10px;float: right"
+            type="primary"
+            icon="el-icon-download"
+            @click="exportSubsidy"
+          >导出清单
           </el-button>
           <el-button
-            style="margin-right: 6px;float: right"
+            style="float: right"
             type="success"
             icon="el-icon-s-promotion"
             @click="release"
           >一键发放
           </el-button>
           <el-button
-            style="margin-right: 6px;float: right"
-            type="success"
-            icon="el-icon-download"
-            @click="exportTemplate"
-          >导出补助模版
+            style="float: right"
+            type="warning"
+            icon="el-icon-share"
+            @click="importUser"
+          >导入名单
           </el-button>
           <el-button
-            style="margin-right: 6px;float: right"
-            type="success"
+            style="float: right"
+            type="primary"
             icon="el-icon-download"
-          >导出补助名单
+            @click="exportTemplate"
+          >导出模版
           </el-button>
+
         </div>
       </div>
       <el-tabs v-model="activeName" style="margin-top: 20px">
@@ -245,6 +237,32 @@
               })
             }
         })
+      },
+      //导出补助名单
+      exportSubsidy(){
+        const token = localStorage.getItem('token')
+        axios.get(this.$_API.subsidyExport, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${token}`//请求的数据类型为form data格式
+          },
+          'responseType': 'blob'  //设置响应的数据类型为一个包含二进制数据的 Blob 对象，必须设置！！！
+        }).then(function (response) {
+          const blob = new Blob([response.data]);
+          const fileName = 'table.xls';
+          const linkNode = document.createElement('a');
+
+          linkNode.download = fileName; //a标签的download属性规定下载文件的名称
+          linkNode.style.display = 'none';
+          linkNode.href = URL.createObjectURL(blob); //生成一个Blob URL
+          document.body.appendChild(linkNode);
+          linkNode.click();  //模拟在按钮上的一次鼠标单击
+          URL.revokeObjectURL(linkNode.href); // 释放URL 对象
+          document.body.removeChild(linkNode);
+
+        }).catch(function (error) {
+          console.log(error);
+        });
       },
       //导出模版
       exportTemplate() {
