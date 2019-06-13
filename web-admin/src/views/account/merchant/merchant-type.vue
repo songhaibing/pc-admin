@@ -19,23 +19,8 @@
         :data="tableData"
         style="width: 100%"
       >
+        <el-table-column align="center" prop="id" label="ID"/>
         <el-table-column align="center" prop="name" label="分类名"/>
-        <el-table-column align="center" prop="sort" label="排序"  width="100">
-          <template slot-scope="scope">
-            <el-form :model="scope.row" >
-                <el-input ref="inputValue"  @input="changeInput" v-model="scope.row.sort" placeholder="排序" @focus="focus(scope.row)" @blur="blur(scope.row)"/>
-            </el-form>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="状态">
-          <template slot-scope="scope">
-            <el-switch active-color="#13ce66" active-value="0" inactive-value="1"
-                       active-text="显示"
-                       inactive-text="隐藏"
-                       v-model="scope.row.businessTypeState" @change='change(scope.row,scope.row.businessTypeState)'/>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" prop="createTime" label="创建时间"/>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button size="mini" type="text" @click="addSubclass(scope.$index, scope.row)">添加子分类</el-button>
@@ -91,19 +76,11 @@
         formLabelWidth: '100px',
         form: {
           name: '',
-          sort: '',
-          status:0
         },
         rules: {
           name: [
             {required: true, message: '请输入商户分类', trigger: 'blur'}
-          ],
-          sort: [
-            {required: true, message: '请输入商户排序', trigger: 'blur'}
-          ],
-          status: [
-            {required: true, message: '请选择商户状态', trigger: 'blur'}
-          ],
+          ]
         },
         dialogFormVisible: false,
         loading: true,
@@ -142,8 +119,6 @@
         this.parentId = row.id
         this.title = '添加商户子类'
         this.form.name = ""
-        this.form.sort = ""
-        this.form.status = ""
         this.merchantId = row.id
         this.dialogFormVisible = true
       },
@@ -158,8 +133,6 @@
       handleEdit(index, row) {
         this.title = '编辑商户分类'
         this.form.name = row.name
-        this.form.sort = row.sort
-        this.form.status = row.businessTypeState
         this.merchantId = row.id
         this.dialogFormVisible = true
       },
@@ -187,14 +160,10 @@
           if (valid) {
             const params = {
               name: this.form.name,
-              sort:0,
-              businessTypeState:0
             }
             const childParams = {
               name: this.form.name,
-              sort: 0,
               parentId: this.parentId,
-              businessTypeState:0
             }
             if (this.title === '添加商户分类') {
               this.$_HTTP.post(this.$_API.addBusinesstype, params, res => {
@@ -250,8 +219,6 @@
       },
       addButton() {
         this.title = '添加商户分类'
-        this.form.status = ''
-        this.form.sort = ''
         this.form.name = ''
         this.dialogFormVisible = true
       }

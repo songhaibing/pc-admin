@@ -320,10 +320,8 @@
               name: this.form.unitName,
               logo: this.base64,
               phone: this.form.mobile,
-              deviceNum: this.form.num,
-              startTime: this.form.openingTime,
-              endTime: this.form.stopTime,
-              deptState: this.selectId,
+              startTime: this.form.openingTime+' 00:00:00',
+              endTime: this.form.stopTime+' 00:00:00',
               username: this.form.dockingPeople,
             }
             if (this.title === '添加单位') {

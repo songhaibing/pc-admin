@@ -322,7 +322,7 @@
           if (valid) {
             const params = {
               name: this.form.name,
-              businessState: this.form.status,
+              deptId:this.unitId,
               categories: this.form.category,
               deviceNumber: this.form.num,
               expireTime: this.form.time,

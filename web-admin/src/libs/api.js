@@ -6,7 +6,7 @@ const API = {
   // 退出登陆
   logout: logoutIp + 'token/logout',
   // 用户管理
-  menu: adminIp + 'menu/tree', // 获取当前用户菜单
+  menu: adminIp + 'menu/tree/current', // 获取当前用户菜单
   userList: adminIp + 'user/list', // 获取用户列表
   userExits: adminIp + 'user/exits/', // 检测用户名是否存在
   addUser: adminIp + 'user/add', // 添加用户
@@ -31,7 +31,7 @@ const API = {
   editDict: adminIp + 'dict/edit/', // 编辑字典信息
   deleteDict: adminIp + 'dict/delete/', // 删除字典信息
   // 菜单管理
-  getMenu: adminIp + 'menu/tree', // 获取当前用户的树状菜单
+  getMenu: adminIp + 'menu/tree/current', // 获取当前用户的树状菜单
   getAllMenu: adminIp + 'menu/tree', // 获取所有的树状菜单
   addMenu: adminIp + 'menu/add', // 添加系统菜单
   deleteMenu: adminIp + 'menu/delete/', // 删除系统菜单
@@ -83,17 +83,22 @@ const API = {
   /**
    *  交易中心API
    */
+  //交易管理-交易订单
+  orderPayList:smartcardIp +'orderPay/list',//分页查询订单列表
   //资金管理-钱包管理
   walletList:smartcardIp +'wallet/list',//分页查询钱包列表
   editWallet:smartcardIp +'wallet/edit/',//修改钱包信息
   delWallet:smartcardIp +'wallet/delete/',//修改钱包信息
   //资金管理-钱包分类
   purseTypeList:smartcardIp +'purseType/list',//分页查询钱包类型列表
+  purseTypeAll:smartcardIp +'purseType/all',//查询所有钱包类型列表
   addPurseType:smartcardIp +'purseType/add',//创建钱包类型
   editPurseType:smartcardIp +'purseType/edit/',//修改钱包类型信息
   delPurseType:smartcardIp +'purseType/delete/' ,//通过ID删除钱包类型
   //资金管理-补助发放
   exportSubsidyTemplate:smartcardIp +'subsidy/exportTemplate' ,//导出一个补贴用户模板
+  subsidyPage:smartcardIp +'subsidy/page', // 分页查询未发放补助列表
+  subsidySend:smartcardIp +'subsidy/send/', // 补助分发
 }
 
 export default API

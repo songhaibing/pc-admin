@@ -174,11 +174,11 @@
   import exportForm from '@/mixins/exportForm'
   import axios from 'axios'
   import ImportForm from "../../../components/importForm/index";
-
+  import mixins from '@/mixins/user'
   export default {
     name: 'User-list',
     components: {ImportForm},
-    mixins: [exportForm],
+    mixins: [exportForm,mixins],
     data() {
       const checkUserName = (rule, value, callback) => {
         if (!value) {
@@ -258,9 +258,6 @@
           mobile: [
             {required: true, validator: checkPhone, trigger: 'blur'}
           ],
-          className: [
-            {required: true, message: '请选择单位', trigger: 'blur'}
-          ]
         }
       }
     },
@@ -405,8 +402,6 @@
         this.form.userName = ''
         this.form.realName = ''
         this.form.mobile = ''
-        this.form.Email = ''
-        this.form.nickName = ''
         this.imageUrl = ''
         this.title = '添加用户'
         this.dialogFormVisible = true
@@ -445,7 +440,6 @@
               username: this.form.userName,
               realname: this.form.realName,
               phone: this.form.mobile,
-              email: this.form.Email,
               avatar: this.base64,
               deptId: this.valueId,
               idCard:this.form.idCard

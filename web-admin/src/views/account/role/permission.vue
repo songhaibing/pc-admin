@@ -121,7 +121,6 @@
           :data="data1"
           show-checkbox
           node-key="id"
-          :default-expand-all="isExpand"
           :props="defaultProps1"
         />
         <span slot="footer" class="dialog-footer">
@@ -129,20 +128,20 @@
           <el-button type="primary" @click="()=>getCheckedKeys()">确 定</el-button>
         </span>
       </el-dialog>
-      <el-dialog :title="titleTree" width="600px" :visible.sync="dialogFormTree">
-        <el-input
-          placeholder="输入关键字进行过滤"
-          v-model="filterText">
-        </el-input>
-        <el-tree
-          class="filter-tree"
-          :data="dataTree"
-          :props="defaultProps"
-          :filter-node-method="filterNode"
-          @node-click="handleNodeClick"
-          ref="tree2">
-        </el-tree>
-      </el-dialog>
+      <!--<el-dialog :title="titleTree" width="600px" :visible.sync="dialogFormTree">-->
+        <!--<el-input-->
+          <!--placeholder="输入关键字进行过滤"-->
+          <!--v-model="filterText">-->
+        <!--</el-input>-->
+        <!--<el-tree-->
+          <!--class="filter-tree"-->
+          <!--:data="dataTree"-->
+          <!--:props="defaultProps"-->
+          <!--:filter-node-method="filterNode"-->
+          <!--@node-click="handleNodeClick"-->
+          <!--ref="tree2">-->
+        <!--</el-tree>-->
+      <!--</el-dialog>-->
   </div>
 </template>
 
@@ -164,7 +163,6 @@
         options: [],
         optionsInquire:[],
         valueSelect:'',
-        isExpand: true,
         permissionId: '',
         defaultProps: {
           children: 'children',
@@ -329,9 +327,38 @@
       this.$_HTTP.get(this.$_API.deptTree, {}, res => {
         this.options=res
       })
+
+      // this.$_HTTP.get(this.$_API.getAllMenu, {}, res => {
+      //  console.log('res',res)
+      //   // this.data1=res
+      // })
+      this.getMenu()
       this.init()
     },
     methods: {
+      getMenu() {
+        this.$_HTTP.get(this.$_API.getAllMenu, {}, res => {
+          console.log(this.toTreeData(res))
+          // this.data1=this.toTreeData(res)
+
+        })
+      },
+      toTreeData(menu) {
+        return menu.map(data => {
+          return {
+            label: data.meta.title,
+            children: this.toTreeData(data.children),
+            icon: data.meta.icon,
+            name: data.name,
+            component: data.component,
+            path: data.path,
+            redirect: data.redirect,
+            id: data.id,
+            type: data.type,
+            alwaysShow: data.alwaysShow
+          }
+        })
+      },
       //分页查询角色
       init(){
         this.$_HTTP.get(this.$_API.roleList, {size: this.size, current: this.currentPage}, res => {

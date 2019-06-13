@@ -1,4 +1,3 @@
-
 <template>
   <!--交易订单-->
   <div style="padding: 20px">
@@ -97,6 +96,17 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="block">
+        <el-pagination
+          background
+          :current-page.sync="currentPage"
+          :page-sizes="[10, 20, 30]"
+          :page-size="size"
+          style="float: right;margin: 10px 0"
+          layout="sizes, prev, pager, next"
+          :total="total"
+        />
+      </div>
     </el-card>
   </div>
 </template>
@@ -106,6 +116,11 @@
     name: 'FundBill',
     data() {
       return {
+        loading:true,
+        tableData:[],
+        currentPage: 1, // 当前多少页
+        size: 10, // 每页多少条数据
+        total: 0, // 总共多少数据
         activeName:'first',
         pickerOptions: {
           shortcuts: [{
@@ -136,6 +151,20 @@
         },
         value: ''
       }
+    },
+    created(){
+      this.init()
+    },
+    methods:{
+      // 初始化分页
+      init() {
+        this.loading = true
+        this.$_HTTP.get(this.$_API.orderPayList, {size: this.size, current: this.currentPage}, res => {
+          this.tableData = res.records
+          this.total = res.total
+          this.loading = false
+        })
+      },
     }
   }
 </script>
