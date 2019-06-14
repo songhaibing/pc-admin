@@ -139,7 +139,7 @@
     <div class="uploadBox">
       <h3>上传文件</h3>
       <div class="fileBox">
-        <input type="file" id="myFile" class="inputfile" @change="handlerUpload($event)">
+        <input type="file" id="myFile" class="inputfile" @change="uploadSub($event)">
         <label for="myFile">
           <i class="el-icon-upload el-icon--right"></i>
           点击上传本地文件
@@ -156,7 +156,7 @@
             </div>
             <!--进度条-->
             <div class="progress">
-              <span :style="{width:file.uploadPercentage,backgroundColor:file.uploadStatus==1 ||file.uploadStatus==2?'':'red'}"></span>
+              <span :style="{width:'100%',backgroundColor:file.uploadStatus==1 ||file.uploadStatus==2?'':'red'}"></span>
             </div>
             <div class="fileStatus">
               <span v-if="file.uploadStatus == -1" class="uploadFail">出错啦，请重新上传或者删除</span>
@@ -189,7 +189,7 @@
       },
     },
     methods: {
-      handlerUpload(e) {
+      uploadSub(e) {
         //获取选定的文件
         let tFiles = e.target.files;
         let len = tFiles.length;
@@ -229,11 +229,11 @@
               'Authorization':`Bearer ${token}`
             },
             //添加上传进度监听事件
-            onUploadProgress: e => {
-              const completeProgress = ((e.loaded / e.total * 100) | 0) + "%";
-              console.log(this.files)
-              item.uploadPercentage = completeProgress;
-            }
+            // onUploadProgress: e => {
+            //   const completeProgress = ((e.loaded / e.total * 100) | 0) + "%";
+            //   console.log('files',this.files)
+            //   item.uploadPercentage = completeProgress;
+            // }
           };
           axios.post('http://106.75.178.9:80/smartcard/'+this.importApi, param, config).then(function (
             response) {

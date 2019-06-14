@@ -52,6 +52,7 @@ HTTP.post = function(url, data, callback) {
   const params = data
   instance.post(url, params)
     .then(function(res) {
+      console.log('post',res)
       // 响应成功回调
       if (res.data.code == '1') {
         callback(res.data)
@@ -88,22 +89,6 @@ HTTP.get = function(url, data, callback) {
       $Vue.$message.error(err)
     })
 }
-HTTP.get1 = function(url, data, callback) {
-  const params = { params: data }
-  instance.get(url, params)
-    .then(function(res) {
-      // 响应成功回调
-      callback(res)
-      // if (res.data.code === 1) {
-      //   callback(res.data.data)
-      // } else {
-      //   $Vue.$message.error('网络异常请刷新')
-      // }
-    })
-    .catch(function(err) {
-      $Vue.$message.error(err)
-    })
-}
 /**
  * 发送delete请求
  *
@@ -115,14 +100,17 @@ HTTP.delete = function(url, data, callback) {
   const params = { params: data }
   instance.delete(url, params)
     .then(function(res) {
+      console.log('res',res)
       // 响应成功回调
       if (res.data.code === 1) {
         callback(res.data)
       } else {
+        console.log('code不等于2')
         $Vue.$message.error('网络异常请刷新')
       }
     })
     .catch(function(err) {
+      console.log(err)
       $Vue.$message.error(err)
     })
 }
@@ -136,6 +124,7 @@ HTTP.delete = function(url, data, callback) {
 HTTP.put = function(url, data, callback) {
   instance.put(url, data)
     .then(function(res) {
+      console.log('resPut',res)
       // 响应成功回调
       if (res.data.code === 1) {
         callback(res.data)

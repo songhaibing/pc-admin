@@ -135,7 +135,7 @@
               <el-input v-model="form.idCard" autocomplete="off"/>
             </el-form-item>
             <el-form-item label="归属单位" :label-width="formLabelWidth" prop="className">
-              <el-input ref="input" placeholder="请选择单位" v-model="form.className" autocomplete="off"
+              <el-input  readonly="readonly" placeholder="请选择单位" v-model="form.className" autocomplete="off"
                         @focus="clickInput"/>
             </el-form-item>
             <el-form-item label="手机号码" :label-width="formLabelWidth" prop="mobile">
@@ -255,6 +255,9 @@
           realName: [
             {required: true, message: '请输入真实姓名', trigger: 'blur'}
           ],
+          className: [
+            {required: true, message: '请选择', trigger: 'blur'}
+          ],
           mobile: [
             {required: true, validator: checkPhone, trigger: 'blur'}
           ],
@@ -287,9 +290,6 @@
       },
       clickInput() {
         this.dialogFormTree = true
-        setTimeout(() => {
-          this.$refs.input.blur()
-        }, 500)
       },
       //导出模版
       exportTemplate() {
