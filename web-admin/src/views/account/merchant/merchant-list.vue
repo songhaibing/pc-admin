@@ -64,7 +64,7 @@
           <el-input v-model="form.category" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="所属单位"   :label-width="formLabelWidth" prop="unit">
-          <el-input ref="inputUnit" v-model="form.unit"  placeholder="请选择所属单位" autocomplete="off" @focus="clickUnit"/>
+          <el-input ref="inputUnit" v-model="form.unit" readonly="readonly" placeholder="请选择所属单位" autocomplete="off" @focus="clickUnit"/>
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth" prop="status" v-if="title==='编辑商户'">
           <el-select v-model="form.status" placeholder="请选择状态" style="width: 100%">
@@ -128,12 +128,10 @@
 </template>
 
 <script>
-  import SelectTree from '@/components/treeSelect/treeSelect.vue'
   import {checkPhone} from '@/libs/regular.js'
 
   export default {
     name: 'MerchantList',
-    components: {SelectTree},
     watch: {
       filterText(val) {
         this.$refs.tree2.filter(val);

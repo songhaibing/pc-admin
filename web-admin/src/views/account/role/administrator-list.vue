@@ -3,7 +3,7 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <i class="el-icon-s-custom"/>
-        <span>管理员列表</span>
+        <span>角色列表</span>
         <el-button
           style="float: right;padding: 6px;margin-right: 6px"
           type="primary"
@@ -80,8 +80,6 @@
           style="float: right;margin: 10px 0"
           layout="sizes, prev, pager, next"
           :total="total"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
         />
       </div>
     </el-card>

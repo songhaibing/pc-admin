@@ -60,6 +60,7 @@ const API = {
   roleList:adminIp +'role/list',//分页查询管理员列表
   // 用户管理-用户列表
   exportTemplate:smartcardIp +'smartCard/exportInfo',//导出一个用户表格文档模板
+  roleFindDept:adminIp+'role/find/dept/',//查询部门下全部的角色
   /**
    *  产品中心API
    */

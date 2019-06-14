@@ -4,14 +4,18 @@
       <div style="display: flex;flex-direction: column;">
         <div>
           <span>账户归属</span>
-          <el-select placeholder="请选择" style="width: 300px;margin-left: 20px">
-
+          <el-select placeholder="请选择" v-model="value" style="width: 300px;margin-left: 20px">
+            <el-option
+              v-for="item in optionsAccount"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
           </el-select>
         </div>
         <div style="margin-top: 20px">
           <span>查询日期</span>
           <el-date-picker
-            v-model="value"
             style="margin-left: 20px"
             type="daterange"
             align="right"
@@ -19,9 +23,8 @@
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :picker-options="pickerOptions"
           />
-          <el-input v-model="value" placeholder="请输入设备ID,设备名称等进行查询" style="width: 300px;margin-left: 20px"></el-input>
+          <el-input placeholder="请输入设备ID,设备名称等进行查询" style="width: 300px;margin-left: 20px"></el-input>
           <el-button
             type="success"
             style="margin-left: 10px"
@@ -88,6 +91,20 @@
         />
       </div>
     </el-card>
+    <el-dialog :title="titleTree" width="600px" :visible.sync="dialogUnitTree">
+      <el-input
+        placeholder="输入关键字进行过滤"
+        v-model="filterTextUnit">
+      </el-input>
+      <el-tree
+        class="filter-tree"
+        :data="unitTree"
+        :props="defaultProps"
+        :filter-node-method="filterNodeUnit"
+        @node-click="handleNodeClickUnit"
+        ref="treeUnit">
+      </el-tree>
+    </el-dialog>
     <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="外观图" :label-width="formLabelWidth">
@@ -109,16 +126,8 @@
         <el-form-item label="设备名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off"/>
         </el-form-item>
-        <el-form-item label="归属单位"  :label-width="formLabelWidth">
-          <SelectTree
-            :props="props"
-            :options="data"
-            :value="valueId"
-            :clearable="isClearable"
-            :accordion="isAccordion"
-            style="width: 100%"
-            @getValue="getValue($event)"
-          />
+        <el-form-item label="归属单位"  :label-width="formLabelWidth"  prop="unit">
+          <el-input ref="inputUnit" v-model="form.unit" readonly="readonly" placeholder="请选择所属单位" autocomplete="off" @focus="clickUnit"/>
         </el-form-item>
         <el-form-item label="归属商户" :label-width="formLabelWidth" prop="address">
           <el-input v-model="form.address" autocomplete="off"/>
@@ -157,26 +166,35 @@
 <script>
   import mixins from '@/mixins/user'
   import statusCode from '@/libs/statusCode'
-  import SelectTree from '@/components/treeSelect/treeSelect.vue'
   export default {
     mixins: [mixins],
-    components: { SelectTree },
+    watch: {
+      filterText(val) {
+        this.$refs.tree2.filter(val);
+      },
+      filterTextUnit(val){
+        this.$refs.treeUnit.filter(val);
+      }
+    },
     data() {
       return {
+        filterTextUnit:'',
+        filterText: '',
+        titleTree:'请选择分类',
+        unitTree:[],
+        defaultProps: {
+          children: 'children',
+          label: 'name'
+        },
+        dialogUnitTree:false,
         statusCode:statusCode,
         imageUrl: '',
+        valueInput:'',
         base64: '',
+        unitId:'',
         deviceId:'',
         data:[],
         avatar: require('@/assets/other/caomei.jpg'),
-        isClearable: true, // 可清空（可选）
-        isAccordion: true, // 可收起（可选）
-        valueId: '', // 初始ID（可选）
-        props: { // 配置项（必选）
-          value: 'id',
-          label: 'name',
-          children: 'children'
-        },
         token: localStorage.getItem('token'),
         formLabelWidth: '100px',
         tableData: [],
@@ -186,6 +204,23 @@
         currentPage: 1, // 当前多少页
         size: 10, // 每页多少条数据
         total: 0, // 总共多少数据
+        optionsAccount: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
+        value: '',
         options: [{
           value: '0',
           label: '使用中'
@@ -200,6 +235,7 @@
           label: '报废'
         }],
         form: {
+          unit:'',
           id: '',
           name: '',
           address: '',
@@ -211,6 +247,9 @@
           id: [
             {required: true, message: '请输入设备id', trigger: 'blur'}
           ],
+          unit: [
+            {required: true, message: '请选择所属单位', trigger: 'blur'}
+          ],
           name: [
             {required: true, message: '请输入设备名称', trigger: 'blur'}
           ],
@@ -219,11 +258,17 @@
     },
     created() {
       this.$_HTTP.get(this.$_API.deptTree, {}, res => {
-        this.data = res
+        this.unitTree=res
       })
       this.init()
     },
     methods: {
+      clickUnit(){
+        this.dialogUnitTree=true
+        setTimeout(()=>{
+          this.$refs.inputUnit.blur()
+        },500)
+      },
       getValue(value) {
         console.log(value)
         this.valueId = value
@@ -233,10 +278,18 @@
         this.loading = true
         this.$_HTTP.get(this.$_API.airportDeviceList, {size: this.size, current: this.currentPage, deptId: 0}, res => {
           this.tableData = res.records
-          console.log(res)
           this.total = res.total
           this.loading = false
         })
+      },
+      filterNodeUnit(value, data) {
+        if (!value) return true;
+        return data.name.indexOf(value) !== -1;
+      },
+      handleNodeClickUnit(data) {
+        this.form.unit=data.name
+        this.unitId=data.id
+        this.dialogUnitTree=false
       },
       handleEdit(index,row){
         this.deviceId = row.id
@@ -318,7 +371,7 @@
             const params = {
               name: this.form.name,
               address: this.form.address,
-              deptId: this.valueId,
+              deptId: this.unitId,
               usingDate: this.form.time+' 00:00:00',
               password:this.form.pw,
               img:this.base64,

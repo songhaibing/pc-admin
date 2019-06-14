@@ -34,7 +34,7 @@
             <el-table-column
               align="center"
               prop="name"
-              label="姓名"
+              label="角色名"
             />
             <el-table-column
               align="center"
@@ -89,7 +89,7 @@
       </div>
       <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
         <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="姓名" :label-width="formLabelWidth" prop="Name">
+          <el-form-item label="角色名" :label-width="formLabelWidth" prop="Name">
             <el-input v-model="form.Name" autocomplete="off" />
           </el-form-item>
           <el-form-item label="单位" :label-width="formLabelWidth" v-if="title==='添加角色'">
@@ -168,122 +168,7 @@
           children: 'children',
           label: 'name'
         },
-        data1: [{
-          id: 1,
-          permission: '平台系统管理',
-          children: [{
-            id: 2,
-            permission: '系统管理',
-            children: [{
-              id: 3,
-              permission: '用户管理',
-              children: [
-                {
-                  id: 4,
-                  permission: '用户删除'
-                },
-                {
-                  id: 5,
-                  permission: '用户编辑'
-                },
-                {
-                  id: 6,
-                  permission: '用户添加'
-                }
-              ]
-            }, {
-              id: 7,
-              permission: '部门管理',
-              children: [
-                {
-                  id: 8,
-                  permission: '部门删除'
-                },
-                {
-                  id: 9,
-                  permission: '部门编辑'
-                },
-                {
-                  id: 10,
-                  permission: '部门添加'
-                }
-              ]
-            },
-              {
-                id: 11,
-                permission: '角色管理',
-                children: [
-                  {
-                    id: 12,
-                    permission: '角色删除'
-                  },
-                  {
-                    id: 13,
-                    permission: '角色编辑'
-                  },
-                  {
-                    id: 14,
-                    permission: '角色添加'
-                  }
-                ]
-              },
-              {
-                id: 15,
-                permission: '权限管理',
-                children: [
-                  {
-                    id: 16,
-                    permission: '权限删除'
-                  },
-                  {
-                    id: 17,
-                    permission: '权限编辑'
-                  },
-                  {
-                    id: 18,
-                    permission: '权限添加'
-                  }
-                ]
-              },
-              {
-                id: 19,
-                permission: '字典管理',
-                children: [
-                  {
-                    id: 20,
-                    permission: '字典删除'
-                  },
-                  {
-                    id: 21,
-                    permission: '字典编辑'
-                  },
-                  {
-                    id: 22,
-                    permission: '字典添加'
-                  }
-                ]
-              },
-              {
-                id: 23,
-                permission: '菜单管理',
-                children: [
-                  {
-                    id: 24,
-                    permission: '菜单删除'
-                  },
-                  {
-                    id: 25,
-                    permission: '菜单编辑'
-                  },
-                  {
-                    id: 26,
-                    permission: '菜单添加'
-                  }
-                ]
-              }
-            ]
-          }]
-        }],
+        data1: [],
         defaultProps1: {
           children: 'children',
           label: 'permission'
@@ -338,24 +223,16 @@
     methods: {
       getMenu() {
         this.$_HTTP.get(this.$_API.getAllMenu, {}, res => {
-          console.log(this.toTreeData(res))
-          // this.data1=this.toTreeData(res)
-
+          console.log("this.toTreeData(res)",this.toTreeData(res))
+          this.data1=this.toTreeData(res)
         })
       },
       toTreeData(menu) {
         return menu.map(data => {
           return {
-            label: data.meta.title,
+            permission: data.meta.title,
+            id:data.id,
             children: this.toTreeData(data.children),
-            icon: data.meta.icon,
-            name: data.name,
-            component: data.component,
-            path: data.path,
-            redirect: data.redirect,
-            id: data.id,
-            type: data.type,
-            alwaysShow: data.alwaysShow
           }
         })
       },
@@ -516,6 +393,7 @@
           const temp = res.authorities
           this.getTreeId(this.data1, temp).forEach(item => {
             this.$refs.tree.setChecked(item, true, false)
+            console.log('item',item)
           })
         })
         this.dialogFormRole = true

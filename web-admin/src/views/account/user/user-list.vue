@@ -6,14 +6,14 @@
           <div slot="header" class="clearfix">
             <el-button
               style="padding: 6px;margin-right: 6px"
-              type="success"
-              icon="el-icon-s-promotion"
+              type="primary"
+              icon="el-icon-download"
               @click="exportTemplate"
             >导出模版
             </el-button>
             <el-button
               style="padding: 6px;margin-right: 6px"
-              type="success"
+              type="warning"
               icon="el-icon-share"
               @click="importUser"
             >导入用户
@@ -59,14 +59,16 @@
             </el-table-column>
             <el-table-column align="center" prop="username" label="用户名"/>
             <el-table-column align="center" prop="realname" label="姓名"/>
-            <el-table-column align="center" prop="sex" label="性别"/>
+            <el-table-column align="center" prop="sex" label="性别">
+              <template slot-scope="scope" v-if="scope.row.sex">{{ scope.row.sex==='1'?'男':'女' }}</template>
+            </el-table-column>
             <el-table-column align="center" prop="idCard" label="身份证号"/>
             <el-table-column align="center" prop="phone" label="手机号码"/>
             <el-table-column align="center" label="归属单位">
-              <template slot-scope="scope">{{ scope.row.dept.name }}</template>
+              <template slot-scope="scope" v-if="scope.row.dept">{{ scope.row.dept.name }}</template>
             </el-table-column>
             <el-table-column align="center" label="状态">
-              <template slot-scope="scope">{{ scope.row.lockFlag?'正常':'禁用' }}</template>
+              <template slot-scope="scope">{{ scope.row.state==='1'?'正常':'禁用' }}</template>
             </el-table-column>
             <el-table-column align="center" label="操作" width="150">
               <template slot-scope="scope">
@@ -94,7 +96,7 @@
             <el-pagination
               background
               :current-page.sync="currentPage"
-              :page-sizes="[8, 10, 20]"
+              :page-sizes="[10, 20, 30]"
               :page-size="size"
               style="float: right;margin: 10px 0"
               layout="sizes, prev, pager, next"
@@ -119,8 +121,11 @@
                 <i v-else class="el-icon-plus avatar-uploader-icon"/>
               </el-upload>
             </el-form-item>
-            <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
+            <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName" v-if="title==='编辑用户'">
               <el-input v-model="form.userName" autocomplete="off" :disabled="disabled"/>
+            </el-form-item>
+            <el-form-item label="姓名" :label-width="formLabelWidth" prop="realName">
+              <el-input v-model="form.realName" autocomplete="off"/>
             </el-form-item>
             <el-form-item label="性别" :label-width="formLabelWidth" prop="status">
               <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
@@ -128,15 +133,22 @@
                 <el-option label="女" value="2"/>
               </el-select>
             </el-form-item>
-            <el-form-item label="姓名" :label-width="formLabelWidth" prop="realName">
-              <el-input v-model="form.realName" autocomplete="off"/>
-            </el-form-item>
             <el-form-item label="身份证号" :label-width="formLabelWidth" prop="idCard">
               <el-input v-model="form.idCard" autocomplete="off"/>
             </el-form-item>
             <el-form-item label="归属单位" :label-width="formLabelWidth" prop="className">
               <el-input  readonly="readonly" placeholder="请选择单位" v-model="form.className" autocomplete="off"
                         @focus="clickInput"/>
+            </el-form-item>
+            <el-form-item label="角色" :label-width="formLabelWidth" prop="role">
+              <el-select v-model="form.role" placeholder="请选择" style="width: 100%">
+                <el-option
+                  v-for="item in optionsRole"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="手机号码" :label-width="formLabelWidth" prop="mobile">
               <el-input v-model="form.mobile" autocomplete="off"/>
@@ -164,7 +176,7 @@
       </el-tree>
     </el-dialog>
     <el-dialog :title="titleExport" width="600px" :visible.sync="dialogFormImport">
-      <import-form :importApi="api"></import-form>
+      <import-form :importApi="api" @export="exportTab"></import-form>
     </el-dialog>
   </div>
 </template>
@@ -180,24 +192,24 @@
     components: {ImportForm},
     mixins: [exportForm,mixins],
     data() {
-      const checkUserName = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入用户名'))
-        }
-        if (this.title === '编辑用户') {
-          callback()
-        }
-        setTimeout(() => {
-          // 检测用户名是否重复
-          this.$_HTTP.get(this.$_API.userExits + this.form.userName, {}, res => {
-            if (res) {
-              callback(new Error('用户名重复'))
-            } else {
-              callback()
-            }
-          })
-        }, 1000)
-      }
+      // const checkUserName = (rule, value, callback) => {
+      //   if (!value) {
+      //     return callback(new Error('请输入用户名'))
+      //   }
+      //   if (this.title === '编辑用户') {
+      //     callback()
+      //   }
+      //   setTimeout(() => {
+      //     // 检测用户名是否重复
+      //     this.$_HTTP.get(this.$_API.userExits + this.form.userName, {}, res => {
+      //       if (res) {
+      //         callback(new Error('用户名重复'))
+      //       } else {
+      //         callback()
+      //       }
+      //     })
+      //   }, 1000)
+      // }
       return {
         selectId: '',
         optionsInquire: [],
@@ -213,6 +225,7 @@
         token: localStorage.getItem('token'),
         loading: true,
         data: [],
+        optionsRole:[],
         defaultProps: {
           children: 'children',
           label: 'name'
@@ -222,7 +235,7 @@
         tableData: [],
         dialogFormTree: false,
         currentPage: 1, // 当前多少页
-        size: 8, // 每页多少条数据
+        size: 10, // 每页多少条数据
         total: 0, // 总共多少数据
         dialogFormVisible: false,
         dialogPwVisible: false,
@@ -234,6 +247,7 @@
         base64: '',
         avatar: require('@/assets/avatar/mieba.png'),
         form: {
+          role:'',
           idCard:'',
           userName: '',
           realName: '',
@@ -248,9 +262,6 @@
           ],
           status: [
             {required: true, message: '请选择性别', trigger: 'blur'}
-          ],
-          userName: [
-            {required: true, validator: checkUserName, trigger: 'blur'}
           ],
           realName: [
             {required: true, message: '请输入真实姓名', trigger: 'blur'}
@@ -280,6 +291,14 @@
       }
     },
     methods: {
+      exportTab(val){
+        this.dialogFormImport=val
+        if (this.selectId) {
+          this.findDept(this.selectId)
+        } else {
+          this.init()
+        }
+      },
       change(val) {
         this.selectId = val
         if (val) {
@@ -302,7 +321,7 @@
           'responseType': 'blob'  //设置响应的数据类型为一个包含二进制数据的 Blob 对象，必须设置！！！
         }).then(function (response) {
           const blob = new Blob([response.data]);
-          const fileName = 'table.xlsx';
+          const fileName = 'table.xls';
           const linkNode = document.createElement('a');
 
           linkNode.download = fileName; //a标签的download属性规定下载文件的名称
@@ -327,9 +346,15 @@
         this.form.className = data.name
         this.valueId = data.id
         this.dialogFormTree = false
+        this.roleFind(data.id)
       },
       getValue(value) {
         this.valueId = value
+      },
+      roleFind(id){
+        this.$_HTTP.get(this.$_API.roleFindDept+id,{}, res => {
+          this.optionsRole=res.records
+        })
       },
       // 初始化分页
       init() {
@@ -364,8 +389,11 @@
         } else {
           this.imageUrl = this.avatar
         }
+        this.roleFind(row.dept.id)
         this.title = '编辑用户'
         this.dialogFormVisible = true
+        this.form.status=row.sex
+        this.form.idCard=row.idCard
         this.form.userName = row.username
         this.form.realName = row.realname
         this.form.mobile = row.phone
@@ -399,7 +427,6 @@
       addButton() {
         this.disabled = false
         this.form.className = ''
-        this.form.userName = ''
         this.form.realName = ''
         this.form.mobile = ''
         this.imageUrl = ''
@@ -408,6 +435,7 @@
       },
       handleSizeChange(val) {
         this.size = val
+        console.log('size',val)
         if (this.selectId) {
           this.findDept(this.selectId)
         } else {
@@ -437,11 +465,13 @@
           if (valid) {
             const params = {
               sex:this.form.status,
-              username: this.form.userName,
+              username:'111',
+              password:'2233eereerr',
               realname: this.form.realName,
               phone: this.form.mobile,
               avatar: this.base64,
               deptId: this.valueId,
+              roleIds:[this.form.role],
               idCard:this.form.idCard
             }
             if (this.title === '添加用户') {
@@ -480,6 +510,7 @@
       },
       handleCurrentChange(val) {
         this.currentPage = val
+        console.log('currentPage',val)
         if (this.selectId) {
           this.findDept(this.selectId)
         } else {

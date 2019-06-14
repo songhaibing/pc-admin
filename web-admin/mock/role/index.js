@@ -83,10 +83,10 @@ export default [
   //     }
   //   }
   // },
-
-  // delete role
-  // {
-  //   url: '/role/[A-Za-z0-9]',
+  //
+  // // delete role
+  // // {
+  // //   url: '/role/[A-Za-z0-9]',
   //   type: 'delete',
   //   response: {
   //     code: 20000,

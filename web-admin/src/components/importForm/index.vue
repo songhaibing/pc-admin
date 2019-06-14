@@ -156,6 +156,7 @@
             </div>
             <!--进度条-->
             <div class="progress">
+              <!--<span :style="{width:file.uploadPercentage,backgroundColor:file.uploadStatus==1 ||file.uploadStatus==2?'':'red'}"></span>-->
               <span :style="{width:'100%',backgroundColor:file.uploadStatus==1 ||file.uploadStatus==2?'':'red'}"></span>
             </div>
             <div class="fileStatus">
@@ -235,12 +236,27 @@
             //   item.uploadPercentage = completeProgress;
             // }
           };
-          axios.post('http://106.75.178.9:80/smartcard/'+this.importApi, param, config).then(function (
-            response) {
-            console.log(response);
-            item.uploadStatus = 2;
-          }).catch(function (error) {
-            console.log(error);
+          axios.post('http://106.75.178.9:80/smartcard/'+this.importApi, param, config).then(response=>{
+              console.log('res',response);
+              if(response.data.code===1){
+                this.$emit('export',false)
+                this.$message({
+                  type: 'success',
+                  message: '导入成功!'
+                })
+                item.uploadStatus = 2;
+              }else {
+                this.$message({
+                  type: 'error',
+                  message: '导入失败请重试!'
+                })
+                item.uploadStatus = -1;
+              }
+            }).catch(error=> {
+            this.$message({
+              type: 'error',
+              message: '导入失败请重试!'
+            })
             item.uploadStatus = -1;
           });
         }

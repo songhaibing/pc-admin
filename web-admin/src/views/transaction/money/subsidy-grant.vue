@@ -138,7 +138,7 @@
 
     </el-dialog>
     <el-dialog :title="titleExport" width="600px" :visible.sync="dialogFormImport">
-      <import-form :importApi="api"></import-form>
+      <import-form :importApi="api" @export="exportTab"></import-form>
     </el-dialog>
   </div>
 </template>
@@ -214,6 +214,10 @@
       })
     },
     methods: {
+      exportTab(val){
+        this.dialogFormImport=val
+        this.init()
+      },
       // 初始化分页
       init() {
         this.loading = true
