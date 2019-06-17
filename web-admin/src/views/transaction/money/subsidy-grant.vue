@@ -5,8 +5,8 @@
       <div style="display: flex;flex-direction: column;">
         <div>
           <span>搜索查询</span>
-          <el-input v-model="input" placeholder="按交易单号或姓名筛选" style="width: 300px;margin-left: 20px"></el-input>
-          <el-input v-model="input" placeholder="按单位筛选" style="width: 300px;margin-left: 20px"></el-input>
+          <el-input v-model="input" placeholder="按交易单号或姓名筛选" style="width: 300px;margin-left: 20px" />
+          <el-input v-model="input" placeholder="按单位筛选" style="width: 300px;margin-left: 20px" />
         </div>
         <div style="margin-top: 20px">
           <span>查询日期</span>
@@ -59,15 +59,14 @@
 
         </div>
       </div>
-      <el-tabs v-model="activeName" style="margin-top: 20px">
-        <el-tab-pane label="未发放" name="first"></el-tab-pane>
-        <el-tab-pane label="已发放" name="second"></el-tab-pane>
+      <el-tabs v-model="activeName" style="margin-top: 20px" @tab-click="handleClick">
+        <el-tab-pane label="未发放" name="first" />
+        <el-tab-pane label="已发放" name="second" />
       </el-tabs>
     </div>
     <el-card class="box-card">
       <el-table v-loading="loading" :data="tableData" style="width: 100%">
-        <el-table-column align="center" label="序号" type="index"/>
-        <el-table-column label="交易流水号" align="center"/>
+        <el-table-column align="center" label="序号" type="index" />
         <el-table-column align="center" prop="username" label="姓名">
           <template slot-scope="scope">{{ scope.row.userVo.realname }}</template>
         </el-table-column>
@@ -77,9 +76,11 @@
         <el-table-column align="center" prop="nickname" label="归属单位">
           <template slot-scope="scope">{{ scope.row.userVo.dept.name }}</template>
         </el-table-column>
-        <el-table-column align="center" prop="money" label="补助金额"/>
-        <el-table-column align="center" prop="createTime" label="发放时间"/>
-        <el-table-column align="center" prop="phone" label="状态"/>
+        <el-table-column align="center" prop="money" label="补助金额" />
+        <el-table-column align="center" prop="createTime" label="发放时间" />
+        <el-table-column align="center" prop="phone" label="状态">
+          <template slot-scope="scope">{{ scope.row.state==='0'?'已发放':'未发放' }}</template>
+        </el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button
@@ -118,7 +119,7 @@
     <el-dialog title="设置补贴信息" width="600px" :visible.sync="dialogForm">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="补助金额" :label-width="formLabelWidth" prop="money">
-          <el-input v-model="form.money" autocomplete="off"/>
+          <el-input v-model="form.money" autocomplete="off" />
         </el-form-item>
         <el-form-item label="入账钱包" :label-width="formLabelWidth" prop="value">
           <el-select v-model="form.value" placeholder="请选择" style="width: 100%">
@@ -126,8 +127,8 @@
               v-for="item in options"
               :key="item.id"
               :label="item.name"
-              :value="item.id">
-            </el-option>
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item class="dialog-footer">
@@ -138,167 +139,186 @@
 
     </el-dialog>
     <el-dialog :title="titleExport" width="600px" :visible.sync="dialogFormImport">
-      <import-form :importApi="api" @export="exportTab"></import-form>
+      <import-form :import-api="api" @export="exportTab" />
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import axios from 'axios'
-  import ImportForm from "../../../components/importForm/index";
+import axios from 'axios'
+import ImportForm from '../../../components/importForm/index'
 
-  export default {
-    name: 'subsidy-grant',
-    components: {ImportForm},
-    data() {
-      return {
-        formLabelWidth:'100px',
-        options: [],
-        dialogForm: false,
-        tableData: [],
-        loading: true,
-        form: {
-          money: '',
-          value: ''
-        },
-        rules: {
-          money: [
-            {required: true, message: '请输入补助金额', trigger: 'blur'}
-          ],
-          value:[
-            {required: true, message: '请输入补助金额', trigger: 'blur'}
-          ],
-        },
-        currentPage: 1, // 当前多少页
-        size: 10, // 每页多少条数据
-        total: 0, // 总共多少数据
-        api: 'subsidy/importSubsidyInfo',
-        input: '',
-        titleExport: '批量导入',
-        dialogFormImport: false,
-        activeName: 'first',
-        pickerOptions: {
-          shortcuts: [{
-            text: '最近一周',
-            onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '最近一个月',
-            onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-              picker.$emit('pick', [start, end])
-            }
-          }, {
-            text: '最近三个月',
-            onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-              picker.$emit('pick', [start, end])
-            }
-          }]
-        },
+export default {
+  name: 'SubsidyGrant',
+  components: { ImportForm },
+  data() {
+    return {
+      formLabelWidth: '100px',
+      options: [],
+      dialogForm: false,
+      tableData: [],
+      loading: true,
+      form: {
+        money: '',
         value: ''
+      },
+      rules: {
+        money: [
+          { required: true, message: '请输入补助金额', trigger: 'blur' }
+        ],
+        value: [
+          { required: true, message: '请输入补助金额', trigger: 'blur' }
+        ]
+      },
+      currentPage: 1, // 当前多少页
+      size: 10, // 每页多少条数据
+      total: 0, // 总共多少数据
+      api: 'subsidy/importSubsidyInfo',
+      input: '',
+      titleExport: '批量导入',
+      dialogFormImport: false,
+      activeName: 'first',
+      pickerOptions: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            picker.$emit('pick', [start, end])
+          }
+        }]
+      },
+      value: ''
+    }
+  },
+  created() {
+    this.init()
+    this.$_HTTP.get(this.$_API.purseTypeAll, {}, res => {
+      this.options = res
+    })
+  },
+  methods: {
+    handleClick(tab, event) {
+      if (tab.name === 'first') {
+        this.init()
+      } else {
+        this.issuedInit()
       }
     },
-    created() {
+    exportTab(val) {
+      this.dialogFormImport = val
       this.init()
-      this.$_HTTP.get(this.$_API.purseTypeAll, {}, res => {
-        this.options=res
+    },
+    // 初始化未发放补助分页
+    init() {
+      this.loading = true
+      this.$_HTTP.get(this.$_API.subsidyPage, { deptId: 0, size: this.size, current: this.currentPage }, res => {
+        this.tableData = res.records
+        this.total = res.total
+        this.loading = false
       })
     },
-    methods: {
-      exportTab(val){
-        this.dialogFormImport=val
-        this.init()
-      },
-      // 初始化分页
-      init() {
-        this.loading = true
-        this.$_HTTP.get(this.$_API.subsidyPage, {deptId: 0, size: this.size, current: this.currentPage}, res => {
-          this.tableData = res.records
-          this.total = res.total
-          this.loading = false
-        })
-      },
-      //一键发放
-      release() {
-        this.dialogForm = true
-      },
-      //补助分发
-      subsidy(form) {
-        this.$refs[form].validate((valid) => {
-          if (valid) {
-              this.$_HTTP.put(this.$_API.subsidySend +this.form.value+'/'+ this.form.money, {}, res => {
-
-
+    issuedInit() {
+      this.loading = true
+      this.$_HTTP.get(this.$_API.subsidyList, { deptId: 0, size: this.size, current: this.currentPage }, res => {
+        this.tableData = res.records
+        this.total = res.total
+        this.loading = false
+      })
+    },
+    // 一键发放
+    release() {
+      this.dialogForm = true
+    },
+    // 补助分发
+    subsidy(form) {
+      this.$refs[form].validate((valid) => {
+        if (valid) {
+          this.$_HTTP.put(this.$_API.subsidySend + this.form.value + '/' + this.form.money, {}, res => {
+            if (res.code === 1) {
+              this.$message({
+                type: 'success',
+                message: '补助发放成功!'
               })
+              this.issuedInit()
+              this.activeName = 'second'
             }
-        })
-      },
-      //导出补助名单
-      exportSubsidy(){
-        const token = localStorage.getItem('token')
-        axios.get(this.$_API.subsidyExport, {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Bearer ${token}`//请求的数据类型为form data格式
-          },
-          'responseType': 'blob'  //设置响应的数据类型为一个包含二进制数据的 Blob 对象，必须设置！！！
-        }).then(function (response) {
-          const blob = new Blob([response.data]);
-          const fileName = 'table.xls';
-          const linkNode = document.createElement('a');
+          })
+        }
+      })
+    },
+    // 导出补助名单
+    exportSubsidy() {
+      const token = localStorage.getItem('token')
+      axios.get(this.$_API.subsidyExport, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Bearer ${token}`// 请求的数据类型为form data格式
+        },
+        'responseType': 'blob' // 设置响应的数据类型为一个包含二进制数据的 Blob 对象，必须设置！！！
+      }).then(function(response) {
+        const blob = new Blob([response.data])
+        const fileName = 'table.xls'
+        const linkNode = document.createElement('a')
 
-          linkNode.download = fileName; //a标签的download属性规定下载文件的名称
-          linkNode.style.display = 'none';
-          linkNode.href = URL.createObjectURL(blob); //生成一个Blob URL
-          document.body.appendChild(linkNode);
-          linkNode.click();  //模拟在按钮上的一次鼠标单击
-          URL.revokeObjectURL(linkNode.href); // 释放URL 对象
-          document.body.removeChild(linkNode);
+        linkNode.download = fileName // a标签的download属性规定下载文件的名称
+        linkNode.style.display = 'none'
+        linkNode.href = URL.createObjectURL(blob) // 生成一个Blob URL
+        document.body.appendChild(linkNode)
+        linkNode.click() // 模拟在按钮上的一次鼠标单击
+        URL.revokeObjectURL(linkNode.href) // 释放URL 对象
+        document.body.removeChild(linkNode)
+      }).catch(function(error) {
+        console.log(error)
+      })
+    },
+    // 导出模版
+    exportTemplate() {
+      const token = localStorage.getItem('token')
+      axios.get(this.$_API.exportSubsidyTemplate, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Bearer ${token}`// 请求的数据类型为form data格式
+        },
+        'responseType': 'blob' // 设置响应的数据类型为一个包含二进制数据的 Blob 对象，必须设置！！！
+      }).then(function(response) {
+        const blob = new Blob([response.data])
+        const fileName = 'table.xls'
+        const linkNode = document.createElement('a')
 
-        }).catch(function (error) {
-          console.log(error);
-        });
-      },
-      //导出模版
-      exportTemplate() {
-        const token = localStorage.getItem('token')
-        axios.get(this.$_API.exportSubsidyTemplate, {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Bearer ${token}`//请求的数据类型为form data格式
-          },
-          'responseType': 'blob'  //设置响应的数据类型为一个包含二进制数据的 Blob 对象，必须设置！！！
-        }).then(function (response) {
-          const blob = new Blob([response.data]);
-          const fileName = 'table.xls';
-          const linkNode = document.createElement('a');
-
-          linkNode.download = fileName; //a标签的download属性规定下载文件的名称
-          linkNode.style.display = 'none';
-          linkNode.href = URL.createObjectURL(blob); //生成一个Blob URL
-          document.body.appendChild(linkNode);
-          linkNode.click();  //模拟在按钮上的一次鼠标单击
-          URL.revokeObjectURL(linkNode.href); // 释放URL 对象
-          document.body.removeChild(linkNode);
-
-        }).catch(function (error) {
-          console.log(error);
-        });
-      },
-      importUser() {
-        this.dialogFormImport = true
-      },
+        linkNode.download = fileName // a标签的download属性规定下载文件的名称
+        linkNode.style.display = 'none'
+        linkNode.href = URL.createObjectURL(blob) // 生成一个Blob URL
+        document.body.appendChild(linkNode)
+        linkNode.click() // 模拟在按钮上的一次鼠标单击
+        URL.revokeObjectURL(linkNode.href) // 释放URL 对象
+        document.body.removeChild(linkNode)
+      }).catch(function(error) {
+        console.log(error)
+      })
+    },
+    importUser() {
+      this.dialogFormImport = true
     }
   }
+}
 </script>
 
 <style scoped>
@@ -306,5 +326,4 @@
 
   }
 </style>
-
 

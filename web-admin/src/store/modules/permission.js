@@ -47,7 +47,7 @@ const state = {
 const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
-    global.antRouter=routes
+    global.antRouter = routes
     state.routes = constantRoutes.concat(routes)
   }
 }
@@ -63,7 +63,6 @@ const actions = {
           commit('SET_ROUTES', accessedRoutes)
           resolve(accessedRoutes)
         })
-
       }
     })
   }

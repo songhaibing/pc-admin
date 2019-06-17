@@ -27,7 +27,9 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img v-if="info.avatar" :src="imageUrl" class="user-avatar">
+          <img v-else :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <span class="username">{{ username }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -70,6 +72,21 @@ export default {
     LangSelect,
     Search
   },
+  data() {
+    return {
+      info: '',
+      username: '',
+      imageUrl: ''
+    }
+  },
+  created() {
+    this.$_HTTP.get(this.$_API.userInfo, {}, res => {
+      console.log(res)
+      this.info = res
+      this.imageUrl = 'http://106.75.178.9:80/resource/' + res.avatar
+      this.username = res.username
+    })
+  },
   computed: {
     ...mapGetters([
       'sidebar',
@@ -88,7 +105,8 @@ export default {
         type: 'warning'
       }).then(async() => {
         await this.$store.dispatch('user/logout')
-        await this.$_HTTP.delete(this.$_API.logout, {}, res => {})
+        await this.$_HTTP.delete(this.$_API.logout, {}, res => {
+        })
         localStorage.removeItem('token')
         this.$router.push(`/login?redirect=${this.$route.fullPath}`)
       }).catch((err) => {
@@ -160,8 +178,15 @@ export default {
         margin-right: 30px;
 
         .avatar-wrapper {
+          display: flex;
           margin-top: 5px;
           position: relative;
+
+          .username {
+            margin-left: 5px;
+            padding-bottom: 10px;
+            font-size: 16px;
+          }
 
           .user-avatar {
             cursor: pointer;
