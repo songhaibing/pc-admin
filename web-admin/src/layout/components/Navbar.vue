@@ -28,7 +28,8 @@
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img v-if="info.avatar" :src="imageUrl" class="user-avatar">
-          <img v-else :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img v-else src="@/assets/avatar/mieba.png" class="user-avatar">
+          <!--avatar+'?imageView2/1/w/80/h/80'-->
           <span class="username">{{ username }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
@@ -83,6 +84,7 @@ export default {
     this.$_HTTP.get(this.$_API.userInfo, {}, res => {
       console.log(res)
       this.info = res
+      localStorage.setItem('authorities',res.roles[0].authorities)
       this.imageUrl = 'http://106.75.178.9:80/resource/' + res.avatar
       this.username = res.username
     })

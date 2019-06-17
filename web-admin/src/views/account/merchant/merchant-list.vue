@@ -17,7 +17,6 @@
         :data="tableData"
         style="width: 100%"
       >
-        <!--<el-table-column align="center" label="序号" type="index" width="50"/>-->
         <el-table-column label="ID" align="center" prop="id" width="50"/>
         <el-table-column align="center" prop="name" label="商户名称"/>
         <el-table-column align="center" prop="categories" label="主营类目"/>
@@ -26,7 +25,7 @@
           <template slot-scope="scope">{{ scope.row.businessState==='0'?'营业中':'已清退' }}</template>
         </el-table-column>
         <el-table-column align="center" label="商户负责人" prop="head"/>
-        <el-table-column align="center" label="归属单位" prop="dept.name"/>
+        <el-table-column align="center" label="归属单位" v-if="authorities.indexOf('归属单位')!==-1" prop="dept.name"/>
         <el-table-column align="center" label="联系电话" prop="phoneNumber"/>
         <el-table-column align="center" label="设备数" prop="deviceNumber"/>
         <el-table-column align="center" label="到期时间" prop="expireTime"/>
@@ -142,6 +141,7 @@
     },
     data() {
       return {
+        authorities:localStorage.getItem('authorities'),
         unitId:'',
         filterTextUnit:'',
         unitTree:[],
@@ -208,6 +208,7 @@
       }
     },
     created() {
+      console.log(localStorage.getItem('authorities'))
       this.init()
     },
     methods: {

@@ -102,6 +102,7 @@ const API = {
   exportSubsidyTemplate: smartcardIp + 'subsidy/exportTemplate', // 导出一个补贴用户模板
   subsidyPage: smartcardIp + 'subsidy/page', // 分页查询未发放补助列表
   subsidyList: smartcardIp + 'subsidy/list', // 分页查询已发放补助列表
+  subsidyEdit: smartcardIp + 'subsidy/edit/', // 撤回补助
   subsidySend: smartcardIp + 'subsidy/send/', // 补助分发
   subsidyExport: smartcardIp + 'subsidy/export' // 导出一个补助名单
 }

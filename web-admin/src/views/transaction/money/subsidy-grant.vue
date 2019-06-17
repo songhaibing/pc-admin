@@ -78,7 +78,7 @@
         </el-table-column>
         <el-table-column align="center" prop="money" label="补助金额" />
         <el-table-column align="center" prop="createTime" label="发放时间" />
-        <el-table-column align="center" prop="phone" label="状态">
+        <el-table-column align="center"  label="状态">
           <template slot-scope="scope">{{ scope.row.state==='0'?'已发放':'未发放' }}</template>
         </el-table-column>
         <el-table-column align="center" label="操作">
@@ -92,13 +92,8 @@
             <el-button
               size="mini"
               type="text"
-              @click="handleEdit(scope.$index, scope.row)"
-            >修改
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-              @click="handleEdit(scope.$index, scope.row)"
+              v-if="activeName==='second'"
+              @click="handleSubsidies(scope.$index, scope.row)"
             >撤回补助
             </el-button>
           </template>
@@ -136,7 +131,32 @@
           <el-button type="primary" @click="subsidy('form')">发放</el-button>
         </el-form-item>
       </el-form>
-
+    </el-dialog>
+    <el-dialog title="查看补助信息" width="600px" :visible.sync="dialogFormMsg">
+      <el-form  :model="formMsg"  label-width="100px" class="demo-ruleForm">
+        <el-form-item label="姓名" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="formMsg.name" autocomplete="off" disabled/>
+        </el-form-item>
+        <el-form-item label="身份证号" :label-width="formLabelWidth" prop="idCard">
+        <el-input v-model="formMsg.idCard" autocomplete="off" disabled/>
+      </el-form-item>
+        <el-form-item label="归属单位" :label-width="formLabelWidth" prop="unit">
+          <el-input v-model="formMsg.unit" autocomplete="off" disabled/>
+        </el-form-item>
+        <el-form-item label="补助金额" :label-width="formLabelWidth" prop="money">
+          <el-input v-model="formMsg.money" autocomplete="off" disabled/>
+        </el-form-item>
+        <el-form-item label="发放时间" :label-width="formLabelWidth" prop="time">
+          <el-input v-model="formMsg.time" autocomplete="off" disabled/>
+        </el-form-item>
+        <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
+          <el-input v-model="formMsg.status" autocomplete="off" disabled/>
+        </el-form-item>
+        <el-form-item class="dialog-footer">
+          <el-button @click="dialogFormMsg = false">取 消</el-button>
+          <el-button type="primary" @click="dialogFormMsg = false">确定</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
     <el-dialog :title="titleExport" width="600px" :visible.sync="dialogFormImport">
       <import-form :import-api="api" @export="exportTab" />
@@ -153,11 +173,20 @@ export default {
   components: { ImportForm },
   data() {
     return {
+      dialogFormMsg:false,
       formLabelWidth: '100px',
       options: [],
       dialogForm: false,
       tableData: [],
       loading: true,
+      formMsg:{
+        name:'',
+        idCard:'',
+        unit:'',
+        money:'',
+        time:'',
+        status:''
+      },
       form: {
         money: '',
         value: ''
@@ -215,6 +244,15 @@ export default {
     })
   },
   methods: {
+    handleEdit(index,row){
+      this.dialogFormMsg=true
+      this.formMsg.name=row.userVo.username
+      this.formMsg.idCard=row.userVo.idCard
+      this.formMsg.unit=row.userVo.dept.name
+      this.formMsg.money=row.money
+      this.formMsg.time=row.createTime
+      this.formMsg.status=row.state==='0'?'已发放':'未发放'
+    },
     handleClick(tab, event) {
       if (tab.name === 'first') {
         this.init()
@@ -235,6 +273,26 @@ export default {
         this.loading = false
       })
     },
+    //撤回补助
+    handleSubsidies(index,row){
+      this.$confirm('此操作将撤回补助, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$_HTTP.put(this.$_API.subsidyEdit + row.id, {}, res => {
+          if (res.code === 1) {
+            this.$message({
+              type: 'success',
+              message: '撤回补助成功!'
+            })
+            this.issuedInit()
+          }
+        })
+      }).catch(() => {
+
+      })
+    },
     issuedInit() {
       this.loading = true
       this.$_HTTP.get(this.$_API.subsidyList, { deptId: 0, size: this.size, current: this.currentPage }, res => {
@@ -245,6 +303,8 @@ export default {
     },
     // 一键发放
     release() {
+      this.form.money=''
+      this.form.value=''
       this.dialogForm = true
     },
     // 补助分发
@@ -257,6 +317,7 @@ export default {
                 type: 'success',
                 message: '补助发放成功!'
               })
+              this.dialogForm=false
               this.issuedInit()
               this.activeName = 'second'
             }
