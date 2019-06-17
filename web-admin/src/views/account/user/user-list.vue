@@ -328,7 +328,6 @@ export default {
         const blob = new Blob([response.data])
         const fileName = 'table.xls'
         const linkNode = document.createElement('a')
-
         linkNode.download = fileName // a标签的download属性规定下载文件的名称
         linkNode.style.display = 'none'
         linkNode.href = URL.createObjectURL(blob) // 生成一个Blob URL

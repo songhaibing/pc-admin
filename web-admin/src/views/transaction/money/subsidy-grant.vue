@@ -6,7 +6,14 @@
         <div>
           <span>搜索查询</span>
           <el-input v-model="input" placeholder="按交易单号或姓名筛选" style="width: 300px;margin-left: 20px" />
-          <el-input v-model="input" placeholder="按单位筛选" style="width: 300px;margin-left: 20px" />
+          <el-select v-model="valueSelect" placeholder="按单位筛选" style="width: 300px;margin-left: 20px" @change="change">
+            <el-option
+              v-for="item in optionsInquire"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
         </div>
         <div style="margin-top: 20px">
           <span>查询日期</span>
@@ -173,6 +180,8 @@ export default {
   components: { ImportForm },
   data() {
     return {
+      valueSelect: '',
+      optionsInquire:[],
       dialogFormMsg:false,
       formLabelWidth: '100px',
       options: [],
@@ -199,6 +208,7 @@ export default {
           { required: true, message: '请输入补助金额', trigger: 'blur' }
         ]
       },
+      selectId:0,
       currentPage: 1, // 当前多少页
       size: 10, // 每页多少条数据
       total: 0, // 总共多少数据
@@ -239,6 +249,9 @@ export default {
   },
   created() {
     this.init()
+    this.$_HTTP.get(this.$_API.deptTree, {}, res => {
+      this.optionsInquire = res
+    })
     this.$_HTTP.get(this.$_API.purseTypeAll, {}, res => {
       this.options = res
     })
@@ -267,7 +280,7 @@ export default {
     // 初始化未发放补助分页
     init() {
       this.loading = true
-      this.$_HTTP.get(this.$_API.subsidyPage, { deptId: 0, size: this.size, current: this.currentPage }, res => {
+      this.$_HTTP.get(this.$_API.subsidyPage, { deptId: this.selectId, size: this.size, current: this.currentPage }, res => {
         this.tableData = res.records
         this.total = res.total
         this.loading = false
@@ -295,11 +308,15 @@ export default {
     },
     issuedInit() {
       this.loading = true
-      this.$_HTTP.get(this.$_API.subsidyList, { deptId: 0, size: this.size, current: this.currentPage }, res => {
+      this.$_HTTP.get(this.$_API.subsidyList, { deptId: this.selectId, size: this.size, current: this.currentPage }, res => {
         this.tableData = res.records
         this.total = res.total
         this.loading = false
       })
+    },
+    change(val) {
+      this.selectId = val
+      this.init()
     },
     // 一键发放
     release() {
