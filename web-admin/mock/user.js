@@ -49,7 +49,7 @@ export default [
 
   // get user info
   {
-    url: '/user/inf\.*',
+    url: '/user/info\.*',
     type: 'get',
     response: config => {
       const { token } = config.query

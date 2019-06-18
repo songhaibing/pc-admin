@@ -12,7 +12,7 @@ const API = {
   addUser: adminIp + 'user/add', // 添加用户
   deleteUser: adminIp + 'user/delete/', // 删除用户
   editUser: adminIp + 'user/edit/', // 编辑用户
-  userInfo: adminIp + 'user/info', // 获取当前用户信息
+  userInfocontact: adminIp + 'usercontact/infocontact', // 获取当前用户信息
   // 部门管理
   deleteDept: adminIp + 'dept/delete/', // 通过ID删除部门
   addDept: adminIp + 'dept/add', // 添加部门数据
