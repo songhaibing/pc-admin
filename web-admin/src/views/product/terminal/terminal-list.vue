@@ -330,6 +330,7 @@
         }
         this.title = '编辑设备'
         this.dialogFormVisible = true
+        this.form.unit=row.dept.name
         this.form.id=row.deviceId
         this.form.name = row.name
         this.valueId=row.dept.id
@@ -371,17 +372,20 @@
           this.base64 = res
         })
       },
+      isImageFormat(file) {
+        return file.type === 'image/jpeg' || file.type === 'image/png'
+      },
       beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg'
+        const isImageFormat = this.isImageFormat(file)
         const isLt2M = file.size / 1024 / 1024 < 2
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!')
+        if (!isImageFormat) {
+          this.$message.error('上传头像图片只能是 JPG和PNG 格式!')
         }
-        if (!isLt2M) {
+        if (!isImageFormat) {
           this.$message.error('上传头像图片大小不能超过 2MB!')
         }
-        return isJPG && isLt2M
+        return isImageFormat && isLt2M
       },
       addButton() {
         this.form.name = ''
