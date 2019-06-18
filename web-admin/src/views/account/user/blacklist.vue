@@ -4,36 +4,8 @@
       <div style="padding:20px">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <el-button
-              style="padding: 6px;margin-right: 6px"
-              type="primary"
-              icon="el-icon-download"
-              @click="exportTemplate"
-            >导出模版
-            </el-button>
-            <el-button
-              style="padding: 6px;margin-right: 6px"
-              type="warning"
-              icon="el-icon-share"
-              @click="importUser"
-            >导入用户
-            </el-button>
-            <el-button
-              style="float: right;margin-right: 6px"
-              type="primary"
-              icon="el-icon-plus"
-              @click="addButton"
-              v-if="$_Authorities.indexOf('添加用户')!==-1"
-            >添加
-            </el-button>
-            <el-select v-model="valueSelect" placeholder="根据单位查询角色" style="float: right;" @change="change">
-              <el-option
-                v-for="item in optionsInquire"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
+            <i class="el-icon-school" />
+            <span>黑名单</span>
           </div>
           <el-table
             v-loading="loading"
