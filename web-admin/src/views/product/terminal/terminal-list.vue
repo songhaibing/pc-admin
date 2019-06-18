@@ -63,6 +63,9 @@
         </el-table-column>
         <el-table-column align="center" prop="name" label="设备名称"/>
         <el-table-column align="center" prop="address" label="设备位置"/>
+        <el-table-column align="center"  label="归属单位">
+          <template slot-scope="scope">{{scope.row.dept.name}}</template>
+        </el-table-column>
         <el-table-column align="center" prop="usingDate" label="启用时间"/>
         <el-table-column align="center" label="设备状态">
           <template slot-scope="scope">{{ statusCode[scope.row.state] }}</template>

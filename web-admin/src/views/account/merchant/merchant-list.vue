@@ -156,9 +156,6 @@
         dialogUnitTree:false,
         data: [],
         titleTree:'请选择分类',
-        dialogFormTree:false,
-        isClearable: true, // 可清空（可选）
-        isAccordion: true, // 可收起（可选）
         valueId: '', // 初始ID（可选）
         props: { // 配置项（必选）
           value: 'id',
@@ -199,9 +196,6 @@
           phone: [
             {required: true, validator: checkPhone, trigger: 'blur'}
           ],
-          num: [
-            {required: true, message: '请输入设备数', trigger: 'blur'}
-          ],
           time: [
             {required: true, message: '请输入到期时间', trigger: 'blur'}
           ]
@@ -209,7 +203,6 @@
       }
     },
     created() {
-      console.log(localStorage.getItem('authorities'))
       this.init()
     },
     methods: {
@@ -270,6 +263,8 @@
         this.init()
       },
       addButton() {
+        this.form.unit=''
+        this.form.className=''
         this.form.name = ''
         this.form.status = ''
         this.form.category = ''
@@ -282,10 +277,12 @@
       },
       handleEdit(index, row) {
         this.classId=row.businessTypeId
+        this.unitId=row.deptId
         this.disabled = true
         this.title = '编辑商户'
         this.merchantId = row.id
-        this.form.className=row.businessType.name
+        this.form.unit=row.dept.name
+        this.form.className=row.businessType?row.businessType.name:null
         this.form.name = row.name
         this.form.status = row.businessState
         this.form.category = row.categories
@@ -324,7 +321,8 @@
               expireTime: this.form.time,
               head: this.form.principal,
               phoneNumber: this.form.phone,
-              businessTypeId:this.classId
+              businessTypeId:this.classId,
+              businessState:this.form.status
             }
             if (this.title === '添加商户') {
               this.$_HTTP.post(this.$_API.addBusiness, params, res => {

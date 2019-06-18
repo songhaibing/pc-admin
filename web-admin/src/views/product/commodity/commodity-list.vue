@@ -112,12 +112,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="预定时间" :label-width="formLabelWidth" prop="scheduledTime">
-          <el-time-picker
+          <el-date-picker
             style="width: 100%"
+            type="datetime"
             v-model="form.scheduledTime"
-            value-format="HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
             placeholder="请选择今天以后的时间">
-          </el-time-picker>
+            </el-date-picker>
         </el-form-item>
         <el-form-item label="好评率" :label-width="formLabelWidth" prop="rate">
           <el-input v-model="form.rate" autocomplete="off">
