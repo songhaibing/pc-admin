@@ -9,6 +9,7 @@
           type="primary"
           icon="el-icon-plus"
           @click="addButton"
+          v-if="$_Authorities.indexOf('添加商户')!==-1"
         >添加
         </el-button>
       </div>
@@ -25,15 +26,15 @@
           <template slot-scope="scope">{{ scope.row.businessState==='0'?'营业中':'已清退' }}</template>
         </el-table-column>
         <el-table-column align="center" label="商户负责人" prop="head"/>
-        <el-table-column align="center" label="归属单位" v-if="authorities.indexOf('归属单位')!==-1" prop="dept.name"/>
+        <el-table-column align="center" label="归属单位" v-if="$_Authorities.indexOf('商户归属单位')!==-1" prop="dept.name"/>
         <el-table-column align="center" label="联系电话" prop="phoneNumber"/>
         <el-table-column align="center" label="设备数" prop="deviceNumber"/>
         <el-table-column align="center" label="到期时间" prop="expireTime"/>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="text" >禁用</el-button>
-            <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('编辑商户')!==-1" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('禁用商户')!==-1">禁用</el-button>
+            <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('删除商户')!==-1" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -141,7 +142,7 @@
     },
     data() {
       return {
-        authorities:localStorage.getItem('authorities'),
+        // authorities:localStorage.getItem('authorities'),
         unitId:'',
         filterTextUnit:'',
         unitTree:[],

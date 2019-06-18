@@ -9,6 +9,7 @@
           type="primary"
           icon="el-icon-plus"
           @click="addButton"
+          v-if="$_Authorities.indexOf('添加单位')!==-1"
         >添加
         </el-button>
       </div>
@@ -81,12 +82,14 @@
               size="mini"
               type="text"
               @click="handleEdit(scope.$index, scope.row)"
+              v-if="$_Authorities.indexOf('编辑单位')!==-1"
             >编辑
             </el-button>
             <el-button
               size="mini"
               type="text"
               @click="deleteUser(scope.$index, scope.row)"
+              v-if="$_Authorities.indexOf('删除单位')!==-1"
             >删除
             </el-button>
           </template>

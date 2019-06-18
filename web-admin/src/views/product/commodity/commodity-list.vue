@@ -7,6 +7,7 @@
           type="primary"
           icon="el-icon-plus"
           @click="addButton"
+          v-if="$_Authorities.indexOf('添加商品')!==-1"
         >添加
         </el-button>
         <el-button
@@ -15,6 +16,7 @@
           icon="el-icon-delete"
           @click="delMore"
           :disabled="delDisabled"
+          v-if="$_Authorities.indexOf('批量删除商品')!==-1"
         >批量删除
         </el-button>
       </div>
@@ -49,9 +51,9 @@
         <el-table-column align="center" prop="rate" label="好评率" />
         <el-table-column align="center" label="操作" >
           <template slot-scope="scope">
-            <el-button size="mini" type="text"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="text" @click="obtained(scope.$index, scope.row)">{{font}}</el-button>
-            <el-button size="mini" type="text" @click="deleteUser(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="text"  v-if="$_Authorities.indexOf('编辑商品')!==-1" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="text"  v-if="$_Authorities.indexOf('下架商品')!==-1" @click="obtained(scope.$index, scope.row)">{{font}}</el-button>
+            <el-button size="mini" type="text"  v-if="$_Authorities.indexOf('删除商品')!==-1" @click="deleteUser(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

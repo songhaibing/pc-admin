@@ -23,6 +23,7 @@
               type="primary"
               icon="el-icon-plus"
               @click="addButton"
+              v-if="$_Authorities.indexOf('添加用户')!==-1"
             >添加
             </el-button>
             <el-select v-model="valueSelect" placeholder="根据单位查询角色" style="float: right;" @change="change">
@@ -64,7 +65,7 @@
             </el-table-column>
             <el-table-column align="center" prop="idCard" label="身份证号" />
             <el-table-column align="center" prop="phone" label="手机号码" />
-            <el-table-column align="center" label="归属单位">
+            <el-table-column align="center" label="归属单位"  v-if="$_Authorities.indexOf('用户归属单位')!==-1">
               <template v-if="scope.row.dept" slot-scope="scope">{{ scope.row.dept.name }}</template>
             </el-table-column>
             <el-table-column align="center" label="状态">
@@ -76,17 +77,20 @@
                   size="mini"
                   type="text"
                   @click="handleEdit(scope.$index, scope.row)"
+                  v-if="$_Authorities.indexOf('编辑用户')!==-1"
                 >编辑
                 </el-button>
                 <el-button
                   size="mini"
                   type="text"
                   @click="deleteUser(scope.$index, scope.row)"
+                  v-if="$_Authorities.indexOf('删除用户')!==-1"
                 >删除
                 </el-button>
                 <el-button
                   size="mini"
                   type="text"
+                  v-if="$_Authorities.indexOf('禁用用户')!==-1"
                 >禁用
                 </el-button>
               </template>

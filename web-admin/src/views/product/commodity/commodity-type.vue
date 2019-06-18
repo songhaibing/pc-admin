@@ -10,6 +10,7 @@
           type="primary"
           icon="el-icon-plus"
           @click="addButton"
+          v-if="$_Authorities.indexOf('添加商品分类')!==-1"
         >添加
         </el-button>
       </div>
@@ -41,9 +42,9 @@
         </el-table-column>
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="text" @click="addSubclass(scope.$index, scope.row)">添加子分类</el-button>
-            <el-button size="mini" type="text" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="text" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('添加商品子分类')!==-1" @click="addSubclass(scope.$index, scope.row)">添加子分类</el-button>
+            <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('编辑商品分类')!==-1" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('删除商品分类')!==-1" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

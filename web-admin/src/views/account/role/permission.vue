@@ -10,6 +10,7 @@
               type="primary"
               icon="el-icon-plus"
               @click="addButton"
+              v-if="$_Authorities.indexOf('添加权限')!==-1"
             >添加
             </el-button>
             <el-select v-model="valueSelect" placeholder="根据单位查询角色" style="float: right;" @change="change">
@@ -55,18 +56,21 @@
                   size="mini"
                   type="text"
                   @click="handleEdit(scope.$index, scope.row)"
+                  v-if="$_Authorities.indexOf('编辑权限')!==-1"
                 >编辑
                 </el-button>
                 <el-button
                   size="mini"
                   type="text"
                   @click="deleteUser(scope.$index, scope.row)"
+                  v-if="$_Authorities.indexOf('删除权限')!==-1"
                 >删除
                 </el-button>
                 <el-button
                   size="mini"
                   type="text"
                   @click="findRole(scope.$index, scope.row)"
+                  v-if="$_Authorities.indexOf('选择角色权限')!==-1"
                 >权限
                 </el-button>
               </template>

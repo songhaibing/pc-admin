@@ -38,6 +38,7 @@
           type="primary"
           icon="el-icon-plus"
           @click="addButton"
+          v-if="$_Authorities.indexOf('添加设备')!==-1"
         >添加
         </el-button>
       </div>
@@ -61,18 +62,16 @@
           </template>
         </el-table-column>
         <el-table-column align="center" prop="name" label="设备名称"/>
-        <el-table-column align="center" prop="dept.name" label="归属单位"/>
         <el-table-column align="center" prop="address" label="设备位置"/>
         <el-table-column align="center" prop="usingDate" label="启用时间"/>
-        <el-table-column align="center" prop="password" label="管理密码"/>
         <el-table-column align="center" label="设备状态">
           <template slot-scope="scope">{{ statusCode[scope.row.state] }}</template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
-            <el-button size="mini" type="text"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('编辑设备')!==-1" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button size="mini" type="text">报修</el-button>
-            <el-button size="mini" type="text" @click="deleteDevice(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="text"  v-if="$_Authorities.indexOf('删除设备')!==-1" @click="deleteDevice(scope.$index, scope.row)">删除</el-button>
             <!--<el-button size="mini" type="text">改密</el-button>-->
           </template>
         </el-table-column>
@@ -129,8 +128,16 @@
         <el-form-item label="归属单位"  :label-width="formLabelWidth"  prop="unit">
           <el-input ref="inputUnit" v-model="form.unit" readonly="readonly" placeholder="请选择所属单位" autocomplete="off" @focus="clickUnit"/>
         </el-form-item>
-        <el-form-item label="归属商户" :label-width="formLabelWidth" prop="address">
-          <el-input v-model="form.address" autocomplete="off"/>
+        <el-form-item label="设备位置" :label-width="formLabelWidth" prop="address">
+          <el-select v-model="valueAddress" placeholder="请选择商户">
+            <el-option
+              v-for="item in optionsAddress"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <el-input v-model="form.address" autocomplete="off" style="width: 56%" placeholder="请输入具体位置，如一号窗口"/>
         </el-form-item>
         <el-form-item label="启用时间" :label-width="formLabelWidth" prop="time">
           <el-date-picker
@@ -142,7 +149,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="管理密码" :label-width="formLabelWidth" prop="pw">
-          <el-input v-model="form.pw" autocomplete="off"/>
+          <el-input v-model="form.pw" type="text" onfocus="this.type='password'"   autocomplete="off"/>
         </el-form-item>
         <el-form-item label="设备状态" :label-width="formLabelWidth" prop="status">
           <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
@@ -156,6 +163,9 @@
         </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-tooltip class="item" effect="dark" content="重置密码为000000" placement="top">
+            <el-button type="primary" @click="resetPassword">重置密码</el-button>
+          </el-tooltip>
           <el-button type="primary" @click="addMerchant('form')">添加</el-button>
         </el-form-item>
       </el-form>
@@ -178,10 +188,27 @@
     },
     data() {
       return {
+        valueAddress:'',
         filterTextUnit:'',
         filterText: '',
         titleTree:'请选择分类',
         unitTree:[],
+        optionsAddress: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
         defaultProps: {
           children: 'children',
           label: 'name'
@@ -269,9 +296,9 @@
           this.$refs.inputUnit.blur()
         },500)
       },
-      getValue(value) {
-        console.log(value)
-        this.valueId = value
+      //重置密码
+      resetPassword(){
+        this.form.pw='000000'
       },
       // 初始化分页
       init() {
@@ -357,7 +384,6 @@
         this.form.name = ''
         this.form.id=''
         this.form.address = ''
-        this.valueId=''
         this.form.time = ''
         this.form.pw = ''
         this.imageUrl = ''

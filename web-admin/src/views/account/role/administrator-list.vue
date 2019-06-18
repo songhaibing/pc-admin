@@ -31,6 +31,7 @@
         <el-table-column
           align="center"
           label="归属单位"
+          v-if="$_Authorities.indexOf('管理员归属单位')!==-1"
         >
           <template slot-scope="scope">{{ scope.row.userVo.dept.name }}</template>
         </el-table-column>
