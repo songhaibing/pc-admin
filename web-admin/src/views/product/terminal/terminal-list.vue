@@ -64,7 +64,7 @@
         <el-table-column align="center" prop="name" label="设备名称"/>
         <el-table-column align="center" prop="address" label="设备位置"/>
         <el-table-column align="center"  label="归属单位">
-          <template slot-scope="scope">{{scope.row.dept.name}}</template>
+          <template slot-scope="scope" v-if="scope.row.dept">{{scope.row.dept.name}}</template>
         </el-table-column>
         <el-table-column align="center" prop="usingDate" label="启用时间"/>
         <el-table-column align="center" label="设备状态">
@@ -320,11 +320,11 @@
         }
         this.title = '编辑设备'
         this.dialogFormVisible = true
-        this.form.unit=row.dept.name
+        this.form.unit=row.dept?row.dept.name:''
         this.form.valueAddress=row.business.id
         this.form.id=row.deviceId
         this.form.name = row.name
-        this.unitId=row.dept.id
+        this.unitId=row.dept?row.dept.id:''
         this.form.address = row.address
         this.form.time = row.usingDate
         this.form.status = row.state

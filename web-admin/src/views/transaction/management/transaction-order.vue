@@ -50,6 +50,7 @@
         <el-table-column
           label="创建时间"
           align="center"
+          prop="realname"
         />
         <el-table-column
           align="center"
@@ -65,7 +66,9 @@
           align="center"
           prop="nickname"
           label="消费人"
-        />
+        >
+          <template slot-scope="scope">{{ scope.row.user.username }}</template>
+        </el-table-column>
         <el-table-column
           align="center"
           prop="phone"
@@ -73,7 +76,7 @@
         />
         <el-table-column
           align="center"
-          prop="phone"
+          prop="price"
           label="订单金额"
         />
         <el-table-column
@@ -161,6 +164,7 @@
         this.loading = true
         this.$_HTTP.get(this.$_API.orderPayList, {businessId:0,size: this.size, current: this.currentPage}, res => {
           this.tableData = res.records
+          console.log('1',res)
           this.total = res.total
           this.loading = false
         })

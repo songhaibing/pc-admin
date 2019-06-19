@@ -2,7 +2,7 @@
   <div style="padding: 20px">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <i class="el-icon-school" />
+        <i class="el-icon-school"/>
         <span>单位列表</span>
         <el-button
           style="float: right;padding: 6px;margin-right: 6px"
@@ -58,9 +58,10 @@
         />
         <el-table-column
           align="center"
-          prop="email"
           label="状态"
-        />
+        >
+          <template slot-scope="scope">{{ userCode[scope.row.deptState] }}</template>
+        </el-table-column>
         <el-table-column
           align="center"
           prop="deviceNum"
@@ -121,11 +122,11 @@
             :before-upload="beforeAvatarUpload"
           >
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"/>
           </el-upload>
         </el-form-item>
         <el-form-item label="单位名称" :label-width="formLabelWidth" prop="unitName">
-          <el-input v-model="form.unitName" autocomplete="off" />
+          <el-input v-model="form.unitName" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="开通时间" :label-width="formLabelWidth" prop="openingTime">
           <el-date-picker
@@ -160,13 +161,13 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="title==='编辑单位'" label="设备数" :label-width="formLabelWidth" prop="num">
-          <el-input v-model="form.num" autocomplete="off" disabled />
+          <el-input v-model="form.num" autocomplete="off" disabled/>
         </el-form-item>
         <el-form-item label="对接人" :label-width="formLabelWidth" prop="dockingPeople">
-          <el-input v-model="form.dockingPeople" autocomplete="off" />
+          <el-input v-model="form.dockingPeople" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="联系电话" :label-width="formLabelWidth" prop="mobile">
-          <el-input v-model="form.mobile" autocomplete="off" />
+          <el-input v-model="form.mobile" autocomplete="off"/>
         </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -178,215 +179,230 @@
 </template>
 
 <script>
-import mixins from '@/mixins/user'
+  import mixins from '@/mixins/user'
+  import userCode from '@/libs/userCode'
 
-export default {
-  name: 'UnitList',
-  mixins: [mixins],
-  data() {
-    return {
-      unitId: '',
-      selectId: '',
-      imageUrl: '',
-      base64: '',
-      avatar: require('@/assets/avatar/mieba.png'),
-      token: localStorage.getItem('token'),
-      formLabelWidth: '100px',
-      title: '添加单位',
-      dialogFormVisible: false,
-      loading: true,
-      tableData: [],
-      currentPage: 1, // 当前多少页
-      size: 10, // 每页多少条数据
-      total: 0, // 总共多少数据
-      options: [{
-        value: 0,
-        label: '正常'
-      }, {
-        value: 1,
-        label: '已到期'
-      }, {
-        value: 9,
-        label: '禁用'
-      }],
-      pickerOptions: {
-        disabledDate(time) {
-          const date = new Date()
-          date.setTime(date.getTime() - 3600 * 1000 * 24)
-          return time.getTime() < date
+  export default {
+    name: 'UnitList',
+    mixins: [mixins],
+    data() {
+      return {
+        userCode: userCode,
+        unitId: '',
+        selectId: '',
+        imageUrl: '',
+        base64: '',
+        avatar: require('@/assets/avatar/mieba.png'),
+        token: localStorage.getItem('token'),
+        formLabelWidth: '100px',
+        title: '添加单位',
+        dialogFormVisible: false,
+        loading: true,
+        tableData: [],
+        currentPage: 1, // 当前多少页
+        size: 10, // 每页多少条数据
+        total: 0, // 总共多少数据
+        options: [{
+          value: '0',
+          label: '正常'
+        }, {
+          value: '1',
+          label: '已到期'
+        }, {
+          value: '2',
+          label: '即将到期'
+        }, {
+          value: '3',
+          label: '禁用'
+        }],
+        pickerOptions: {
+          disabledDate(time) {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24)
+            return time.getTime() < date
+          }
+        },
+        form: {
+          unitName: '',
+          mobile: '',
+          openingTime: '',
+          stopTime: '',
+          status: '',
+          num: '',
+          dockingPeople: ''
+        },
+        rules: {
+          unitName: [
+            {required: true, message: '请输入单位名称', trigger: 'blur'}
+          ],
+          mobile: [
+            {required: true, message: '请输入手机号', trigger: 'blur'}
+          ],
+          stopTime: [
+            {required: true, message: '请输入终止时间', trigger: 'blur'}
+          ],
+          openingTime: [
+            {required: true, message: '请输入开通时间', trigger: 'blur'}
+          ],
+          dockingPeople: [
+            {required: true, message: '请输入对接人', trigger: 'blur'}
+          ]
         }
-      },
-      form: {
-        unitName: '',
-        mobile: '',
-        openingTime: '',
-        stopTime: '',
-        status: '',
-        num: '',
-        dockingPeople: ''
-      },
-      rules: {
-        unitName: [
-          { required: true, message: '请输入单位名称', trigger: 'blur' }
-        ],
-        mobile: [
-          { required: true, message: '请输入手机号', trigger: 'blur' }
-        ],
-        stopTime: [
-          { required: true, message: '请输入终止时间', trigger: 'blur' }
-        ],
-        openingTime: [
-          { required: true, message: '请输入开通时间', trigger: 'blur' }
-        ],
-        dockingPeople: [
-          { required: true, message: '请输入对接人', trigger: 'blur' }
-        ]
       }
-    }
-  },
-  created() {
-    this.init()
-  },
-  methods: {
-    // 初始化分页
-    init() {
-      this.loading = true
-      this.$_HTTP.get(this.$_API.unitList, { size: this.size, current: this.currentPage }, res => {
-        this.tableData = res.records
-        this.total = res.total
-        this.loading = false
-      })
     },
-    change(val) {
-      this.selectId = val
-      console.log(val)
-    },
-    handleSizeChange(val) {
-      this.size = val
+    created() {
       this.init()
     },
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
-      this.getBase64(file.raw).then(res => {
-        this.base64 = res
-      })
-    },
-    isImageFormat(file) {
-      return file.type === 'image/jpeg' || file.type === 'image/png'
-    },
-    beforeAvatarUpload(file) {
-      const isImageFormat = this.isImageFormat(file)
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isImageFormat) {
-        this.$message.error('上传头像图片只能是JPG和PNG格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isImageFormat && isLt2M
-    },
-    handleEdit(index, row) {
-      this.unitId = row.id
-      if (row.logo) {
-        this.imageUrl = 'http://106.75.178.9:80/resource/' + row.logo
-      } else {
-        this.imageUrl = this.avatar
-      }
-      this.title = '编辑单位'
-      this.form.unitName = row.name,
-      this.form.mobile = row.phone,
-      this.form.num = row.deviceNum,
-      this.form.openingTime = row.startTime,
-      this.form.stopTime = row.endTime,
-      this.selectId = row.deptState,
-      this.form.dockingPeople = row.username,
-      this.dialogFormVisible = true
-      console.log(index, row)
-    },
-    deleteUser(index, row) {
-      this.$confirm('此操作将永久删除该单位, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$_HTTP.delete(this.$_API.delUnit + row.id, {}, res => {
-          if (res.code === 1) {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            })
-            this.init()
+    methods: {
+      // 初始化分页
+      init() {
+        this.loading = true
+        this.$_HTTP.get(this.$_API.unitList, {size: this.size, current: this.currentPage}, res => {
+          this.tableData = res.records
+          this.total = res.total
+          this.loading = false
+        })
+      },
+      change(val) {
+        this.selectId = val
+        console.log(val)
+      },
+      handleSizeChange(val) {
+        this.size = val
+        this.init()
+      },
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw)
+        this.getBase64(file.raw).then(res => {
+          this.base64 = res
+        })
+      },
+      isImageFormat(file) {
+        return file.type === 'image/jpeg' || file.type === 'image/png'
+      },
+      beforeAvatarUpload(file) {
+        const isImageFormat = this.isImageFormat(file)
+        const isLt2M = file.size / 1024 / 1024 < 2
+        if (!isImageFormat) {
+          this.$message.error('上传头像图片只能是JPG和PNG格式!')
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!')
+        }
+        return isImageFormat && isLt2M
+      },
+      handleEdit(index, row) {
+        this.unitId = row.id
+        if (row.logo) {
+          this.imageUrl = 'http://106.75.178.9:80/resource/' + row.logo
+        } else {
+          this.imageUrl = this.avatar
+        }
+        this.title = '编辑单位'
+        this.form.unitName = row.name,
+          this.form.mobile = row.phone,
+          this.form.status = row.deptState
+        this.form.num = row.deviceNum,
+          this.form.openingTime = row.startTime,
+          this.form.stopTime = row.endTime,
+          this.selectId = row.deptState,
+          this.form.dockingPeople = row.username,
+          this.dialogFormVisible = true
+        console.log(index, row)
+      },
+      deleteUser(index, row) {
+        this.$confirm('此操作将永久删除该单位, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$_HTTP.delete(this.$_API.delUnit + row.id, {}, res => {
+            if (res.code === 1) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.init()
+            }
+          })
+        }).catch(() => {
+
+        })
+      },
+      addUser(form) {
+        this.$refs[form].validate((valid) => {
+          if (valid) {
+            const params = {
+              name: this.form.unitName,
+              logo: this.base64,
+              phone: this.form.mobile,
+              startTime: this.form.openingTime,
+              endTime: this.form.stopTime,
+              username: this.form.dockingPeople
+            }
+            const paramsEdit = {
+              name: this.form.unitName,
+              logo: this.base64,
+              phone: this.form.mobile,
+              startTime: this.form.openingTime,
+              endTime: this.form.stopTime,
+              username: this.form.dockingPeople,
+              deptState: this.selectId
+            }
+            if (this.title === '添加单位') {
+              this.$_HTTP.post(this.$_API.addUnit, params, res => {
+                if (res.code === 1) {
+                  this.dialogFormVisible = false
+                  this.$message({
+                    message: '添加单位成功',
+                    type: 'success'
+                  })
+                  this.init()
+                } else if (res.code === 2) {
+                  this.$message({
+                    message: res.msg,
+                    type: 'error'
+                  })
+                }
+              })
+            } else {
+              this.$_HTTP.put(this.$_API.editUnit + this.unitId, paramsEdit, res => {
+                if (res.code === 1) {
+                  this.dialogFormVisible = false
+                  this.$message({
+                    message: '修改单位成功',
+                    type: 'success'
+                  })
+                  this.init()
+                } else {
+                  this.$message({
+                    message: '修改单位失败',
+                    type: 'error'
+                  })
+                }
+              })
+            }
           }
         })
-      }).catch(() => {
-
-      })
-    },
-    addUser(form) {
-      this.$refs[form].validate((valid) => {
-        if (valid) {
-          const params = {
-            name: this.form.unitName,
-            logo: this.base64,
-            phone: this.form.mobile,
-            startTime: this.form.openingTime,
-            endTime: this.form.stopTime,
-            username: this.form.dockingPeople
-          }
-          if (this.title === '添加单位') {
-            this.$_HTTP.post(this.$_API.addUnit, params, res => {
-              if (res.code === 1) {
-                this.dialogFormVisible = false
-                this.$message({
-                  message: '添加单位成功',
-                  type: 'success'
-                })
-                this.init()
-              } else if (res.code === 2) {
-                this.$message({
-                  message: res.msg,
-                  type: 'error'
-                })
-              }
-            })
-          } else {
-            this.$_HTTP.put(this.$_API.editUnit + this.unitId, params, res => {
-              if (res.code === 1) {
-                this.dialogFormVisible = false
-                this.$message({
-                  message: '修改单位成功',
-                  type: 'success'
-                })
-                this.init()
-              } else {
-                this.$message({
-                  message: '修改单位失败',
-                  type: 'error'
-                })
-              }
-            })
-          }
-        }
-      })
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val
-      this.init()
-    },
-    addButton() {
-      this.form.unitName = ''
-      this.imageUrl = ''
-      this.form.mobile = ''
-      this.form.num = ''
-      this.form.openingTime = ''
-      this.form.stopTime = ''
-      this.form.status = ''
-      this.form.dockingPeople = ''
-      this.title = '添加单位'
-      this.dialogFormVisible = true
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val
+        this.init()
+      },
+      addButton() {
+        this.form.unitName = ''
+        this.imageUrl = ''
+        this.form.mobile = ''
+        this.form.num = ''
+        this.form.openingTime = ''
+        this.form.stopTime = ''
+        this.form.status = ''
+        this.form.dockingPeople = ''
+        this.title = '添加单位'
+        this.dialogFormVisible = true
+      }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>

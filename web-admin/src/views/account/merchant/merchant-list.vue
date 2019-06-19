@@ -322,6 +322,15 @@
               head: this.form.principal,
               phoneNumber: this.form.phone,
               businessTypeId:this.classId,
+            }
+            const paramsEdit = {
+              name: this.form.name,
+              deptId:this.unitId,
+              categories: this.form.category,
+              expireTime: this.form.time,
+              head: this.form.principal,
+              phoneNumber: this.form.phone,
+              businessTypeId:this.classId,
               businessState:this.form.status
             }
             if (this.title === '添加商户') {
@@ -341,7 +350,7 @@
                 }
               })
             } else {
-              this.$_HTTP.put(this.$_API.editBusiness + this.merchantId, params, res => {
+              this.$_HTTP.put(this.$_API.editBusiness + this.merchantId,paramsEdit, res => {
                 if (res.code === 1) {
                   this.dialogFormVisible = false
                   this.$message({

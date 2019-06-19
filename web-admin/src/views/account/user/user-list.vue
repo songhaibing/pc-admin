@@ -367,7 +367,7 @@ export default {
     // 初始化分页
     init() {
       this.loading = true
-      this.$_HTTP.get(this.$_API.userList, { size: this.size, current: this.currentPage }, res => {
+      this.$_HTTP.get(this.$_API.userList, { deptId:localStorage.getItem('deptId'),size: this.size, current: this.currentPage }, res => {
         this.tableData = res.records
         this.total = res.total
         this.loading = false
