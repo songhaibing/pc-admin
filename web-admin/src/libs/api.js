@@ -83,6 +83,7 @@ const API = {
   addAirportDevice: smartcardIp + 'airportDevice/add', // 添加设备信息
   delAirportDevice: smartcardIp + 'airportDevice/delete/', // 删除设备信息
   editAirportDevice: smartcardIp + 'airportDevice/edit/', // 修改设备信息
+  businessAll: smartcardIp + 'business/all', // 查询所有商户列表
   /**
    *  交易中心API
    */

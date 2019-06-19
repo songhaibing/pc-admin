@@ -142,7 +142,6 @@
     },
     data() {
       return {
-        // authorities:localStorage.getItem('authorities'),
         unitId:'',
         filterTextUnit:'',
         unitTree:[],

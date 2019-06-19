@@ -75,7 +75,6 @@
             <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('编辑设备')!==-1" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button size="mini" type="text">报修</el-button>
             <el-button size="mini" type="text"  v-if="$_Authorities.indexOf('删除设备')!==-1" @click="deleteDevice(scope.$index, scope.row)">删除</el-button>
-            <!--<el-button size="mini" type="text">改密</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -132,12 +131,12 @@
           <el-input ref="inputUnit" v-model="form.unit" readonly="readonly" placeholder="请选择所属单位" autocomplete="off" @focus="clickUnit"/>
         </el-form-item>
         <el-form-item label="设备位置" :label-width="formLabelWidth" prop="address">
-          <el-select v-model="valueAddress" placeholder="请选择商户">
+          <el-select v-model="form.valueAddress" placeholder="请选择商户">
             <el-option
               v-for="item in optionsAddress"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
             </el-option>
           </el-select>
           <el-input v-model="form.address" autocomplete="off" style="width: 56%" placeholder="请输入具体位置，如一号窗口"/>
@@ -196,22 +195,7 @@
         filterText: '',
         titleTree:'请选择分类',
         unitTree:[],
-        optionsAddress: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
+        optionsAddress: [],
         defaultProps: {
           children: 'children',
           label: 'name'
@@ -265,6 +249,7 @@
           label: '报废'
         }],
         form: {
+          valueAddress:'',
           unit:'',
           id: '',
           name: '',
@@ -291,6 +276,10 @@
         this.unitTree=res
       })
       this.init()
+      this.$_HTTP.get(this.$_API.businessAll, {}, res => {
+        this.optionsAddress=res
+        console.log(res)
+      })
     },
     methods: {
       clickUnit(){
@@ -322,6 +311,7 @@
         this.dialogUnitTree=false
       },
       handleEdit(index,row){
+        console.log(row)
         this.deviceId = row.id
         if (row.img) {
           this.imageUrl = 'http://106.75.178.9:80/resource/' + row.img
@@ -331,9 +321,10 @@
         this.title = '编辑设备'
         this.dialogFormVisible = true
         this.form.unit=row.dept.name
+        this.form.valueAddress=row.business.id
         this.form.id=row.deviceId
         this.form.name = row.name
-        this.valueId=row.dept.id
+        this.unitId=row.dept.id
         this.form.address = row.address
         this.form.time = row.usingDate
         this.form.status = row.state
@@ -405,9 +396,10 @@
               name: this.form.name,
               address: this.form.address,
               deptId: this.unitId,
-              usingDate: this.form.time+' 00:00:00',
+              usingDate: this.form.time,
               password:this.form.pw,
               img:this.base64,
+              businessId:this.form.valueAddress,
               deviceId:this.form.id,
               state:this.form.status
             }
