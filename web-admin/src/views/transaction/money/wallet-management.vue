@@ -55,7 +55,6 @@
         />
         <el-table-column
           align="center"
-          prop="phone"
           label="是否允许充值"
         >
           <!--<template slot-scope="scope">{{ scope.row.isAllow?'是':'否' }}</template>-->

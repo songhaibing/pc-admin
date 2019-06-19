@@ -22,6 +22,17 @@
         <el-table-column label="ID" align="center" prop="id"/>
         <el-table-column align="center" prop="name" label="分类名"/>
         <el-table-column align="center" prop="businessType.name" label="商户分类"/>
+        <el-table-column
+          align="center"
+          label="是否允许充值"
+        >
+          <!--<template slot-scope="scope">{{ scope.row.isAllow?'是':'否' }}</template>-->
+          <template slot-scope="scope">
+            <el-switch :active-value="activeValue" :inactive-value="false"
+                       active-color="#13ce66"
+                       v-model="scope.row.isAllow" @change='change(scope.row,scope.row.isAllow)'/>
+          </template>
+        </el-table-column>
         <el-table-column align="center" prop="createTime" label="创建时间"/>
         <el-table-column align="center" label="操作" >
           <template slot-scope="scope">
@@ -85,6 +96,7 @@
     },
     data(){
       return{
+        activeValue:true,
         dataTree:[],
         defaultProps: {
           children: 'children',
@@ -124,6 +136,10 @@
       })
     },
     methods:{
+      change(row, data) {
+        this.$_HTTP.put(this.$_API.editWallet + row.id, {isAllow: data}, res => {
+        })
+      },
       // 初始化分页
       init() {
         this.loading = true

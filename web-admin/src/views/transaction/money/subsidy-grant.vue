@@ -99,6 +99,12 @@
             <el-button
               size="mini"
               type="text"
+              v-if="activeName==='first'"
+            >单个发放
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
               v-if="activeName==='second'"
               @click="handleSubsidies(scope.$index, scope.row)"
             >撤回补助
