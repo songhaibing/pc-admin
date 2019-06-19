@@ -153,6 +153,7 @@
           label: 'name'
         },
         classId:'',
+        dialogFormTree:false,
         dialogUnitTree:false,
         data: [],
         titleTree:'请选择分类',

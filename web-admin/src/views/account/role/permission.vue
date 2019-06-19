@@ -125,6 +125,7 @@
           :data="data1"
           show-checkbox
           node-key="id"
+          default-expand-all
           :props="defaultProps1"
         />
         <span slot="footer" class="dialog-footer">

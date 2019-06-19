@@ -78,7 +78,6 @@ HTTP.get = function(url, data, callback) {
   const params = { params: data }
   instance.get(url, params)
     .then(function(res) {
-      console.log('http',res)
       // 响应成功回调
       if (res.data.code === 1) {
         callback(res.data.data)

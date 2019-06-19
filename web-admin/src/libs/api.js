@@ -7,18 +7,18 @@ const API = {
   logout: logoutIp + 'token/logout',
   // 用户管理
   menu: adminIp + 'menu/tree/current', // 获取当前用户菜单
-  userList: adminIp + 'user/list', // 获取用户列表
-  userExits: adminIp + 'user/exits/', // 检测用户名是否存在
-  addUser: adminIp + 'user/add', // 添加用户
-  deleteUser: adminIp + 'user/delete/', // 删除用户
-  editUser: adminIp + 'user/edit/', // 编辑用户
+  userList: adminIp + 'usercontact/list', // 获取用户列表
+  userExits: adminIp + 'usercontact/exits/', // 检测用户名是否存在
+  addUser: adminIp + 'usercontact/add', // 添加用户
+  deleteUser: adminIp + 'usercontact/delete/', // 删除用户
+  editUser: adminIp + 'usercontact/edit/', // 编辑用户
   userInfocontact: adminIp + 'usercontact/infocontact', // 获取当前用户信息
   // 部门管理
   deleteDept: adminIp + 'dept/delete/', // 通过ID删除部门
   addDept: adminIp + 'dept/add', // 添加部门数据
   editDept: adminIp + 'dept/edit/', // 修改部门信息
   // 角色管理
-  editAvatar: adminIp + 'user/edit/', // 用户头像修改
+  editAvatar: adminIp + 'usercontact/edit/', // 用户头像修改
   deptTree: adminIp + 'dept/tree', // 获取树状部门结构数据
   findDept: adminIp + 'role/find/dept/', // 查询部门下全部的角色
   addRoleMsg: adminIp + 'role/addrole', // 创建角色角色
