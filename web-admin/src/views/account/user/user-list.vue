@@ -360,7 +360,7 @@ export default {
       this.valueId = value
     },
     roleFind(id) {
-      this.$_HTTP.get(this.$_API.roleFindDept + id, {}, res => {
+      this.$_HTTP.get(this.$_API.roleFindDept + id,{}, res => {
         this.optionsRole = res.records
       })
     },
@@ -405,7 +405,7 @@ export default {
       this.form.userName = row.username
       this.form.realName = row.realname
       this.form.mobile = row.phone
-      this.form.role = row.roles[0].id
+      this.form.role = row.roles?row.roles[0].id:''
       this.form.Email = row.email
       this.form.nickName = row.nickname
     },

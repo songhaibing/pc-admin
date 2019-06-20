@@ -3,11 +3,14 @@
   <div style="padding: 20px">
     <div style="margin-left: 10px">
       <div style="display: flex;flex-direction: column;">
-        <div>
-          <span>账户归属</span>
-          <el-select placeholder="请选择" style="width: 300px;margin-left: 20px">
-
-          </el-select>
+        <div style="display: flex;align-items: center">
+          <div>账户归属</div>
+          <div >
+            <select-tree width="300" style="width: 300px;margin-left: 20px;"
+                         v-model="selected"
+                         :options="options"
+                         :props="defaultProps" @selected="selectedDept"/>
+          </div>
         </div>
         <div style="margin-top: 20px">
           <span>查询日期</span>
@@ -60,7 +63,7 @@
           prop="nickname"
           label="消费人"
         >
-          <template slot-scope="scope">{{ scope.row.user.username }}</template>
+          <template slot-scope="scope">{{ scope.row.userVo.username }}</template>
         </el-table-column>
         <el-table-column
           align="center"
@@ -115,12 +118,31 @@
 
 <script>
   import status from '@/libs/orderCode'
+  import SelectTree from '@/components/widget/SelectTree.vue';
   export default {
     name: 'FundBill',
+    components: {
+      SelectTree,
+    },
     data() {
       return {
+        orderType:-1,
+        deptId:localStorage.getItem('deptId'),
+        // 默认选中值
+        selected: Number(localStorage.getItem('deptId')),
+        // 数据默认字段
+        defaultProps: {
+          value: 'id',          // 唯一标识
+          label: 'name',       // 标签显示
+          children: 'children', // 子级
+        },
+        // 数据列表
+        options: this.$_current,
+        deptValue:'',
+        deptOptions:[],
         status:status,
         loading:true,
+        tab:'',
         tableData:[],
         currentPage: 1, // 当前多少页
         size: 10, // 每页多少条数据
@@ -157,32 +179,59 @@
       }
     },
     created(){
-      this.init()
+      this.issuedInit()
+      this.$_HTTP.get(this.$_API.getCurrentTree,{}, res => {
+       this.deptOptions=res
+      })
     },
     methods:{
-      // 初始化分页
-      init() {
+      selectedDept(val){
+        this.deptId=val
+        if (this.tab.name === 'first') {
+          this.orderType=-1
+          this.issuedInit(this.orderType)
+        } else {
+          this.orderType=1
+          this.issuedInit(this.orderType)
+        }
+      },
+      issuedInit() {
         this.loading = true
-        this.$_HTTP.get(this.$_API.orderPayList, {deptId:localStorage.getItem('deptId'),businessId:0,size: this.size, current: this.currentPage}, res => {
+        this.$_HTTP.get(this.$_API.orderPayPage, { endTime:0,startTime:0,deptId: this.deptId,orderType: this.orderType, size: this.size, current: this.currentPage }, res => {
           this.tableData = res.records
           this.total = res.total
           this.loading = false
         })
       },
       handleClick(tab, event) {
-        if (tab.name === 'first') {
-          this.init()
+        this.tab=tab
+        if (this.tab.name === 'first') {
+          this.orderType=-1
+          this.issuedInit(this.orderType)
         } else {
-          this.issuedInit()
+          this.orderType=1
+          this.issuedInit(this.orderType)
         }
       },
       handleSizeChange(val) {
         this.size = val
-        this.init()
+        if (this.tab.name === 'first') {
+          this.orderType=-1
+          this.issuedInit(this.orderType)
+        } else {
+          this.orderType=1
+          this.issuedInit(this.orderType)
+        }
       },
       handleCurrentChange(val) {
         this.currentPage = val
-        this.init()
+        if (this.tab.name === 'first') {
+          this.orderType=-1
+          this.issuedInit(this.orderType)
+        } else {
+          this.orderType=1
+          this.issuedInit(this.orderType)
+        }
       },
     }
   }

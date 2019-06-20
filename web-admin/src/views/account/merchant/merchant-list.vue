@@ -102,6 +102,7 @@
         v-model="filterText">
       </el-input>
       <el-tree
+        default-expand-all
         class="filter-tree"
         :data="dataTree"
         :props="defaultProps"
@@ -116,6 +117,7 @@
         v-model="filterTextUnit">
       </el-input>
       <el-tree
+        default-expand-all
         class="filter-tree"
         :data="unitTree"
         :props="defaultProps"

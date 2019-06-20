@@ -45,6 +45,7 @@ Object.keys(filters).forEach(key => {
 Vue.prototype.$_HTTP = HTTP
 Vue.prototype.$_API = API
 Vue.prototype.$_Authorities =localStorage.getItem('authorities')
+Vue.prototype.$_current=JSON.parse(localStorage.getItem('current'))
 Vue.config.productionTip = false
 
 new Vue({

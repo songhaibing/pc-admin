@@ -81,6 +81,9 @@ export default {
     }
   },
   created() {
+    this.$_HTTP.get(this.$_API.getCurrentTree,{}, res => {
+      localStorage.setItem('current',JSON.stringify(res))
+    })
     this.$_HTTP.get(this.$_API.userInfocontact, {}, res => {
       this.info = res
       localStorage.setItem('deptId',res.dept.id)

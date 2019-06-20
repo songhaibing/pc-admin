@@ -346,7 +346,7 @@
       handleEdit(index,row){
         this.goodId = row.id
         if (row.picture) {
-          this.imageUrl = 'http://106.75.178.9:8080/resource/' + row.picture
+          this.imageUrl = 'http://106.75.178.9:80/resource/' + row.picture
         } else {
           this.imageUrl = this.avatar
         }

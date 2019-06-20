@@ -12,6 +12,7 @@ const API = {
   addUser: adminIp + 'usercontact/add', // 添加用户
   deleteUser: adminIp + 'usercontact/delete/', // 删除用户
   editUser: adminIp + 'usercontact/edit/', // 编辑用户
+  getCurrentTree: adminIp + 'dept/tree/current', // '获取用户当前部门的树状结构数据'
   userInfocontact: adminIp + 'usercontact/infocontact', // 获取当前用户信息
   // 部门管理
   deleteDept: adminIp + 'dept/delete/', // 通过ID删除部门
@@ -89,6 +90,7 @@ const API = {
    */
   // 交易管理-交易订单
   orderPayList: smartcardIp + 'orderPay/list', // 分页查询订单列表
+  orderPayPage: smartcardIp + 'orderPay/page', // 根据状态分页查询订单列表
   // 资金管理-钱包管理
   walletList: smartcardIp + 'wallet/list', // 分页查询钱包列表
   editWallet: smartcardIp + 'wallet/edit/', // 修改钱包信息

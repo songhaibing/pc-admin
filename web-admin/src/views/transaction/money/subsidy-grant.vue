@@ -100,6 +100,7 @@
               size="mini"
               type="text"
               v-if="activeName==='first'"
+              @click="singleSubsidies(scope.$index, scope.row)"
             >单个发放
             </el-button>
             <el-button
@@ -124,7 +125,7 @@
         />
       </div>
     </el-card>
-    <el-dialog title="设置补贴信息" width="600px" :visible.sync="dialogForm">
+    <el-dialog :title="titleMoney" width="600px" :visible.sync="dialogForm">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="补助金额" :label-width="formLabelWidth" prop="money">
           <el-input v-model="form.money" autocomplete="off" />
@@ -186,6 +187,8 @@ export default {
   components: { ImportForm },
   data() {
     return {
+      moneyId:'',
+      titleMoney:'一键发放',
       valueSelect: '',
       optionsInquire:[],
       dialogFormMsg:false,
@@ -292,6 +295,14 @@ export default {
         this.loading = false
       })
     },
+    singleSubsidies(index,row){
+      console.log(row)
+      this.moneyId=row.userVo.id
+      this.form.money=''
+      this.form.value=''
+      this.titleMoney='单个发放'
+      this.dialogForm = true
+    },
     //撤回补助
     handleSubsidies(index,row){
       this.$confirm('此操作将撤回补助, 是否继续?', '提示', {
@@ -326,6 +337,7 @@ export default {
     },
     // 一键发放
     release() {
+      this.titleMoney==='一键发放'
       this.form.money=''
       this.form.value=''
       this.dialogForm = true
@@ -334,17 +346,31 @@ export default {
     subsidy(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
-          this.$_HTTP.put(this.$_API.subsidySend + this.form.value + '/' + this.form.money, {}, res => {
-            if (res.code === 1) {
-              this.$message({
-                type: 'success',
-                message: '补助发放成功!'
-              })
-              this.dialogForm=false
-              this.issuedInit()
-              this.activeName = 'second'
-            }
-          })
+          if(this.titleMoney==='一键发放'){
+            this.$_HTTP.put(this.$_API.subsidySend + this.form.value + '/' + this.form.money+'/'+0, {}, res => {
+              if (res.code === 1) {
+                this.$message({
+                  type: 'success',
+                  message: '补助发放成功!'
+                })
+                this.dialogForm=false
+                this.issuedInit()
+                this.activeName = 'second'
+              }
+            })
+          }else{
+            this.$_HTTP.put(this.$_API.subsidySend + this.form.value + '/' + this.form.money+'/'+this.moneyId, {}, res => {
+              if (res.code === 1) {
+                this.$message({
+                  type: 'success',
+                  message: '补助发放成功!'
+                })
+                this.dialogForm=false
+                this.issuedInit()
+                this.activeName = 'second'
+              }
+            })
+          }
         }
       })
     },
