@@ -29,11 +29,9 @@
           </el-button>
         </div>
       </div>
-      <el-tabs v-model="activeName" style="margin-top: 20px">
+      <el-tabs v-model="activeName" style="margin-top: 20px" @tab-click="handleClick">
         <el-tab-pane label="全部订单" name="first"></el-tab-pane>
         <el-tab-pane label="已支付" name="second"></el-tab-pane>
-        <el-tab-pane label="未支付" name="third"></el-tab-pane>
-        <el-tab-pane label="已取消" name="fourth"></el-tab-pane>
       </el-tabs>
     </div>
     <el-card class="box-card">
@@ -50,16 +48,11 @@
         <el-table-column
           label="创建时间"
           align="center"
-          prop="realname"
+          prop="createTime"
         />
         <el-table-column
           align="center"
-          prop="username"
-          label="商户流水号"
-        />
-        <el-table-column
-          align="center"
-          prop="realname"
+          prop="orderId"
           label="支付单号"
         />
         <el-table-column
@@ -73,7 +66,9 @@
           align="center"
           prop="phone"
           label="支付场景"
-        />
+        >
+          <template slot-scope="scope" v-if="scope.row.business">{{ scope.row.business.name }}</template>
+        </el-table-column>
         <el-table-column
           align="center"
           prop="price"
@@ -83,7 +78,9 @@
           align="center"
           prop="phone"
           label="交易状态"
-        />
+        >
+          <template slot-scope="scope" >{{ status[scope.row.orderType] }}</template>
+        </el-table-column>
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
             <el-button
@@ -108,6 +105,8 @@
           style="float: right;margin: 10px 0"
           layout="sizes, prev, pager, next"
           :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
         />
       </div>
     </el-card>
@@ -115,10 +114,12 @@
 </template>
 
 <script>
+  import status from '@/libs/orderCode'
   export default {
     name: 'FundBill',
     data() {
       return {
+        status:status,
         loading:true,
         tableData:[],
         currentPage: 1, // 当前多少页
@@ -162,12 +163,26 @@
       // 初始化分页
       init() {
         this.loading = true
-        this.$_HTTP.get(this.$_API.orderPayList, {businessId:0,size: this.size, current: this.currentPage}, res => {
+        this.$_HTTP.get(this.$_API.orderPayList, {deptId:localStorage.getItem('deptId'),businessId:0,size: this.size, current: this.currentPage}, res => {
           this.tableData = res.records
-          console.log('1',res)
           this.total = res.total
           this.loading = false
         })
+      },
+      handleClick(tab, event) {
+        if (tab.name === 'first') {
+          this.init()
+        } else {
+          this.issuedInit()
+        }
+      },
+      handleSizeChange(val) {
+        this.size = val
+        this.init()
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val
+        this.init()
       },
     }
   }

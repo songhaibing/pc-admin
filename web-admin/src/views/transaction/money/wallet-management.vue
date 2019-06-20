@@ -53,17 +53,6 @@
           prop="userVo.dept.name"
           label="归属单位"
         />
-        <el-table-column
-          align="center"
-          label="是否允许充值"
-        >
-          <!--<template slot-scope="scope">{{ scope.row.isAllow?'是':'否' }}</template>-->
-          <template slot-scope="scope">
-            <el-switch :active-value="activeValue" :inactive-value="false"
-                       active-color="#13ce66"
-                       v-model="scope.row.isAllow" @change='change(scope.row,scope.row.isAllow)'/>
-          </template>
-        </el-table-column>
         <el-table-column align="center" label="操作" width="150">
           <template slot-scope="scope">
             <!--<el-button-->
@@ -144,7 +133,6 @@ export default {
   data() {
     return {
       inactiveValue:false,
-      activeValue:true,
       selectId:'',
       title:'添加钱包',
       formLabelWidth: '100px',
@@ -189,10 +177,6 @@ export default {
         this.tableData = res.records
         this.total = res.total
         this.loading = false
-      })
-    },
-    change(row, data) {
-      this.$_HTTP.put(this.$_API.editWallet + row.id, {isAllow: data}, res => {
       })
     },
     handleSizeChange(val) {

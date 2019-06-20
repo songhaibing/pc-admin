@@ -308,7 +308,6 @@
           this.selectId = row.deptState,
           this.form.dockingPeople = row.username,
           this.dialogFormVisible = true
-        console.log(index, row)
       },
       deleteUser(index, row) {
         this.$confirm('此操作将永久删除该单位, 是否继续?', '提示', {
