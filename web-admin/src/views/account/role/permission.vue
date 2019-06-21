@@ -13,14 +13,10 @@
               v-if="$_Authorities.indexOf('添加权限')!==-1"
             >添加
             </el-button>
-            <el-select v-model="valueSelect" placeholder="根据单位查询角色" style="float: right;" @change="change">
-              <el-option
-                v-for="item in optionsInquire"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
+            <select-tree width="200" style="float:right;width: 300px;margin-right: -100px;"
+                         v-model="selected"
+                         :options="selectedOptions"
+                         :props="selectedProps" @selected="selectedDept" />
           </div>
           <el-table
             v-loading="loading"
@@ -151,8 +147,12 @@
 </template>
 
 <script>
+  import SelectTree from '@/components/widget/SelectTree.vue';
   export default {
     name: 'Role',
+    components: {
+      SelectTree,
+    },
     watch: {
       filterText(val) {
         this.$refs.tree2.filter(val);
@@ -160,6 +160,17 @@
     },
     data() {
       return {
+        deptId:localStorage.getItem('deptId'),
+        // 默认选中值
+        selected: Number(localStorage.getItem('deptId')),
+        // 数据默认字段
+        selectedProps: {
+          value: 'id',          // 唯一标识
+          label: 'name',       // 标签显示
+          children: 'children', // 子级
+        },
+        // 数据列表
+        selectedOptions: JSON.parse(localStorage.getItem('current')),
         selectId:'',
         valueId:'',
         filterText:'',
@@ -217,15 +228,14 @@
       this.$_HTTP.get(this.$_API.deptTree, {}, res => {
         this.options=res
       })
-
-      // this.$_HTTP.get(this.$_API.getAllMenu, {}, res => {
-      //  console.log('res',res)
-      //   // this.data1=res
-      // })
       this.getMenu()
       this.init()
     },
     methods: {
+      selectedDept(val){
+        this.deptId=val
+        this.init()
+      },
       getMenu() {
         this.$_HTTP.get(this.$_API.getAllMenu, {}, res => {
           console.log("this.toTreeData(res)",this.toTreeData(res))
@@ -243,7 +253,7 @@
       },
       //分页查询角色
       init(){
-        this.$_HTTP.get(this.$_API.roleList, {size: this.size, current: this.currentPage}, res => {
+        this.$_HTTP.get(this.$_API.roleList, {deptId:this.deptId,size: this.size, current: this.currentPage}, res => {
           this.loading=true
           this.tableData = res.records
           this.total = res.total

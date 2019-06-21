@@ -124,7 +124,6 @@ HTTP.delete = function(url, data, callback) {
 HTTP.put = function(url, data, callback) {
   instance.put(url, data)
     .then(function(res) {
-      console.log('resPut',res)
       // 响应成功回调
       if (res.data.code === 1) {
         callback(res.data)

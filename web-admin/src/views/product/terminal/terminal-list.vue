@@ -2,32 +2,33 @@
   <div style="padding: 20px">
     <div style="display: flex;justify-content: space-between;margin-left: 10px">
       <div style="display: flex;flex-direction: column;">
-        <div>
-          <span>账户归属</span>
-          <el-select placeholder="请选择" v-model="value" style="width: 300px;margin-left: 20px">
-            <el-option
-              v-for="item in optionsAccount"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+        <div style="display: flex;align-items: center">
+          <div>账户归属</div>
+          <div >
+            <select-tree width="300" style="width: 300px;margin-left: 20px;"
+                         v-model="selected"
+                         :options="selectedOptions"
+                         :props="selectedProps" @selected="selectedDept"/>
+          </div>
         </div>
         <div style="margin-top: 20px">
           <span>查询日期</span>
           <el-date-picker
             style="margin-left: 20px"
             type="daterange"
+            value-format="timestamp"
+            v-model="queryDate"
             align="right"
             unlink-panels
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
           />
-          <el-input placeholder="请输入设备ID,设备名称等进行查询" style="width: 300px;margin-left: 20px"></el-input>
+          <el-input v-model="queryName" placeholder="请输入设备ID,设备名称等进行查询" style="width: 300px;margin-left: 20px"></el-input>
           <el-button
             type="success"
             style="margin-left: 10px"
+            @click="query"
           >查询
           </el-button>
         </div>
@@ -131,7 +132,7 @@
           <el-input ref="inputUnit" v-model="form.unit" readonly="readonly" placeholder="请选择所属单位" autocomplete="off" @focus="clickUnit"/>
         </el-form-item>
         <el-form-item label="设备位置" :label-width="formLabelWidth" prop="address">
-          <el-select v-model="form.valueAddress" placeholder="请选择商户">
+          <el-select v-model="form.valueAddress" placeholder="请选择商户" style="width: 100%">
             <el-option
               v-for="item in optionsAddress"
               :key="item.id"
@@ -139,7 +140,7 @@
               :value="item.id">
             </el-option>
           </el-select>
-          <el-input v-model="form.address" autocomplete="off" style="width: 56%" placeholder="请输入具体位置，如一号窗口"/>
+          <el-input v-model="form.address" autocomplete="off"  placeholder="请输入具体位置，如一号窗口"/>
         </el-form-item>
         <el-form-item label="启用时间" :label-width="formLabelWidth" prop="time">
           <el-date-picker
@@ -178,7 +179,11 @@
 <script>
   import mixins from '@/mixins/user'
   import statusCode from '@/libs/statusCode'
+  import SelectTree from '@/components/widget/SelectTree.vue';
   export default {
+    components: {
+      SelectTree,
+    },
     mixins: [mixins],
     watch: {
       filterText(val) {
@@ -190,11 +195,26 @@
     },
     data() {
       return {
+        queryName:'',
+        queryDate:'',
+        // 默认选中值
+        selected: Number(localStorage.getItem('deptId')),
+        // 数据默认字段
+        selectedProps: {
+          value: 'id',          // 唯一标识
+          label: 'name',       // 标签显示
+          children: 'children', // 子级
+        },
+        // 数据列表
+        selectedOptions: JSON.parse(localStorage.getItem('current')),
+        startTime:0,
+        endTime:0,
+        deptId:localStorage.getItem('deptId'),
         valueAddress:'',
         filterTextUnit:'',
         filterText: '',
         titleTree:'请选择分类',
-        unitTree:[],
+        unitTree: JSON.parse(localStorage.getItem('current')),
         optionsAddress: [],
         defaultProps: {
           children: 'children',
@@ -218,22 +238,6 @@
         currentPage: 1, // 当前多少页
         size: 10, // 每页多少条数据
         total: 0, // 总共多少数据
-        optionsAccount: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
         value: '',
         options: [{
           value: '0',
@@ -272,13 +276,12 @@
       }
     },
     created() {
-      this.$_HTTP.get(this.$_API.deptTree, {}, res => {
-        this.unitTree=res
-      })
+      // this.$_HTTP.get(this.$_API.deptTree, {}, res => {
+      //   this.unitTree=res
+      // })
       this.init()
       this.$_HTTP.get(this.$_API.businessAll, {}, res => {
         this.optionsAddress=res
-        console.log(res)
       })
     },
     methods: {
@@ -292,10 +295,17 @@
       resetPassword(){
         this.form.pw='000000'
       },
+      query(){
+        this.startTime=this.queryDate?this.queryDate[0]:0
+        this.endTime=this.queryDate?this.queryDate[1]:0
+        this.init()
+      },
       // 初始化分页
       init() {
         this.loading = true
-        this.$_HTTP.get(this.$_API.airportDeviceList, {size: this.size, current: this.currentPage, deptId: 0}, res => {
+        this.$_HTTP.get(this.$_API.airportDeviceList, {startTime:this.startTime,
+          endTime:this.endTime, size: this.size,name:this.queryName,
+          current: this.currentPage, deptId: this.deptId}, res => {
           this.tableData = res.records
           this.total = res.total
           this.loading = false
@@ -311,7 +321,6 @@
         this.dialogUnitTree=false
       },
       handleEdit(index,row){
-        console.log(row)
         this.deviceId = row.id
         if (row.img) {
           this.imageUrl = 'http://106.75.178.9:80/resource/' + row.img
@@ -377,6 +386,10 @@
           this.$message.error('上传头像图片大小不能超过 2MB!')
         }
         return isImageFormat && isLt2M
+      },
+      selectedDept(val){
+        this.deptId=val
+        this.init()
       },
       addButton() {
         this.form.name = ''

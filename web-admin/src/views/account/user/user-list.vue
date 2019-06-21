@@ -26,14 +26,18 @@
               v-if="$_Authorities.indexOf('添加用户')!==-1"
             >添加
             </el-button>
-            <el-select v-model="valueSelect" placeholder="根据单位查询角色" style="float: right;" @change="change">
-              <el-option
-                v-for="item in optionsInquire"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
+            <!--<el-select v-model="valueSelect" placeholder="根据单位查询角色" style="float: right;" @change="change">-->
+              <!--<el-option-->
+                <!--v-for="item in optionsInquire"-->
+                <!--:key="item.id"-->
+                <!--:label="item.name"-->
+                <!--:value="item.id"-->
+              <!--/>-->
+            <!--</el-select>-->
+            <select-tree width="200" style="width: 300px;margin-right:-100px;float: right"
+                         v-model="selected"
+                         :options="selectedOptions"
+                         :props="selectedProps" @selected="selectedDept"/>
           </div>
           <el-table
             v-loading="loading"
@@ -181,7 +185,7 @@
         :data="dataTree"
         :props="defaultProps"
         :filter-node-method="filterNode"
-        @node-click="handleNodeClick1"
+        @node-click="handleNodeClick"
       />
     </el-dialog>
     <el-dialog :title="titleExport" width="600px" :visible.sync="dialogFormImport">
@@ -193,34 +197,27 @@
 <script>
 import { checkPhone, checkEmail, checkPw, checkRenewPw } from '@/libs/regular.js'
 import exportForm from '@/mixins/exportForm'
+import SelectTree from '@/components/widget/SelectTree.vue';
 import axios from 'axios'
 import ImportForm from '../../../components/importForm/index'
 import mixins from '@/mixins/user'
 export default {
   name: 'UserList',
-  components: { ImportForm },
+  components: { ImportForm,SelectTree },
   mixins: [exportForm, mixins],
   data() {
-    // const checkUserName = (rule, value, callback) => {
-    //   if (!value) {
-    //     return callback(new Error('请输入用户名'))
-    //   }
-    //   if (this.title === '编辑用户') {
-    //     callback()
-    //   }
-    //   setTimeout(() => {
-    //     // 检测用户名是否重复
-    //     this.$_HTTP.get(this.$_API.userExits + this.form.userName, {}, res => {
-    //       if (res) {
-    //         callback(new Error('用户名重复'))
-    //       } else {
-    //         callback()
-    //       }
-    //     })
-    //   }, 1000)
-    // }
     return {
+      selected: Number(localStorage.getItem('deptId')),
+      // 数据默认字段
+      selectedProps: {
+        value: 'id',          // 唯一标识
+        label: 'name',       // 标签显示
+        children: 'children', // 子级
+      },
+      // 数据列表
+      selectedOptions:  JSON.parse(localStorage.getItem('current')),
       selectId: '',
+      deptId:localStorage.getItem('deptId'),
       optionsInquire: [],
       valueSelect: '',
       api: 'smartCard/importInfo',
@@ -292,29 +289,17 @@ export default {
   created() {
     this.init()
     this.$_HTTP.get(this.$_API.deptTree, {}, res => {
-      this.optionsInquire = res
-      this.optionsInquire.unshift({ id: '', name: '全部' })
-    })
-    this.$_HTTP.get(this.$_API.deptTree, {}, res => {
       this.dataTree = res
     })
   },
   methods: {
+    selectedDept(val){
+      this.deptId=val
+      this.init()
+    },
     exportTab(val) {
       this.dialogFormImport = val
-      if (this.selectId) {
-        this.findDept(this.selectId)
-      } else {
-        this.init()
-      }
-    },
-    change(val) {
-      this.selectId = val
-      if (val) {
-        this.findDept(val)
-      } else {
-        this.init()
-      }
+      this.init()
     },
     clickInput() {
       this.dialogFormTree = true
@@ -350,14 +335,11 @@ export default {
       if (!value) return true
       return data.name.indexOf(value) !== -1
     },
-    handleNodeClick1(data) {
+    handleNodeClick(data) {
       this.form.className = data.name
       this.valueId = data.id
       this.dialogFormTree = false
       this.roleFind(data.id)
-    },
-    getValue(value) {
-      this.valueId = value
     },
     roleFind(id) {
       this.$_HTTP.get(this.$_API.roleFindDept + id,{}, res => {
@@ -367,25 +349,11 @@ export default {
     // 初始化分页
     init() {
       this.loading = true
-      this.$_HTTP.get(this.$_API.userList, { deptId:localStorage.getItem('deptId'),size: this.size, current: this.currentPage }, res => {
+      this.$_HTTP.get(this.$_API.userList, { deptId:this.deptId,size: this.size, current: this.currentPage }, res => {
         this.tableData = res.records
         this.total = res.total
         this.loading = false
       })
-    },
-    // 根据单位查询用户
-    findDept(id) {
-      this.loading = true
-      this.$_HTTP.get(this.$_API.userList, { deptId: id, size: this.size, current: this.currentPage }, res => {
-        this.tableData = res.records
-        this.total = res.total
-        this.loading = false
-      })
-    },
-    handleNodeClick(data) {
-      this.isShow = false
-      this.id = data.id
-      this.init(data.id)
     },
     // 编辑
     handleEdit(index, row) {
@@ -418,11 +386,7 @@ export default {
       }).then(() => {
         this.$_HTTP.delete(this.$_API.deleteUser + row.id, {}, res => {
           if (res.code === 1) {
-            if (this.selectId) {
-              this.findDept(this.selectId)
-            } else {
-              this.init()
-            }
+            this.init()
             this.$message({
               type: 'success',
               message: '删除成功!'
@@ -444,12 +408,7 @@ export default {
     },
     handleSizeChange(val) {
       this.size = val
-      console.log('size', val)
-      if (this.selectId) {
-        this.findDept(this.selectId)
-      } else {
-        this.init()
-      }
+      this.init()
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw)
@@ -489,11 +448,7 @@ export default {
             this.$_HTTP.post(this.$_API.addUser, params, res => {
               if (res.code === 1) {
                 this.dialogFormVisible = false
-                if (this.selectId) {
-                  this.findDept(this.selectId)
-                } else {
-                  this.init()
-                }
+                this.init()
                 this.$message({
                   message: '添加用户成功',
                   type: 'success'
@@ -504,11 +459,7 @@ export default {
             this.$_HTTP.put(this.$_API.editUser + this.form.userName, params, res => {
               if (res.code === 1) {
                 this.dialogFormVisible = false
-                if (this.selectId) {
-                  this.findDept(this.selectId)
-                } else {
-                  this.init()
-                }
+                this.init()
                 this.$message({
                   message: '修改用户成功',
                   type: 'success'
@@ -521,12 +472,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val
-      console.log('currentPage', val)
-      if (this.selectId) {
-        this.findDept(this.selectId)
-      } else {
-        this.init()
-      }
+      this.init()
     }
   }
 }

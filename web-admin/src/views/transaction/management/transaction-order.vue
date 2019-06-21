@@ -70,7 +70,7 @@
           prop="phone"
           label="支付场景"
         >
-          <template slot-scope="scope" v-if="scope.row.business">{{ scope.row.business.name }}</template>
+          <template slot-scope="scope">{{ code[scope.row.type] }}</template>
         </el-table-column>
         <el-table-column
           align="center"
@@ -119,6 +119,7 @@
 <script>
   import status from '@/libs/orderCode'
   import SelectTree from '@/components/widget/SelectTree.vue';
+  import code from '@/libs/payCode'
   export default {
     name: 'FundBill',
     components: {
@@ -126,6 +127,7 @@
     },
     data() {
       return {
+        code:code,
         orderType:-1,
         deptId:localStorage.getItem('deptId'),
         // 默认选中值
@@ -137,7 +139,7 @@
           children: 'children', // 子级
         },
         // 数据列表
-        options: this.$_current,
+        options: JSON.parse(localStorage.getItem('current')),
         deptValue:'',
         deptOptions:[],
         status:status,
