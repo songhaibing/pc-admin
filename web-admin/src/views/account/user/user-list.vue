@@ -68,7 +68,9 @@
               <template v-if="scope.row.sex" slot-scope="scope">{{ scope.row.sex==='1'?'男':'女' }}</template>
             </el-table-column>
             <el-table-column align="center" prop="idCard" label="身份证号" />
-            <el-table-column align="center" prop="smartCardVo" label="卡号" />
+            <el-table-column align="center" label="卡号" >
+              <template v-if="scope.row.smartCardVo" slot-scope="scope">{{ scope.row.smartCardVo.idCard }}</template>
+            </el-table-column>
             <el-table-column align="center" prop="phone" label="手机号码" />
             <el-table-column align="center" label="归属单位"  v-if="$_Authorities.indexOf('用户归属单位')!==-1">
               <template v-if="scope.row.dept" slot-scope="scope">{{ scope.row.dept.name }}</template>
@@ -92,12 +94,13 @@
                   v-if="$_Authorities.indexOf('删除用户')!==-1"
                 >删除
                 </el-button>
+                <el-button size="mini" type="text"   v-if="scope.row.businessState==='0'&&$_Authorities.indexOf('禁用商户')!==-1" @click="disableMechant(scope.$index, scope.row)">禁用</el-button>
                 <el-button
                   size="mini"
                   type="text"
                   @click="disableUser(scope.$index, scope.row)"
                   v-if="$_Authorities.indexOf('禁用用户')!==-1"
-                >禁用
+                >{{disableFont}}
                 </el-button>
               </template>
             </el-table-column>
@@ -209,6 +212,7 @@ export default {
   mixins: [exportForm, mixins],
   data() {
     return {
+      disableFont:'禁用',
       selected: Number(localStorage.getItem('deptId')),
       // 数据默认字段
       selectedProps: {
@@ -402,24 +406,47 @@ export default {
     },
     //禁用用户
     disableUser(index,row){
-      this.$confirm('此操作将禁用该用户, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$_HTTP.put(this.$_API.editUser + row.username,{state:'2'}, res => {
-          if (res.code === 1) {
-            this.dialogFormVisible = false
-            this.init()
-            this.$message({
-              message: '禁用用户成功',
-              type: 'success'
-            })
-          }
-        })
-      }).catch(() => {
+      if(this.disableFont==='禁用'){
+        this.$confirm('此操作将禁用该用户, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$_HTTP.put(this.$_API.editUser + row.username,{state:'2'}, res => {
+            if (res.code === 1) {
+              this.dialogFormVisible = false
+              this.init()
+              this.disableFont='启用'
+              this.$message({
+                message: '禁用用户成功',
+                type: 'success'
+              })
+            }
+          })
+        }).catch(() => {
 
-      })
+        })
+      }else{
+        this.$confirm('此操作将启用该用户, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$_HTTP.put(this.$_API.editUser + row.username,{state:'1'}, res => {
+            if (res.code === 1) {
+              this.dialogFormVisible = false
+              this.init()
+              this.disableFont='禁用'
+              this.$message({
+                message: '启用用户成功',
+                type: 'success'
+              })
+            }
+          })
+        }).catch(() => {
+
+        })
+      }
     },
     addButton() {
       this.disabled = false

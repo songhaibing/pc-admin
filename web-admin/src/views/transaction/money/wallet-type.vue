@@ -4,7 +4,7 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <i class="el-icon-school" />
-        <span>钱包分类</span>
+        <span>钱包类型</span>
         <el-button
           style="float: right;padding: 6px;margin-right: 6px"
           type="primary"
@@ -21,7 +21,7 @@
         <el-table-column align="center" label="序号" type="index"/>
         <el-table-column label="ID" align="center" prop="id"/>
         <el-table-column align="center" prop="name" label="分类名"/>
-        <el-table-column align="center" prop="businessType.name" label="商户分类"/>
+        <el-table-column align="center" prop="businessType.name" label="使用场景"/>
         <el-table-column
           align="center"
           label="是否允许充值"
@@ -55,13 +55,13 @@
         />
       </div>
     </el-card>
-    <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
+    <el-dialog title="添加钱包类型" width="600px" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="分类名" :label-width="formLabelWidth" prop="name">
+        <el-form-item label="钱包名" :label-width="formLabelWidth" prop="name">
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="商户类型" :label-width="formLabelWidth" prop="className">
-          <el-input ref="input" v-model="form.className"  placeholder="请选择商户类型" autocomplete="off" @focus="clickInput"/>
+        <el-form-item label="使用场景" :label-width="formLabelWidth" prop="className">
+          <el-input ref="input" v-model="form.className"  placeholder="请选择使用场景" autocomplete="off" @focus="clickInput"/>
         </el-form-item>
         <el-form-item class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -110,7 +110,6 @@
         loading:true,
         merchantId:'',
         formLabelWidth: '100px',
-        title:'添加钱包分类',
         tableData: [],
         currentPage: 1, // 当前多少页
         size: 10, // 每页多少条数据

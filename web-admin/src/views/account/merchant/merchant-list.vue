@@ -33,7 +33,8 @@
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('编辑商户')!==-1" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('禁用商户')!==-1" @click="disableMechant(scope.$index, scope.row)">禁用</el-button>
+            <el-button size="mini" type="text"   v-if="scope.row.businessState==='0'&&$_Authorities.indexOf('禁用商户')!==-1" @click="disableMechant(scope.$index, scope.row)">禁用</el-button>
+            <el-button size="mini" type="text"   v-if="scope.row.businessState==='1'&&$_Authorities.indexOf('禁用商户')!==-1" @click="enableMechant(scope.$index, scope.row)">启用</el-button>
             <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('删除商户')!==-1" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -296,12 +297,37 @@
       },
       //禁用商户
       disableMechant(index,row){
-        this.$confirm('此操作将永久删除该商户, 是否继续?', '提示', {
+          this.$confirm('此操作将禁用该商户, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$_HTTP.put(this.$_API.editBusiness +row.id,{businessState:'1'}, res => {
+              if (res.code === 1) {
+                this.dialogFormVisible = false
+                this.$message({
+                  message: '修改商户状态成功',
+                  type: 'success'
+                })
+                this.init()
+              } else {
+                this.$message({
+                  message: '修改商户状态失败',
+                  type: 'error'
+                })
+              }
+            })
+          }).catch(() => {
+
+          })
+      },
+      enableMechant(index,row){
+        this.$confirm('此操作将启用该用户, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$_HTTP.put(this.$_API.editBusiness +row.id,{businessState:'1'}, res => {
+          this.$_HTTP.put(this.$_API.editBusiness +row.id,{businessState:'0'}, res => {
             if (res.code === 1) {
               this.dialogFormVisible = false
               this.$message({
@@ -317,6 +343,7 @@
             }
           })
         }).catch(() => {
+
         })
       },
       handleDelete(index, row) {
