@@ -5,21 +5,21 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <el-button
-              style="padding: 6px;margin-right: 6px"
+              style="padding: 6px;"
               type="primary"
               icon="el-icon-download"
               @click="exportTemplate"
             >导出模版
             </el-button>
             <el-button
-              style="padding: 6px;margin-right: 6px"
+              style="padding: 6px;"
               type="warning"
               icon="el-icon-share"
               @click="importUser"
             >导入用户
             </el-button>
             <el-button
-              style="float: right;margin-right: 6px"
+              style="padding: 6px;"
               type="primary"
               icon="el-icon-plus"
               @click="addButton"
@@ -68,6 +68,7 @@
               <template v-if="scope.row.sex" slot-scope="scope">{{ scope.row.sex==='1'?'男':'女' }}</template>
             </el-table-column>
             <el-table-column align="center" prop="idCard" label="身份证号" />
+            <el-table-column align="center" prop="smartCardVo" label="卡号" />
             <el-table-column align="center" prop="phone" label="手机号码" />
             <el-table-column align="center" label="归属单位"  v-if="$_Authorities.indexOf('用户归属单位')!==-1">
               <template v-if="scope.row.dept" slot-scope="scope">{{ scope.row.dept.name }}</template>
@@ -94,6 +95,7 @@
                 <el-button
                   size="mini"
                   type="text"
+                  @click="disableUser(scope.$index, scope.row)"
                   v-if="$_Authorities.indexOf('禁用用户')!==-1"
                 >禁用
                 </el-button>
@@ -315,7 +317,7 @@ export default {
         'responseType': 'blob' // 设置响应的数据类型为一个包含二进制数据的 Blob 对象，必须设置！！！
       }).then(function(response) {
         const blob = new Blob([response.data])
-        const fileName = 'table.xls'
+        const fileName = '新增人员名单.xls'
         const linkNode = document.createElement('a')
         linkNode.download = fileName // a标签的download属性规定下载文件的名称
         linkNode.style.display = 'none'
@@ -373,12 +375,13 @@ export default {
       this.form.userName = row.username
       this.form.realName = row.realname
       this.form.mobile = row.phone
-      this.form.role = row.roles?row.roles[0].id:''
+      this.form.role = row.roles.length!==0?row.roles[0].id:''
       this.form.Email = row.email
       this.form.nickName = row.nickname
     },
     // 删除
     deleteUser(index, row) {
+      console.log(row)
       this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -390,6 +393,27 @@ export default {
             this.$message({
               type: 'success',
               message: '删除成功!'
+            })
+          }
+        })
+      }).catch(() => {
+
+      })
+    },
+    //禁用用户
+    disableUser(index,row){
+      this.$confirm('此操作将禁用该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$_HTTP.put(this.$_API.editUser + row.username,{state:'2'}, res => {
+          if (res.code === 1) {
+            this.dialogFormVisible = false
+            this.init()
+            this.$message({
+              message: '禁用用户成功',
+              type: 'success'
             })
           }
         })

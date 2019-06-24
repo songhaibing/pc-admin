@@ -14,11 +14,11 @@ const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
-  if (from.path == '/login') {
-    HTTP.get(API.menu, {}, res => {
-      localStorage.setItem('router', JSON.stringify(res))
-    })
-  }
+  // if (from.path == '/login') {
+  //   HTTP.get(API.menu, {}, res => {
+  //     localStorage.setItem('router', JSON.stringify(res))
+  //   })
+  // }
   // set page title
   document.title = getPageTitle(to.meta.title)
 

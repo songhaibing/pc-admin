@@ -23,7 +23,7 @@
         <el-table-column align="center" prop="categories" label="主营类目"/>
         <el-table-column align="center" prop="businessType.name" label="类型"/>
         <el-table-column align="center" label="状态">
-          <template slot-scope="scope">{{ scope.row.businessState==='0'?'营业中':'已清退' }}</template>
+          <template slot-scope="scope">{{ scope.row.businessState==='0'?'营业中':'已禁用' }}</template>
         </el-table-column>
         <el-table-column align="center" label="商户负责人" prop="head"/>
         <el-table-column align="center" label="归属单位" v-if="$_Authorities.indexOf('商户归属单位')!==-1" prop="dept.name"/>
@@ -33,7 +33,7 @@
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('编辑商户')!==-1" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('禁用商户')!==-1">禁用</el-button>
+            <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('禁用商户')!==-1" @click="disableMechant(scope.$index, scope.row)">禁用</el-button>
             <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('删除商户')!==-1" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -69,7 +69,7 @@
         <el-form-item label="状态" :label-width="formLabelWidth" prop="status" v-if="title==='编辑商户'">
           <el-select v-model="form.status" placeholder="请选择状态" style="width: 100%">
             <el-option label="营业中" value="0"/>
-            <el-option label="已清退" value="1"/>
+            <el-option label="已禁用" value="1"/>
           </el-select>
         </el-form-item>
         <el-form-item label="商户负责人" :label-width="formLabelWidth" prop="principal">
@@ -293,6 +293,31 @@
         this.form.time = row.expireTime
         this.form.phone = row.phoneNumber
         this.dialogFormVisible = true
+      },
+      //禁用商户
+      disableMechant(index,row){
+        this.$confirm('此操作将永久删除该商户, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$_HTTP.put(this.$_API.editBusiness +row.id,{businessState:'1'}, res => {
+            if (res.code === 1) {
+              this.dialogFormVisible = false
+              this.$message({
+                message: '修改商户状态成功',
+                type: 'success'
+              })
+              this.init()
+            } else {
+              this.$message({
+                message: '修改商户状态失败',
+                type: 'error'
+              })
+            }
+          })
+        }).catch(() => {
+        })
       },
       handleDelete(index, row) {
         this.$confirm('此操作将永久删除该商户, 是否继续?', '提示', {

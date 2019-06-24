@@ -164,7 +164,6 @@ export default {
             .then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
-              history.go(0)
             })
             .catch(() => {
               this.loading = false

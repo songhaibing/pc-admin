@@ -58,7 +58,7 @@ const actions = {
       let accessedRoutes
       if (roles.includes('admin')) {
         HTTP.get(API.menu, {}, res => {
-          localStorage.setItem('router', JSON.stringify(res))
+          // localStorage.setItem('router', JSON.stringify(res))
           accessedRoutes = filterAsyncRouter(filterMenu(res))
           accessedRoutes.push({ path: '*', redirect: '/404', hidden: true })
           commit('SET_ROUTES', accessedRoutes)

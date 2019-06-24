@@ -6,21 +6,18 @@
         <div>
           <span>搜索查询</span>
           <el-input v-model="input" placeholder="按交易单号或姓名筛选" style="width: 300px;margin-left: 20px" />
-          <el-select v-model="valueSelect" placeholder="按单位筛选" style="width: 300px;margin-left: 20px" @change="change">
-            <el-option
-              v-for="item in optionsInquire"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
+          <select-tree width="200" style="width: 300px;"
+                       v-model="selected"
+                       :options="selectedOptions"
+                       :props="selectedProps" @selected="selectedDept"/>
         </div>
         <div style="margin-top: 20px">
           <span>查询日期</span>
           <el-date-picker
-            v-model="value"
+            v-model="queryDate"
             style="margin-left: 20px"
             type="daterange"
+            value-format="timestamp"
             align="right"
             unlink-panels
             range-separator="-"
@@ -31,6 +28,7 @@
           <el-button
             type="success"
             style="margin-left: 10px"
+            @click="query"
           >查询
           </el-button>
         </div>
@@ -181,12 +179,26 @@
 <script>
 import axios from 'axios'
 import ImportForm from '../../../components/importForm/index'
-
+import SelectTree from '@/components/widget/SelectTree.vue';
 export default {
   name: 'SubsidyGrant',
-  components: { ImportForm },
+  components: { ImportForm,SelectTree },
   data() {
     return {
+      queryDate:'',
+      startTime:0,
+      endTime:0,
+      state:1,
+      deptId:localStorage.getItem('deptId'),
+      selected: Number(localStorage.getItem('deptId')),
+      // 数据默认字段
+      selectedProps: {
+        value: 'id',          // 唯一标识
+        label: 'name',       // 标签显示
+        children: 'children', // 子级
+      },
+      // 数据列表
+      selectedOptions:  JSON.parse(localStorage.getItem('current')),
       moneyId:'',
       titleMoney:'一键发放',
       valueSelect: '',
@@ -257,7 +269,7 @@ export default {
     }
   },
   created() {
-    this.init()
+    this.issuedInit()
     this.$_HTTP.get(this.$_API.deptTree, {}, res => {
       this.optionsInquire = res
     })
@@ -266,6 +278,15 @@ export default {
     })
   },
   methods: {
+    query(){
+      this.startTime=this.queryDate?this.queryDate[0]:0
+      this.endTime=this.queryDate?this.queryDate[1]:0
+      this.issuedInit()
+    },
+    selectedDept(val){
+      this.deptId=val
+      this.issuedInit()
+    },
     handleEdit(index,row){
       this.dialogFormMsg=true
       this.formMsg.name=row.userVo.username
@@ -277,19 +298,30 @@ export default {
     },
     handleClick(tab, event) {
       if (tab.name === 'first') {
-        this.init()
+        this.state=1
+        this.issuedInit()
       } else {
+        this.state=0
         this.issuedInit()
       }
     },
     exportTab(val) {
       this.dialogFormImport = val
-      this.init()
+      this.state=1
+      this.issuedInit()
     },
     // 初始化未发放补助分页
-    init() {
+    // init() {
+    //   this.loading = true
+    //   this.$_HTTP.get(this.$_API.subsidyPage, { deptId: this.selectId, size: this.size, current: this.currentPage }, res => {
+    //     this.tableData = res.records
+    //     this.total = res.total
+    //     this.loading = false
+    //   })
+    // },
+    issuedInit() {
       this.loading = true
-      this.$_HTTP.get(this.$_API.subsidyPage, { deptId: this.selectId, size: this.size, current: this.currentPage }, res => {
+      this.$_HTTP.get(this.$_API.subsidyList, { username:this.input,endTime:this.endTime,startTime:this.startTime,state:this.state,deptId: this.deptId, size: this.size, current: this.currentPage }, res => {
         this.tableData = res.records
         this.total = res.total
         this.loading = false
@@ -323,14 +355,7 @@ export default {
 
       })
     },
-    issuedInit() {
-      this.loading = true
-      this.$_HTTP.get(this.$_API.subsidyList, { deptId: this.selectId, size: this.size, current: this.currentPage }, res => {
-        this.tableData = res.records
-        this.total = res.total
-        this.loading = false
-      })
-    },
+
     change(val) {
       this.selectId = val
       this.init()
@@ -385,7 +410,7 @@ export default {
         'responseType': 'blob' // 设置响应的数据类型为一个包含二进制数据的 Blob 对象，必须设置！！！
       }).then(function(response) {
         const blob = new Blob([response.data])
-        const fileName = 'table.xls'
+        const fileName = '已发放人员名单.xls'
         const linkNode = document.createElement('a')
 
         linkNode.download = fileName // a标签的download属性规定下载文件的名称
@@ -410,7 +435,7 @@ export default {
         'responseType': 'blob' // 设置响应的数据类型为一个包含二进制数据的 Blob 对象，必须设置！！！
       }).then(function(response) {
         const blob = new Blob([response.data])
-        const fileName = 'table.xls'
+        const fileName = '待发放人员名单.xls'
         const linkNode = document.createElement('a')
 
         linkNode.download = fileName // a标签的download属性规定下载文件的名称
