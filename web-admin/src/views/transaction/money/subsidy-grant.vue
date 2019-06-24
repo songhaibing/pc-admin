@@ -4,12 +4,14 @@
     <div style="margin-left: 10px">
       <div style="display: flex;flex-direction: column;">
         <div>
-          <span>搜索查询</span>
-          <el-input v-model="input" placeholder="按交易单号或姓名筛选" style="width: 300px;margin-left: 20px" />
-          <select-tree width="200" style="width: 300px;"
-                       v-model="selected"
-                       :options="selectedOptions"
-                       :props="selectedProps" @selected="selectedDept"/>
+          <div style="display: flex;align-items: center">
+            <span>搜索查询</span>
+            <el-input v-model="input" placeholder="按交易单号或姓名筛选" style="width: 300px;margin-left: 20px;"/>
+            <select-tree width="200" style="margin-left: 10px"
+                         v-model="selected"
+                         :options="selectedOptions"
+                         :props="selectedProps" @selected="selectedDept"/>
+          </div>
         </div>
         <div style="margin-top: 20px">
           <span>查询日期</span>
@@ -27,12 +29,12 @@
           />
           <el-button
             type="success"
-            style="margin-left: 10px"
+            style="margin-left: 30px"
             @click="query"
           >查询
           </el-button>
         </div>
-        <div style="margin-top: -30px">
+        <div>
           <el-button
             style="margin-left:10px;float: right"
             type="primary"
