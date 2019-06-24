@@ -52,7 +52,8 @@
         <el-table-column align="center" label="操作" >
           <template slot-scope="scope">
             <el-button size="mini" type="text"  v-if="$_Authorities.indexOf('编辑商品')!==-1" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="text"  v-if="$_Authorities.indexOf('下架商品')!==-1" @click="obtained(scope.$index, scope.row)">{{font}}</el-button>
+            <el-button size="mini" type="text"   v-if="scope.row.goodsState==='0'&&$_Authorities.indexOf('下架商品')!==-1" @click="disableCommodity(scope.$index, scope.row)">下架</el-button>
+            <el-button size="mini" type="text"   v-if="scope.row.goodsState==='1'&&$_Authorities.indexOf('下架商品')!==-1" @click="enableCommodity(scope.$index, scope.row)">上架</el-button>
             <el-button size="mini" type="text"  v-if="$_Authorities.indexOf('删除商品')!==-1" @click="deleteUser(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -383,8 +384,7 @@
         })
       },
       //上下架
-      obtained(index,row){
-        if(this.font==='下架'){
+      disableCommodity(index,row){
           this.$confirm('此操作将下架此商品, 是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -403,27 +403,26 @@
           }).catch(() => {
 
           })
-        }else{
-          this.$confirm('此操作将上架此商品, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.$_HTTP.put(this.$_API.editGoods+ row.id, {goodsState:'0'}, res => {
-              if (res.code === 1) {
-                this.$message({
-                  type: 'success',
-                  message: '商品上架成功!'
-                })
-                this.init()
-                this.font='下架'
-              }
-            })
-          }).catch(() => {
-
+      },
+      enableCommodity(index,row){
+        this.$confirm('此操作将上架此商品, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$_HTTP.put(this.$_API.editGoods+ row.id, {goodsState:'0'}, res => {
+            if (res.code === 1) {
+              this.$message({
+                type: 'success',
+                message: '商品上架成功!'
+              })
+              this.init()
+              this.font='下架'
+            }
           })
-        }
+        }).catch(() => {
 
+        })
       },
       addMerchant(form) {
         this.$refs[form].validate((valid) => {

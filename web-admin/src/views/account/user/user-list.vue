@@ -69,7 +69,7 @@
             </el-table-column>
             <el-table-column align="center" prop="idCard" label="身份证号" />
             <el-table-column align="center" label="卡号" >
-              <template v-if="scope.row.smartCardVo" slot-scope="scope">{{ scope.row.smartCardVo.idCard }}</template>
+              <template v-if="scope.row.smartCardVo" slot-scope="scope">{{ scope.row.smartCardVo.code}}</template>
             </el-table-column>
             <el-table-column align="center" prop="phone" label="手机号码" />
             <el-table-column align="center" label="归属单位"  v-if="$_Authorities.indexOf('用户归属单位')!==-1">
@@ -94,14 +94,8 @@
                   v-if="$_Authorities.indexOf('删除用户')!==-1"
                 >删除
                 </el-button>
-                <el-button size="mini" type="text"   v-if="scope.row.businessState==='0'&&$_Authorities.indexOf('禁用商户')!==-1" @click="disableMechant(scope.$index, scope.row)">禁用</el-button>
-                <el-button
-                  size="mini"
-                  type="text"
-                  @click="disableUser(scope.$index, scope.row)"
-                  v-if="$_Authorities.indexOf('禁用用户')!==-1"
-                >{{disableFont}}
-                </el-button>
+                <el-button size="mini" type="text"   v-if="scope.row.state==='1'&&$_Authorities.indexOf('禁用用户')!==-1" @click="disableUser(scope.$index, scope.row)">禁用</el-button>
+                <el-button size="mini" type="text"   v-if="scope.row.state==='2'&&$_Authorities.indexOf('禁用用户')!==-1" @click="enableUser(scope.$index, scope.row)">启用</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -406,7 +400,6 @@ export default {
     },
     //禁用用户
     disableUser(index,row){
-      if(this.disableFont==='禁用'){
         this.$confirm('此操作将禁用该用户, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -424,29 +417,29 @@ export default {
             }
           })
         }).catch(() => {
-
         })
-      }else{
-        this.$confirm('此操作将启用该用户, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$_HTTP.put(this.$_API.editUser + row.username,{state:'1'}, res => {
-            if (res.code === 1) {
-              this.dialogFormVisible = false
-              this.init()
-              this.disableFont='禁用'
-              this.$message({
-                message: '启用用户成功',
-                type: 'success'
-              })
-            }
-          })
-        }).catch(() => {
-
+    },
+    //启用用户
+    enableUser(index,row){
+      this.$confirm('此操作将启用该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$_HTTP.put(this.$_API.editUser + row.username,{state:'1'}, res => {
+          if (res.code === 1) {
+            this.dialogFormVisible = false
+            this.init()
+            this.disableFont='禁用'
+            this.$message({
+              message: '启用用户成功',
+              type: 'success'
+            })
+          }
         })
-      }
+      }).catch(() => {
+
+      })
     },
     addButton() {
       this.disabled = false
