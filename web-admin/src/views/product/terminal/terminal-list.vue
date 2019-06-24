@@ -392,6 +392,8 @@
         this.init()
       },
       addButton() {
+        this.form.valueAddress=''
+        this.form.unit=''
         this.form.name = ''
         this.form.id=''
         this.form.address = ''
