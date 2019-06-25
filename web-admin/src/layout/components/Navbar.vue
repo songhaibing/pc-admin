@@ -86,6 +86,7 @@ export default {
     })
     this.$_HTTP.get(this.$_API.userInfocontact, {}, res => {
       this.info = res
+      localStorage.setItem('info',res.dept.name)
       localStorage.setItem('deptId',res.dept.id)
       localStorage.setItem('authorities',res.roles[0].authorities)
       this.imageUrl = 'http://106.75.178.9:80/resource/' + res.avatar

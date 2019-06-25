@@ -91,16 +91,7 @@
             <el-input v-model="form.Name" autocomplete="off" />
           </el-form-item>
           <el-form-item label="单位" :label-width="formLabelWidth" v-if="title==='添加角色'">
-            <!--<el-input ref="input" placeholder="请选择单位" v-model="form.className" autocomplete="off" />-->
-            <!--<el-select v-model="selectId" placeholder="请选择" @change="changeSelect" style="width: 100%">-->
-              <!--<el-option-->
-                <!--v-for="item in options"-->
-                <!--:key="item.id"-->
-                <!--:label="item.name"-->
-                <!--:value="item.id">-->
-              <!--</el-option>-->
-            <!--</el-select>-->
-            <select-tree width="100%"
+            <select-tree width="460"
                          v-model="selectId"
                          :options="selectedOptions"
                          :props="selectedProps" @selected="changeSelect" />

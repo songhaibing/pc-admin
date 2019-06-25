@@ -3,12 +3,14 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">
-          {{ $t('login.title') }}
+        <h3 class="title" style="color: #0e0e0e;">
+         登录
         </h3>
-        <lang-select class="set-language" />
+        <div style="margin-top: -30px">
+          <div style="width: 50px;height: 3px;background-color: #1890ff"></div>
+          <div style="border-bottom: 1px solid #778899"></div>
+        </div>
       </div>
-
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -164,7 +166,7 @@ export default {
             .then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
-              location.reload()
+              history.go(0)
             })
             .catch(() => {
               this.loading = false
@@ -213,24 +215,24 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
+
   .el-input {
     display: inline-block;
     height: 47px;
     width: 85%;
-
     input {
       background: transparent;
       border: 0px;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
+      color:  $bg;
       height: 47px;
-      caret-color: $cursor;
+      caret-color: $bg;
 
       &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
+        box-shadow: 0 0 0px 1000px $cursor inset !important;
+        -webkit-text-fill-color: $bg !important;
       }
     }
   }
@@ -239,7 +241,7 @@ $cursor: #fff;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    color: #454545;
+    color: $cursor;
   }
 }
 </style>
@@ -252,13 +254,14 @@ $light_gray:#eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-image: url(~@/assets/WechatIMG7.jpeg);
+  background-image: url(~@/assets/WechatIMG9.jpeg);
+  background-repeat:no-repeat;
   overflow: hidden;
-
   .login-form {
     position: relative;
-    width: 520px;
+    width: 450px;
     max-width: 100%;
+    left:600px;
     padding: 160px 35px 0;
     margin: 0 auto;
     overflow: hidden;
@@ -286,12 +289,12 @@ $light_gray:#eee;
 
   .title-container {
     position: relative;
-
+    margin-bottom: 30px;
     .title {
       font-size: 26px;
       color: $light_gray;
       margin: 0px auto 40px auto;
-      text-align: center;
+
       font-weight: bold;
     }
 
