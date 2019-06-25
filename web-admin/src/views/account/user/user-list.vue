@@ -26,14 +26,6 @@
               v-if="$_Authorities.indexOf('添加用户')!==-1"
             >添加
             </el-button>
-            <!--<el-select v-model="valueSelect" placeholder="根据单位查询角色" style="float: right;" @change="change">-->
-            <!--<el-option-->
-            <!--v-for="item in optionsInquire"-->
-            <!--:key="item.id"-->
-            <!--:label="item.name"-->
-            <!--:value="item.id"-->
-            <!--/>-->
-            <!--</el-select>-->
             <select-tree width="200" style="width: 300px;margin-right:-100px;float: right"
                          v-model="selected"
                          :options="selectedOptions"
@@ -69,7 +61,13 @@
             </el-table-column>
             <el-table-column align="center" prop="idCard" label="身份证号"/>
             <el-table-column align="center" label="卡号">
-              <template v-if="scope.row.smartCardVo" slot-scope="scope">{{ scope.row.smartCardVo.code}}</template>
+              <template slot-scope="scope">
+                <el-form :model="scope.row">
+                  <el-input ref="inputValue" v-if="scope.row.smartCardVo" v-model="scope.row.smartCardVo.code" placeholder="卡号" @focus="focusFilling(scope.row)" @blur="blurFilling(scope.row)"/>
+                  <el-input ref="inputValue" v-else v-model="valueCode" placeholder="卡号" @focus="focusBlank(scope.row)" @blur="blurBlank(scope.row)"/>
+                </el-form>
+              </template>
+              <!--<template v-if="scope.row.smartCardVo" slot-scope="scope">{{ scope.row.smartCardVo.code}}</template>-->
             </el-table-column>
             <el-table-column align="center" prop="phone" label="手机号码"/>
             <el-table-column align="center" label="归属单位" v-if="$_Authorities.indexOf('用户归属单位')!==-1">
@@ -147,6 +145,9 @@
             <el-form-item label="身份证号" :label-width="formLabelWidth" prop="idCard">
               <el-input v-model="form.idCard" autocomplete="off"/>
             </el-form-item>
+            <el-form-item label="卡号" :label-width="formLabelWidth" prop="cardNum">
+              <el-input v-model="form.cardNum" autocomplete="off"/>
+            </el-form-item>
             <el-form-item label="归属单位" :label-width="formLabelWidth" prop="className">
               <el-input
                 v-model="form.className"
@@ -212,6 +213,9 @@
     mixins: [exportForm, mixins],
     data() {
       return {
+        userId:'',
+        id:'',
+        valueCode:'',
         disableFont: '禁用',
         selected: Number(localStorage.getItem('deptId')),
         // 数据默认字段
@@ -261,6 +265,7 @@
         form: {
           role: '',
           idCard: '',
+          cardNum:'',
           userName: '',
           realName: '',
           mobile: '',
@@ -269,6 +274,9 @@
         },
         formLabelWidth: '80px',
         rules: {
+          cardNum: [
+            {required: true, message: '请输入卡号', trigger: 'blur'}
+          ],
           idCard: [
             {required: true, message: '请输入身份证号', trigger: 'blur'}
           ],
@@ -299,6 +307,15 @@
       })
     },
     methods: {
+      focusFilling(row) {
+        console.log(row)
+        this.userId = row.smartCardVo.userId
+        this.id=row.smartCardVo.id
+      },
+      blurFilling(row) {
+        this.$_HTTP.post(this.$_API.addCard, {userId:row.smartCardVo.userId,id:row.smartCardVo.id}, res => {
+        })
+      },
       selectedDept(val) {
         this.deptId = val
         this.init()

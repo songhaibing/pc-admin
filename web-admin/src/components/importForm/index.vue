@@ -238,7 +238,7 @@
           };
           axios.post('http://106.75.178.9:80/smartcard/'+this.importApi, param, config).then(response=>{
               console.log('res',response);
-              if(response.data.code===1){
+              if(response.data.data===true){
                 this.$emit('export',false)
                 this.$message({
                   type: 'success',
@@ -248,7 +248,7 @@
               }else {
                 this.$message({
                   type: 'error',
-                  message: '导入失败请重试!'
+                  message: response.data.msg
                 })
                 item.uploadStatus = -1;
               }

@@ -14,6 +14,8 @@ const API = {
   editUser: adminIp + 'usercontact/edit/', // 编辑用户
   getCurrentTree: adminIp + 'dept/tree/current', // '获取用户当前部门的树状结构数据'
   userInfocontact: adminIp + 'usercontact/infocontact', // 获取当前用户信息
+  addCard:adminIp+'smartCard/add',//创建一卡通
+  editCard:adminIp+'smartCard/edit/',//修改一卡通
   // 部门管理
   deleteDept: adminIp + 'dept/delete/', // 通过ID删除部门
   addDept: adminIp + 'dept/add', // 添加部门数据
