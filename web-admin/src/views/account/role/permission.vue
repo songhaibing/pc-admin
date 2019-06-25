@@ -3,10 +3,8 @@
       <div style="padding:20px;">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
-            <i class="el-icon-menu" />
-            <span>权限分配</span>
             <el-button
-              style="float: right;margin-left: 10px"
+              style="margin-left: 10px"
               type="primary"
               icon="el-icon-plus"
               @click="addButton"
@@ -94,14 +92,18 @@
           </el-form-item>
           <el-form-item label="单位" :label-width="formLabelWidth" v-if="title==='添加角色'">
             <!--<el-input ref="input" placeholder="请选择单位" v-model="form.className" autocomplete="off" />-->
-            <el-select v-model="selectId" placeholder="请选择" @change="changeSelect" style="width: 100%">
-              <el-option
-                v-for="item in options"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
+            <!--<el-select v-model="selectId" placeholder="请选择" @change="changeSelect" style="width: 100%">-->
+              <!--<el-option-->
+                <!--v-for="item in options"-->
+                <!--:key="item.id"-->
+                <!--:label="item.name"-->
+                <!--:value="item.id">-->
+              <!--</el-option>-->
+            <!--</el-select>-->
+            <select-tree width="100%"
+                         v-model="selectId"
+                         :options="selectedOptions"
+                         :props="selectedProps" @selected="changeSelect" />
           </el-form-item>
           <el-form-item label="code" :label-width="formLabelWidth" prop="Code">
             <el-input v-model="form.Code" autocomplete="off" />
@@ -129,20 +131,6 @@
           <el-button type="primary" @click="()=>getCheckedKeys()">确 定</el-button>
         </span>
       </el-dialog>
-      <!--<el-dialog :title="titleTree" width="600px" :visible.sync="dialogFormTree">-->
-        <!--<el-input-->
-          <!--placeholder="输入关键字进行过滤"-->
-          <!--v-model="filterText">-->
-        <!--</el-input>-->
-        <!--<el-tree-->
-          <!--class="filter-tree"-->
-          <!--:data="dataTree"-->
-          <!--:props="defaultProps"-->
-          <!--:filter-node-method="filterNode"-->
-          <!--@node-click="handleNodeClick"-->
-          <!--ref="tree2">-->
-        <!--</el-tree>-->
-      <!--</el-dialog>-->
   </div>
 </template>
 
@@ -211,9 +199,6 @@
           ],
           Code: [
             { required: true, message: '请输入code', trigger: 'blur' }
-          ],
-          des: [
-            { required: true, message: '请输入描述信息', trigger: 'blur' }
           ]
         },
         tableData: [],
@@ -222,10 +207,6 @@
     },
     created() {
       this.$_HTTP.get(this.$_API.deptTree, {}, res => {
-        this.optionsInquire=res
-        this.optionsInquire.unshift({id:'',name:'全部'})
-      })
-      this.$_HTTP.get(this.$_API.deptTree, {}, res => {
         this.options=res
       })
       this.getMenu()
@@ -233,12 +214,12 @@
     },
     methods: {
       selectedDept(val){
+
         this.deptId=val
         this.init()
       },
       getMenu() {
-        this.$_HTTP.get(this.$_API.getAllMenu, {}, res => {
-          console.log("this.toTreeData(res)",this.toTreeData(res))
+        this.$_HTTP.get(this.$_API.menu, {}, res => {
           this.data1=this.toTreeData(res)
         })
       },
@@ -253,7 +234,7 @@
       },
       //分页查询角色
       init(){
-        this.$_HTTP.get(this.$_API.roleList, {deptId:this.deptId,size: this.size, current: this.currentPage}, res => {
+        this.$_HTTP.get(this.$_API.findDept+this.deptId, {size: this.size, current: this.currentPage}, res => {
           this.loading=true
           this.tableData = res.records
           this.total = res.total
@@ -261,7 +242,7 @@
         })
       },
       changeSelect(val){
-        console.log(val)
+        this.selectId=val
       },
       filterNode(value, data) {
         if (!value) return true;
@@ -408,7 +389,6 @@
           const temp = res.authorities
           this.getTreeId(this.data1, temp).forEach(item => {
             this.$refs.tree.setChecked(item, true, false)
-            console.log('item',item)
           })
         })
         this.dialogFormRole = true
