@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
+    <img src="@/assets/WechatIMG9.jpeg" style="width: 70%;min-height: 100%">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-
       <div class="title-container">
         <h3 class="title" style="color: #0e0e0e;">
          登录
@@ -166,7 +166,7 @@ export default {
             .then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
-
+              history.go(0)
             })
             .catch(() => {
               this.loading = false
@@ -252,26 +252,18 @@ $dark_gray:#889aa4;
 $light_gray:#eee;
 
 .login-container {
-  min-height: 100%;
-  width: 100%;
-  background-image: url(~@/assets/WechatIMG9.jpeg);
-  background-repeat:no-repeat;
-  overflow: hidden;
+  display: flex;
   .login-form {
-    position: relative;
-    width: 450px;
+    padding-top: 100px;
+    width: 350px;
     max-width: 100%;
-    left:600px;
-    padding: 160px 35px 0;
     margin: 0 auto;
-    overflow: hidden;
   }
 
   .tips {
     font-size: 14px;
     color: #fff;
-    margin-bottom: 10px;
-
+    margin-bottom: 20px;
     span {
       &:first-of-type {
         margin-right: 16px;

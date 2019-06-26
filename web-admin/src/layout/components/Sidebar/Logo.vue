@@ -23,11 +23,14 @@ export default {
     }
   },
   created(){
-    console.log()
+    this.$_HTTP.get(this.$_API.userInfocontact, {}, res => {
+      this.info = res
+      this.title=res.dept.name+'管理系统'
+    })
   },
   data() {
     return {
-      title: localStorage.getItem('info')+'管理系统',
+      title: '',
       logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
     }
   }
