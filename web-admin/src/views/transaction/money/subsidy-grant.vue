@@ -393,6 +393,7 @@ export default {
                   message: '补助发放成功!'
                 })
                 this.dialogForm=false
+                this.state=0
                 this.issuedInit()
                 this.activeName = 'second'
               }
