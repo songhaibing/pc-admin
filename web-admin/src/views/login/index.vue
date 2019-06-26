@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <img src="@/assets/WechatIMG9.jpeg" style="width: 64%;">
+    <img src="@/assets/WechatIMG9.jpeg" style="width: 63.6%;">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
       <div class="title-container">
         <h3 class="title" style="color: #0e0e0e;">

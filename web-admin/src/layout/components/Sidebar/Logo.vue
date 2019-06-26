@@ -25,7 +25,6 @@ export default {
   created(){
     this.$_HTTP.get(this.$_API.userInfocontact, {}, res => {
       this.info = res
-      console.log(res)
       if(res.dept.logo){
         this.logo='http://106.75.178.9:80/resource/'+res.dept.logo
       }else{
@@ -67,8 +66,8 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       vertical-align: middle;
       margin-right: 12px;
     }
