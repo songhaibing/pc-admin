@@ -55,7 +55,7 @@
               </template>
             </el-table-column>
             <el-table-column align="center" prop="username" label="用户名"/>
-            <el-table-column align="center" prop="realname" label="姓名"/>
+            <el-table-column align="center" prop="realname" label="姓名" width="50"/>
             <el-table-column align="center" prop="sex" label="性别">
               <template v-if="scope.row.sex" slot-scope="scope">{{ scope.row.sex==='1'?'男':'女' }}</template>
             </el-table-column>
@@ -63,8 +63,7 @@
             <el-table-column align="center" label="卡号">
               <template slot-scope="scope">
                 <el-form :model="scope.row">
-                  <el-input ref="inputValue" v-if="scope.row.smartCardVo" v-model="scope.row.smartCardVo.code" placeholder="卡号" @focus="focusFilling(scope.row)" @blur="blurFilling(scope.row)"/>
-                  <el-input ref="inputValue" v-else v-model="valueCode" placeholder="卡号" @focus="focusBlank(scope.row)" @blur="blurBlank(scope.row)"/>
+                  <el-input ref="inputValue"  v-model="scope.row.smartCardCode" placeholder="卡号" @focus="focusFilling(scope.row)" @blur="blurFilling(scope.row)"/>
                 </el-form>
               </template>
               <!--<template v-if="scope.row.smartCardVo" slot-scope="scope">{{ scope.row.smartCardVo.code}}</template>-->

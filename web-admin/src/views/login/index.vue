@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <img src="@/assets/WechatIMG9.jpeg" style="width: 70%;min-height: 100%">
+    <img src="@/assets/WechatIMG9.jpeg" style="height: 100%;">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
       <div class="title-container">
         <h3 class="title" style="color: #0e0e0e;">
@@ -25,7 +25,6 @@
           auto-complete="on"
         />
       </el-form-item>
-
       <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
         <el-form-item prop="password">
           <span class="svg-container">
@@ -212,10 +211,8 @@ $cursor: #fff;
     color: $cursor;
   }
 }
-
 /* reset element-ui css */
 .login-container {
-
   .el-input {
     display: inline-block;
     height: 47px;
@@ -250,7 +247,6 @@ $cursor: #fff;
 $bg:#2d3a4b;
 $dark_gray:#889aa4;
 $light_gray:#eee;
-
 .login-container {
   display: flex;
   .login-form {
@@ -286,7 +282,6 @@ $light_gray:#eee;
       font-size: 26px;
       color: $light_gray;
       margin: 0px auto 40px auto;
-
       font-weight: bold;
     }
 
