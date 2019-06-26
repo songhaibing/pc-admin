@@ -63,7 +63,7 @@
             <el-table-column align="center" label="卡号">
               <template slot-scope="scope">
                 <el-form :model="scope.row">
-                  <el-input ref="inputValue"  v-model="scope.row.smartCardCode" placeholder="卡号" @focus="focusFilling(scope.row)" @blur="blurFilling(scope.row)"/>
+                  <el-input  v-model="scope.row.smartCardCode" placeholder="卡号"/>
                 </el-form>
               </template>
               <!--<template v-if="scope.row.smartCardVo" slot-scope="scope">{{ scope.row.smartCardVo.code}}</template>-->
@@ -306,15 +306,6 @@
       })
     },
     methods: {
-      focusFilling(row) {
-        console.log(row)
-        this.userId = row.smartCardVo.userId
-        this.id=row.smartCardVo.id
-      },
-      blurFilling(row) {
-        this.$_HTTP.post(this.$_API.addCard, {userId:row.smartCardVo.userId,id:row.smartCardVo.id}, res => {
-        })
-      },
       selectedDept(val) {
         this.deptId = val
         this.init()
