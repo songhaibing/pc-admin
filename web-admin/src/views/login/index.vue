@@ -250,7 +250,7 @@ $light_gray:#eee;
 .login-container {
   display: flex;
   .login-form {
-    padding-top: 100px;
+    padding-top: 300px;
     width: 350px;
     max-width: 100%;
     margin: 0 auto;
