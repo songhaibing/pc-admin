@@ -25,13 +25,19 @@ export default {
   created(){
     this.$_HTTP.get(this.$_API.userInfocontact, {}, res => {
       this.info = res
+      console.log(res)
+      if(res.dept.logo){
+        this.logo='http://106.75.178.9:80/resource/'+res.dept.logo
+      }else{
+        this.logo='https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      }
       this.title=res.dept.name+'管理系统'
     })
   },
   data() {
     return {
       title: '',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      logo: ''
     }
   }
 }

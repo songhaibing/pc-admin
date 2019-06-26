@@ -5,11 +5,14 @@
   <div style="padding: 20px">
     <div style="margin-left: 10px">
       <div style="display: flex;flex-direction: column;">
-        <div>
+       <div style="display: flex;align-items: center">
           <span>账户归属</span>
-          <el-select placeholder="请选择" style="width: 300px;margin-left: 20px">
-
-          </el-select>
+          <div >
+            <select-tree width="300" style="width: 300px;margin-left: 20px;"
+                         v-model="selected"
+                         :options="options"
+                         :props="defaultProps" @selected="selectedDept"/>
+          </div>
         </div>
         <div style="margin-top: 20px">
           <span>查询日期</span>
@@ -99,10 +102,25 @@
 </template>
 
 <script>
+  import SelectTree from '@/components/widget/SelectTree.vue';
   export default {
     name: 'FundBill',
+    components: {
+      SelectTree,
+    },
     data() {
       return {
+        selected: Number(localStorage.getItem('deptId')),
+        // 数据列表
+        options: JSON.parse(localStorage.getItem('current')),
+        // 数据默认字段
+        defaultProps: {
+          value: 'id',          // 唯一标识
+          label: 'name',       // 标签显示
+          children: 'children', // 子级
+        },
+        loading:false,
+        tableData:[],
         activeName:'first',
         pickerOptions: {
           shortcuts: [{
@@ -133,6 +151,11 @@
         },
         value: ''
       }
+    },
+    methods:{
+      selectedDept(val){
+
+      },
     }
   }
 </script>

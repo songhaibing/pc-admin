@@ -63,7 +63,7 @@
             <el-table-column align="center" label="卡号">
               <template slot-scope="scope">
                 <el-form :model="scope.row">
-                  <el-input  v-model="scope.row.smartCardCode" placeholder="卡号"/>
+                  <el-input  v-model="scope.row.smartCardCode" placeholder="卡号" @focus="focus(scope.row)" @blur="blur(scope.row)"/>
                 </el-form>
               </template>
               <!--<template v-if="scope.row.smartCardVo" slot-scope="scope">{{ scope.row.smartCardVo.code}}</template>-->
@@ -143,9 +143,6 @@
             </el-form-item>
             <el-form-item label="身份证号" :label-width="formLabelWidth" prop="idCard">
               <el-input v-model="form.idCard" autocomplete="off"/>
-            </el-form-item>
-            <el-form-item label="卡号" :label-width="formLabelWidth" prop="cardNum">
-              <el-input v-model="form.cardNum" autocomplete="off"/>
             </el-form-item>
             <el-form-item label="归属单位" :label-width="formLabelWidth" prop="className">
               <el-input
@@ -306,6 +303,13 @@
       })
     },
     methods: {
+      focus(row) {
+       console.log(row)
+      },
+      blur(row) {
+        this.$_HTTP.post(this.$_API.addCard, { code: row.smartCardCode,idCard:row.idCard,name:row.realname,userId:row.id }, res => {
+        })
+      },
       selectedDept(val) {
         this.deptId = val
         this.init()
