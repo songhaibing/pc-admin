@@ -65,13 +65,13 @@
           prop="nickname"
           label="消费人"
         >
-          <template slot-scope="scope">{{ scope.row.userVo.username }}</template>
+          <template slot-scope="scope" v-if="scope.row.userVo">{{ scope.row.userVo.username }}</template>
         </el-table-column>
         <el-table-column
           align="center"
           label="支付场景"
         >
-          <template slot-scope="scope">{{ code[scope.row.type] }}</template>
+          <template slot-scope="scope">{{ scope.row.business.name}}</template>
         </el-table-column>
         <el-table-column
           align="center"
@@ -263,7 +263,7 @@
         console.log(row)
          this.formView.order=row.orderId
         this.formView.createTime=row.createTime
-        this.formView.name=row.userVo.username
+        this.formView.name=row.userVo?row.userVo.username:''
         this.formView.payment=code[row.type]
         this.formView.money=row.price
         const article=row.article.split('|')

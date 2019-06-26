@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <img src="@/assets/WechatIMG9.jpeg" style="width: 63.6%;">
+    <img src="@/assets/WechatIMG9.jpeg" style="width: 65%;">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
       <div class="title-container">
         <h3 class="title" style="color: #0e0e0e;">
@@ -165,7 +165,6 @@ export default {
             .then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
-              history.go(0)
             })
             .catch(() => {
               this.loading = false
@@ -213,6 +212,8 @@ $cursor: #fff;
 }
 /* reset element-ui css */
 .login-container {
+  height: 100%;
+  overflow: hidden;
   .el-input {
     display: inline-block;
     height: 47px;

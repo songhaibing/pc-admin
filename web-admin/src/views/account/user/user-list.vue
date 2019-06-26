@@ -44,6 +44,7 @@
             <el-table-column
               label="头像"
               align="center"
+              width="50"
             >
               <template scope="scope">
                 <img
@@ -154,7 +155,7 @@
               />
             </el-form-item>
             <el-form-item label="角色" :label-width="formLabelWidth" prop="role">
-              <el-select v-model="form.role" placeholder="请选择" style="width: 100%">
+              <el-select v-model="form.role" placeholder="请选择"  clearable  style="width: 100%">
                 <el-option
                   v-for="item in optionsRole"
                   :key="item.id"
@@ -196,7 +197,7 @@
 </template>
 
 <script>
-  import {checkPhone, checkEmail, checkPw, checkRenewPw} from '@/libs/regular.js'
+  import  {checkPhone, checkEmail, checkPw, checkRenewPw} from '@/libs/regular.js'
   import exportForm from '@/mixins/exportForm'
   import SelectTree from '@/components/widget/SelectTree.vue';
   import axios from 'axios'
