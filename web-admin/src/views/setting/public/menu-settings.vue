@@ -104,9 +104,7 @@
 
 <script>
   import TipMessage from '../../../components/tipMessage/tipMessage'
-
   export default {
-    name: 'Menu',
     components: {TipMessage},
     data() {
       return {

@@ -7,10 +7,18 @@
           <div style="display: flex;align-items: center">
             <span>搜索查询</span>
             <el-input v-model="input" placeholder="按交易单号或姓名筛选" style="width: 300px;margin-left: 20px;"/>
-            <select-tree width="200" style="margin-left: 10px"
+            <select-tree width="200" style="margin-left: 10px;margin-top: 5px"
                          v-model="selected"
                          :options="selectedOptions"
                          :props="selectedProps" @selected="selectedDept"/>
+            <el-select v-model="moneyValue" placeholder="请选择钱包类型" clearable style="margin-left: 20px" @change="getMoneyValue">
+              <el-option
+                v-for="item in optionsMoney"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
           </div>
         </div>
         <div style="margin-top: 20px">
@@ -106,7 +114,7 @@
             <el-button
               size="mini"
               type="text"
-              v-if="activeName==='second'"
+              v-if="activeName==='second'&&scope.row.createTime.substring(0,10)===nowTime"
               @click="handleSubsidies(scope.$index, scope.row)"
             >撤回补助
             </el-button>
@@ -187,6 +195,9 @@ export default {
   components: { ImportForm,SelectTree },
   data() {
     return {
+      nowTime:'',
+      moneyValue:'',
+      optionsMoney:[],
       queryDate:'',
       startTime:0,
       endTime:0,
@@ -231,6 +242,7 @@ export default {
           { required: true, message: '请输入补助金额', trigger: 'blur' }
         ]
       },
+      purseId:0,
       selectId:0,
       currentPage: 1, // 当前多少页
       size: 10, // 每页多少条数据
@@ -277,9 +289,22 @@ export default {
     })
     this.$_HTTP.get(this.$_API.purseTypeAll, {}, res => {
       this.options = res
+      this.optionsMoney=res
     })
   },
+  watch: {
+    activeName(){
+      this.getNowTime();
+    }
+  },
   methods: {
+    //获取现在时间
+    getNowTime(){
+      const day = new Date();
+      day.setTime(day.getTime());
+      const nowTime = day.getFullYear()+"-" + (day.getMonth()+1) + "-" + day.getDate();
+      this.nowTime=nowTime
+    },
     query(){
       this.startTime=this.queryDate?this.queryDate[0]:0
       this.endTime=this.queryDate?this.queryDate[1]:0
@@ -312,18 +337,14 @@ export default {
       this.state=1
       this.issuedInit()
     },
-    // 初始化未发放补助分页
-    // init() {
-    //   this.loading = true
-    //   this.$_HTTP.get(this.$_API.subsidyPage, { deptId: this.selectId, size: this.size, current: this.currentPage }, res => {
-    //     this.tableData = res.records
-    //     this.total = res.total
-    //     this.loading = false
-    //   })
-    // },
+    getMoneyValue(val){
+      console.log(val)
+      this.purseId=val
+      this.issuedInit()
+    },
     issuedInit() {
       this.loading = true
-      this.$_HTTP.get(this.$_API.subsidyList, { username:this.input,endTime:this.endTime,startTime:this.startTime,state:this.state,deptId: this.deptId, size: this.size, current: this.currentPage }, res => {
+      this.$_HTTP.get(this.$_API.subsidyList, { purseId:this.purseId,username:this.input,endTime:this.endTime,startTime:this.startTime,state:this.state,deptId: this.deptId, size: this.size, current: this.currentPage }, res => {
         this.tableData = res.records
         this.total = res.total
         this.loading = false
@@ -406,6 +427,13 @@ export default {
     exportSubsidy() {
       const token = localStorage.getItem('token')
       axios.get(this.$_API.subsidyExport, {
+        params: {
+          purseId:this.purseId,
+          username:this.input,
+          endTime:this.endTime,
+          startTime:this.startTime,
+          deptId: this.deptId,
+        },
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization': `Bearer ${token}`// 请求的数据类型为form data格式

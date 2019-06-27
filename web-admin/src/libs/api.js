@@ -3,6 +3,9 @@ const adminIp = 'http://106.75.178.9:80/admin/'
 const logoutIp = 'http://106.75.178.9:80/'
 const smartcardIp = 'http://106.75.178.9:80/smartcard/'
 const API = {
+  //首页
+  findByBusiness: smartcardIp + 'serialPay/findByBusiness/',// 通过商户查询流水信息
+  orderPayBusiness: smartcardIp + 'orderPay/findByBusiness/',//通过支付单ID查询订单信息
   // 退出登陆
   logout: logoutIp + 'token/logout',
   // 用户管理

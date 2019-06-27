@@ -7,7 +7,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            New Visits
+            用户数
           </div>
           <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
         </div>
@@ -20,9 +20,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Messages
+            当前用餐人数
           </div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="num" :duration="3000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -33,9 +33,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Purchases
+          当日成交额
           </div>
-          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="sum" :duration="3200" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -46,9 +46,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Shoppings
+          当日支付笔数
           </div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="sumOrder" :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -61,6 +61,23 @@ import CountTo from 'vue-count-to'
 export default {
   components: {
     CountTo
+  },
+  data(){
+    return{
+      num:0,
+      sum:0,
+      sumOrder:0,
+      businessId:0
+    }
+  },
+  created(){
+    this.$_HTTP.get(this.$_API.findByBusiness+this.businessId, {}, res => {
+      this.num=res.num
+      this.sum=res.sum
+    })
+    this.$_HTTP.get(this.$_API.orderPayBusiness+this.businessId,{}, res => {
+      this.sumOrder=res.sum
+    })
   },
   methods: {
     handleSetLineChartData(type) {

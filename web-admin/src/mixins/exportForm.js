@@ -24,7 +24,7 @@ export default {
         document.body.removeChild(linkNode);
 
       }).catch(function (error) {
-        console.log(error);
+
       });
     },
   }
