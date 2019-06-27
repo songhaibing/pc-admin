@@ -145,6 +145,7 @@ export default {
             .then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
+              location.reload()
             })
             .catch(() => {
               this.loading = false

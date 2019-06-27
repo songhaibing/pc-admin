@@ -71,6 +71,8 @@
     components: {TipMessage},
     data() {
       return {
+        startTime:'',
+        endTime:'',
         isShow: true,
         disabled: true,
         deptId: '',
@@ -101,17 +103,23 @@
         this.form.name = data.name
         this.form.des = data.description
         this.deptId = data.id
+        this.startTime=data.startTime
+        this.endTime=data.endTime
         console.log(data)
       },
       sure() {
         const params = {
           name: this.form.name,
           description: this.form.des,
-          parentId: this.deptId
+          parentId: this.deptId,
+          endTime:this.endTime,
+          startTime:this.startTime
         }
         const params1 = {
           name: this.form.name,
-          description: this.form.des
+          description: this.form.des,
+          endTime:this.endTime,
+          startTime:this.startTime
         }
         if (this.title === '添加') {
           this.$_HTTP.post(this.$_API.addDept, params, res => {
@@ -138,7 +146,7 @@
         }
       },
       getDept() {
-        this.$_HTTP.get(this.$_API.deptTree, {}, res => {
+        this.$_HTTP.get(this.$_API.getCurrentTree, {}, res => {
           this.data = res
         })
       },

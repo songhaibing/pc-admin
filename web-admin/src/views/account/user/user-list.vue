@@ -299,7 +299,7 @@
     },
     created() {
       this.init()
-      this.$_HTTP.get(this.$_API.deptTree, {}, res => {
+      this.$_HTTP.get(this.$_API.getCurrentTree, {}, res => {
         this.dataTree = res
       })
     },
