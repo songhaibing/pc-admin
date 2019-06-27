@@ -136,7 +136,7 @@
     },
     methods:{
       change(row, data) {
-        this.$_HTTP.put(this.$_API.editWallet + row.id, {isAllow: data}, res => {
+        this.$_HTTP.put(this.$_API.editPurseType + row.id, {isAllow: data}, res => {
         })
       },
       // 初始化分页

@@ -1,7 +1,25 @@
 <template>
   <div>
     <el-row>
-      <div style="padding:20px">
+      <el-col>
+        <div class="left-main">
+          <div class="boxLeftTop">
+            <span class="menu_title">所属部门</span>
+          </div>
+          <el-tree
+            default-expand-all
+            :highlight-current="true"
+            class="single-content"
+            :data="data2"
+            :props="defaultProps2"
+            @node-click="handleNodeClick2"
+          />
+        </div>
+      </el-col>
+      <el-col v-if="isShow">
+        <tip-message/>
+      </el-col>
+      <div v-else style="padding:20px;margin-left: 200px;">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <el-button
@@ -26,10 +44,10 @@
               v-if="$_Authorities.indexOf('添加用户')!==-1"
             >添加
             </el-button>
-            <select-tree width="200" style="width: 300px;margin-right:-100px;float: right"
-                         v-model="selected"
-                         :options="selectedOptions"
-                         :props="selectedProps" @selected="selectedDept"/>
+            <!--<select-tree width="200" style="width: 300px;margin-right:-100px;float: right"-->
+                         <!--v-model="selected"-->
+                         <!--:options="selectedOptions"-->
+                         <!--:props="selectedProps" @selected="selectedDept"/>-->
           </div>
           <el-table
             v-loading="loading"
@@ -56,8 +74,8 @@
               </template>
             </el-table-column>
             <el-table-column align="center" prop="username" label="用户名"/>
-            <el-table-column align="center" prop="realname" label="姓名" width="50"/>
-            <el-table-column align="center" prop="sex" label="性别">
+            <el-table-column align="center" prop="realname" label="姓名" width="60"/>
+            <el-table-column align="center" prop="sex" label="性别" width="50">
               <template v-if="scope.row.sex" slot-scope="scope">{{ scope.row.sex==='1'?'男':'女' }}</template>
             </el-table-column>
             <el-table-column align="center" prop="idCard" label="身份证号"/>
@@ -203,10 +221,11 @@
   import axios from 'axios'
   import ImportForm from '../../../components/importForm/index'
   import mixins from '@/mixins/user'
+  import TipMessage from '../../../components/tipMessage/tipMessage'
 
   export default {
     name: 'UserList',
-    components: {ImportForm, SelectTree},
+    components: {ImportForm, SelectTree,TipMessage},
     mixins: [exportForm, mixins],
     data() {
       return {
@@ -238,6 +257,11 @@
         token: localStorage.getItem('token'),
         loading: true,
         data: [],
+        data2: [],
+        defaultProps2: {
+          children: 'children',
+          label: 'name'
+        },
         optionsRole: [],
         defaultProps: {
           children: 'children',
@@ -301,9 +325,15 @@
       this.init()
       this.$_HTTP.get(this.$_API.getCurrentTree, {}, res => {
         this.dataTree = res
+        this.data2=res
       })
     },
     methods: {
+      handleNodeClick2(data) {
+        this.isShow = false
+        this.deptId = data.id
+        this.init()
+      },
       focus(row) {
        console.log(row)
       },

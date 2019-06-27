@@ -253,7 +253,7 @@
         this.$_HTTP.get(this.$_API.businessAllTree, {}, res => {
           this.dataTree = res
         })
-        this.$_HTTP.get(this.$_API.deptTree, {}, res => {
+        this.$_HTTP.get(this.$_API.getCurrentTree, {}, res => {
           this.unitTree=res
         })
       },
