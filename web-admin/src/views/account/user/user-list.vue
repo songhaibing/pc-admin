@@ -16,10 +16,7 @@
           />
         </div>
       </el-col>
-      <el-col v-if="isShow">
-        <tip-message/>
-      </el-col>
-      <div v-else style="padding:20px;margin-left: 200px;">
+      <div  style="padding:20px;margin-left: 200px;">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <el-button

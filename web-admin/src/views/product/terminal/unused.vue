@@ -303,7 +303,7 @@
       // 初始化分页
       init() {
         this.loading = true
-        this.$_HTTP.get(this.$_API.airportDeviceList, {startTime:this.startTime,
+        this.$_HTTP.get(this.$_API.airportDeviceList, {state:1,startTime:this.startTime,
           endTime:this.endTime, size: this.size,name:this.queryName,
           current: this.currentPage, deptId: this.deptId}, res => {
           this.tableData = res.records
