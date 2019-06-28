@@ -3,11 +3,11 @@ const adminIp = 'http://106.75.178.9:80/admin/'
 const logoutIp = 'http://106.75.178.9:80/'
 const smartcardIp = 'http://106.75.178.9:80/smartcard/'
 const API = {
-  //首页
-  findByBusiness: smartcardIp + 'serialPay/findByBusiness/',// 通过商户查询流水信息
-  orderPayBusiness: smartcardIp + 'orderPay/findByBusiness/',//通过支付单ID查询订单信息
-  findOrderPayData: smartcardIp + 'orderPay/findOrderPayData',//本周点餐人数与成交额
-  findSerialPayVo: smartcardIp + 'serialPay/findSerialPayVo',//本周点餐人数与成交额
+  // 首页
+  findByBusiness: smartcardIp + 'serialPay/findByBusiness/', // 通过商户查询流水信息
+  orderPayBusiness: smartcardIp + 'orderPay/findByBusiness/', // 通过支付单ID查询订单信息
+  findOrderPayData: smartcardIp + 'orderPay/findOrderPayData', // 本周点餐人数与成交额
+  findSerialPayVo: smartcardIp + 'serialPay/findSerialPayVo', // 本周点餐人数与成交额
   // 退出登陆
   logout: logoutIp + 'token/logout',
   // 用户管理
@@ -19,7 +19,7 @@ const API = {
   editUser: adminIp + 'usercontact/edit/', // 编辑用户
   getCurrentTree: adminIp + 'dept/tree/current', // '获取用户当前部门的树状结构数据'
   userInfocontact: adminIp + 'usercontact/infocontact', // 获取当前用户信息
-  addCard:smartcardIp+'smartCard/addOrUpdate',//一卡通
+  addCard: smartcardIp + 'smartCard/addOrUpdate', // 一卡通
   // 部门管理
   deleteDept: adminIp + 'dept/delete/', // 通过ID删除部门
   addDept: adminIp + 'dept/add', // 添加部门数据
@@ -70,6 +70,12 @@ const API = {
   // 用户管理-用户列表
   exportTemplate: smartcardIp + 'smartCard/exportInfo', // 导出一个用户表格文档模板
   roleFindDept: adminIp + 'role/find/dept/', // 查询部门下全部的角色
+
+  // 一卡通管理
+  getCardList: smartcardIp + 'smartCard/list',
+  addSmartCard: smartcardIp + 'smartCard/add',
+  editSmartCard: smartcardIp + 'smartCard/edit/',
+
   /**
    *  产品中心API
    */
