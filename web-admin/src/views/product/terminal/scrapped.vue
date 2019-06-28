@@ -33,16 +33,16 @@
           </el-button>
         </div>
       </div>
-      <div style="margin-top: 120px">
-        <el-button
-          style="float: right;margin-right: 6px"
-          type="primary"
-          icon="el-icon-plus"
-          @click="addButton"
-          v-if="$_Authorities.indexOf('添加设备')!==-1"
-        >添加
-        </el-button>
-      </div>
+      <!--<div style="margin-top: 120px">-->
+        <!--<el-button-->
+          <!--style="float: right;margin-right: 6px"-->
+          <!--type="primary"-->
+          <!--icon="el-icon-plus"-->
+          <!--@click="addButton"-->
+          <!--v-if="$_Authorities.indexOf('添加设备')!==-1"-->
+        <!--&gt;添加-->
+        <!--</el-button>-->
+      <!--</div>-->
     </div>
     <el-card class="box-card" style="margin-top: 20px">
       <el-table
@@ -71,13 +71,13 @@
         <el-table-column align="center" label="设备状态">
           <template slot-scope="scope">{{ statusCode[scope.row.state] }}</template>
         </el-table-column>
-        <el-table-column align="center" label="操作" width="150">
-          <template slot-scope="scope">
-            <el-button size="mini" type="text"   v-if="$_Authorities.indexOf('编辑设备')!==-1" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="text">报修</el-button>
-            <el-button size="mini" type="text"  v-if="$_Authorities.indexOf('删除设备')!==-1" @click="deleteDevice(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
+        <!--<el-table-column align="center" label="操作" width="150">-->
+          <!--<template slot-scope="scope">-->
+            <!--<el-button size="mini" type="text"   v-if="$_Authorities.indexOf('编辑设备')!==-1" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>-->
+            <!--<el-button size="mini" type="text">报修</el-button>-->
+            <!--<el-button size="mini" type="text"  v-if="$_Authorities.indexOf('删除设备')!==-1" @click="deleteDevice(scope.$index, scope.row)">删除</el-button>-->
+          <!--</template>-->
+        <!--</el-table-column>-->
       </el-table>
       <div class="block">
         <el-pagination

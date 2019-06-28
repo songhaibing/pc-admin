@@ -138,7 +138,6 @@
 
 <script>
   import SelectTree from '@/components/widget/SelectTree.vue';
-
   export default {
     name: 'AdministratorList',
     watch: {
