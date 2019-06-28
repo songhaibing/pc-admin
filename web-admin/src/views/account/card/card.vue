@@ -49,7 +49,7 @@
               </template>
               <!--<template v-if="scope.row.smartCardVo" slot-scope="scope">{{ scope.row.smartCardVo.code}}</template>-->
             </el-table-column>
-            <el-table-column align="center" prop="user.username" label="姓名" width="60" />
+            <el-table-column align="center" prop="user.username" label="姓名" width="180" />
             <el-table-column align="center" prop="user.idCard" label="身份证号" />
 
             <el-table-column align="center" label="状态">
