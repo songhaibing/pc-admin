@@ -24,7 +24,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
           />
-          <el-input v-model="queryName" placeholder="请输入设备ID,设备名称等进行查询" style="width: 300px;margin-left: 20px"></el-input>
+          <el-input v-model="queryName"  placeholder="请输入设备ID,设备名称等进行查询" style="width: 300px;margin-left: 20px"></el-input>
           <el-button
             type="success"
             style="margin-left: 10px"

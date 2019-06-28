@@ -8,6 +8,7 @@ const API = {
   orderPayBusiness: smartcardIp + 'orderPay/findByBusiness/', // 通过支付单ID查询订单信息
   findOrderPayData: smartcardIp + 'orderPay/findOrderPayData', // 本周点餐人数与成交额
   findSerialPayVo: smartcardIp + 'serialPay/findSerialPayVo', // 本周点餐人数与成交额
+  findSerialPayVoById: smartcardIp + 'serialPay/findSerialPayVoById', // 用餐人员分布
   // 退出登陆
   logout: logoutIp + 'token/logout',
   // 用户管理

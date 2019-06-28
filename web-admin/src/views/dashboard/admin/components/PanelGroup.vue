@@ -78,13 +78,13 @@ export default {
     this.$_HTTP.get(this.$_API.orderPayBusiness+this.businessId,{}, res => {
       this.sumOrder=res.sum
     })
-    //本周点餐人数与成交额
-    this.$_HTTP.get(this.$_API.findOrderPayData,{}, res => {
-      console.log('res',res)
-    })
+
     //扫码刷卡比例
     this.$_HTTP.get(this.$_API.findSerialPayVo,{}, res => {
-     console.log('findSerialPayVo',res)
+     // console.log('findSerialPayVo',res)
+    })
+    this.$_HTTP.get(this.$_API.findSerialPayVoById,{}, res => {
+
     })
   },
   methods: {

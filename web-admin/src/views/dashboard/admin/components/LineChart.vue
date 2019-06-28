@@ -33,15 +33,19 @@ export default {
   data() {
     return {
       chart: null,
-      sidebarElm: null
+      sidebarElm: null,
+      timeData:[],
     }
+  },
+  created(){
+   this.getOrderNum()
   },
   watch: {
     chartData: {
       deep: true,
-      handler(val) {
-        this.setOptions(val)
-      }
+      // handler(val) {
+      //   this.setOptions(val)
+      // }
     }
   },
   mounted() {
@@ -73,15 +77,27 @@ export default {
     this.chart = null
   },
   methods: {
+
     sidebarResizeHandler(e) {
       if (e.propertyName === 'width') {
         this.__resizeHandler()
       }
     },
-    setOptions({ expectedData, actualData } = {}) {
+    //本周点餐人数与成交额
+    async getOrderNum(){
+      await this.$_HTTP.get(this.$_API.findOrderPayData,{}, res => {
+        const timeData=res.map(item=>{
+          return item.nowDate
+        })
+        this.timeData=timeData
+        console.log('this.timeData1',this.timeData)
+      })
+    },
+    setOptions({ expectedData, actualData} = {}) {
+      let that=this
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data:that.timeData,
           boundaryGap: false,
           axisTick: {
             show: false
