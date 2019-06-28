@@ -30,14 +30,14 @@
 
           label="角色"
         >
-          <template slot-scope="scope">{{ scope.row.userVo.roles[0].name }}</template>
+          <template slot-scope="scope" v-if="scope.row.userVo.roles.length!==0">{{ scope.row.userVo.roles[0].name }}</template>
         </el-table-column>
         <el-table-column
           align="center"
           label="归属单位"
           v-if="$_Authorities.indexOf('管理员归属单位')!==-1"
         >
-          <template slot-scope="scope">{{ scope.row.userVo.dept.name }}</template>
+          <template slot-scope="scope" >{{ scope.row.userVo.dept.name }}</template>
         </el-table-column>
         <el-table-column
           align="center"
@@ -55,6 +55,7 @@
             <el-button
               size="mini"
               type="text"
+              @click="handleEdit(scope.$index, scope.row)"
             >编辑
             </el-button>
             <el-button
@@ -84,6 +85,51 @@
         />
       </div>
     </el-card>
+    <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
+      <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="登录名" :label-width="formLabelWidth" prop="realName">
+          <el-input v-model="form.realName" autocomplete="off"/>
+        </el-form-item>
+        <el-form-item label="归属单位" :label-width="formLabelWidth" prop="className">
+          <el-input
+            v-model="form.className"
+            readonly="readonly"
+            placeholder="请选择单位"
+            autocomplete="off"
+            @focus="clickInput"
+          />
+        </el-form-item>
+        <el-form-item label="角色" :label-width="formLabelWidth" prop="role">
+          <el-select v-model="form.role" placeholder="请选择"  clearable  style="width: 100%">
+            <el-option
+              v-for="item in optionsRole"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addUser('form')">添加</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <el-dialog :title="titleTree" width="600px" :visible.sync="dialogFormTree">
+      <el-input
+        v-model="filterText"
+        placeholder="输入关键字进行过滤"
+      />
+      <el-tree
+        ref="tree2"
+        class="filter-tree"
+        :data="dataTree"
+        default-expand-all
+        :props="defaultProps"
+        :filter-node-method="filterNode"
+        @node-click="handleNodeClick"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -91,8 +137,31 @@
   import SelectTree from '@/components/widget/SelectTree.vue';
   export default {
     name: 'AdministratorList',
+    watch: {
+      filterText(val) {
+        this.$refs.tree2.filter(val)
+      }
+    },
     data() {
       return {
+        dataTree: [],
+        titleTree: '请选择',
+        filterText: '',
+        dialogFormTree: false,
+        title:'编辑管理员',
+        form:{
+          realName:"",
+          className:'',
+          role: '',
+        },
+        defaultProps: {
+          children: 'children',
+          label: 'name'
+        },
+        optionsRole: [],
+        rules:{},
+        formLabelWidth: '80px',
+        dialogFormVisible: false,
         selected: Number(localStorage.getItem('deptId')),
         // 数据默认字段
         selectedProps: {
@@ -113,11 +182,71 @@
     components: { SelectTree },
     created() {
       this.init()
+      this.$_HTTP.get(this.$_API.getCurrentTree, {}, res => {
+        this.dataTree = res
+      })
     },
     methods: {
+      roleFind(id) {
+        this.$_HTTP.get(this.$_API.roleFindDept + id, {}, res => {
+          this.optionsRole = res.records
+        })
+      },
+      clickInput() {
+        this.dialogFormTree = true
+      },
       selectedDept(val){
         this.deptId=val
         this.init()
+      },
+      // 编辑
+      handleEdit(index,row) {
+        this.form.className=row.userVo.dept.name
+        this.dialogFormVisible=true
+        this.form.realName=row.userVo.username
+        this.form.role = row.userVo.roles.length !== 0 ? row.userVo.roles[0].id : ''
+        this.roleFind(row.userVo.roles[0].id)
+        console.log(row)
+      },
+      addUser(form) {
+        this.$refs[form].validate((valid) => {
+          if (valid) {
+            const params = {
+              sex: this.form.status,
+              username: '111',
+              password: '2233eereerr',
+              realname: this.form.realName,
+              phone: this.form.mobile,
+              avatar: this.base64,
+              deptId: this.valueId,
+              roleIds: [this.form.role],
+              idCard: this.form.idCard
+            }
+            if (this.title === '添加用户') {
+              this.$_HTTP.post(this.$_API.addUser, params, res => {
+                if (res.code === 1) {
+                  this.dialogFormVisible = false
+                  this.init()
+                  this.$message({
+                    message: '添加用户成功',
+                    type: 'success'
+                  })
+                }
+              })
+            } else {
+              this.$_HTTP.put(this.$_API.editUser + this.form.userName, params, res => {
+                if (res.code === 1) {
+                  this.dialogFormVisible = false
+                  this.init()
+                  this.$message({
+                    message: '修改用户成功',
+                    type: 'success'
+                  })
+                }
+              })
+            }
+          }
+        })
       },
       // 初始化分页
       init() {
@@ -127,6 +256,15 @@
           this.total = res.total
           this.loading = false
         })
+      },
+      filterNode(value, data) {
+        if (!value) return true
+        return data.name.indexOf(value) !== -1
+      },
+      handleNodeClick(data) {
+        this.form.className = data.name
+        this.dialogFormTree = false
+        this.roleFind(data.id)
       },
       handleSizeChange(val) {
         this.size = val

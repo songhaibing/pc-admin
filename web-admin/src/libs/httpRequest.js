@@ -52,7 +52,6 @@ HTTP.post = function(url, data, callback) {
   const params = data
   instance.post(url, params)
     .then(function(res) {
-      console.log('post',res)
       // 响应成功回调
       if (res.data.code == '1') {
         callback(res.data)
@@ -100,7 +99,6 @@ HTTP.delete = function(url, data, callback) {
   const params = { params: data }
   instance.delete(url, params)
     .then(function(res) {
-      console.log('res',res)
       // 响应成功回调
       if (res.data.code === 1) {
         callback(res.data)
