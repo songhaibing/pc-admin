@@ -30,14 +30,15 @@
 
           label="角色"
         >
-          <template slot-scope="scope" v-if="scope.row.userVo.roles.length!==0">{{ scope.row.userVo.roles[0].name }}</template>
+          <template slot-scope="scope" v-if="scope.row.userVo.roles.length!==0">{{ scope.row.userVo.roles[0].name }}
+          </template>
         </el-table-column>
         <el-table-column
           align="center"
           label="归属单位"
           v-if="$_Authorities.indexOf('管理员归属单位')!==-1"
         >
-          <template slot-scope="scope" >{{ scope.row.userVo.dept.name }}</template>
+          <template slot-scope="scope">{{ scope.row.userVo.dept.name }}</template>
         </el-table-column>
         <el-table-column
           align="center"
@@ -61,12 +62,14 @@
             <el-button
               size="mini"
               type="text"
+              @click="deleteUser(scope.$index, scope.row)"
             >删除
             </el-button>
-            <el-button
-              size="mini"
-              type="text"
-            >禁用
+            <el-button size="mini" type="text" v-if="scope.row.userVo.state==='1'"
+                       @click="disableUser(scope.$index, scope.row)">禁用
+            </el-button>
+            <el-button size="mini" type="text" v-if="scope.row.userVo.state==='2'"
+                       @click="enableUser(scope.$index, scope.row)">启用
             </el-button>
           </template>
         </el-table-column>
@@ -87,8 +90,8 @@
     </el-card>
     <el-dialog :title="title" width="600px" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" status-icon :rules="rules" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="登录名" :label-width="formLabelWidth" prop="realName">
-          <el-input v-model="form.realName" autocomplete="off"/>
+        <el-form-item label="登录名" :label-width="formLabelWidth" prop="name">
+          <el-input v-model="form.name" autocomplete="off" disabled/>
         </el-form-item>
         <el-form-item label="归属单位" :label-width="formLabelWidth" prop="className">
           <el-input
@@ -100,7 +103,7 @@
           />
         </el-form-item>
         <el-form-item label="角色" :label-width="formLabelWidth" prop="role">
-          <el-select v-model="form.role" placeholder="请选择"  clearable  style="width: 100%">
+          <el-select v-model="form.role" placeholder="请选择" clearable style="width: 100%">
             <el-option
               v-for="item in optionsRole"
               :key="item.id"
@@ -135,6 +138,7 @@
 
 <script>
   import SelectTree from '@/components/widget/SelectTree.vue';
+
   export default {
     name: 'AdministratorList',
     watch: {
@@ -148,10 +152,10 @@
         titleTree: '请选择',
         filterText: '',
         dialogFormTree: false,
-        title:'编辑管理员',
-        form:{
-          realName:"",
-          className:'',
+        title: '编辑管理员',
+        form: {
+          name: "",
+          className: '',
           role: '',
         },
         defaultProps: {
@@ -159,7 +163,11 @@
           label: 'name'
         },
         optionsRole: [],
-        rules:{},
+        rules: {
+          className: [
+            {required: true, message: '请选择归属单位', trigger: 'blur'}
+          ],
+        },
         formLabelWidth: '80px',
         dialogFormVisible: false,
         selected: Number(localStorage.getItem('deptId')),
@@ -170,8 +178,8 @@
           children: 'children', // 子级
         },
         // 数据列表
-        selectedOptions:  JSON.parse(localStorage.getItem('current')),
-        deptId:localStorage.getItem('deptId'),
+        selectedOptions: JSON.parse(localStorage.getItem('current')),
+        deptId: localStorage.getItem('deptId'),
         loading: true,
         tableData: [],
         currentPage: 1, // 当前多少页
@@ -179,7 +187,7 @@
         total: 0 // 总共多少数据
       }
     },
-    components: { SelectTree },
+    components: {SelectTree},
     created() {
       this.init()
       this.$_HTTP.get(this.$_API.getCurrentTree, {}, res => {
@@ -187,6 +195,66 @@
       })
     },
     methods: {
+      //禁用用户
+      disableUser(index, row) {
+        this.$confirm('此操作将禁用该用户, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$_HTTP.put(this.$_API.editUser + row.userVo.username, {state: '2'}, res => {
+            if (res.code === 1) {
+              this.init()
+              this.$message({
+                message: '禁用用户成功',
+                type: 'success'
+              })
+            }
+          })
+        }).catch(() => {
+        })
+      },
+      //启用用户
+      enableUser(index, row) {
+        this.$confirm('此操作将启用该用户, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$_HTTP.put(this.$_API.editUser + row.userVo.username, {state: '1'}, res => {
+            if (res.code === 1) {
+              this.init()
+              this.$message({
+                message: '启用用户成功',
+                type: 'success'
+              })
+            }
+          })
+        }).catch(() => {
+
+        })
+      },
+      // 删除
+      deleteUser(index, row) {
+        console.log(row)
+        this.$confirm('此操作将永久删除该管理员, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$_HTTP.delete(this.$_API.deleteUser + row.userVo.id, {}, res => {
+            if (res.code === 1) {
+              this.init()
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+            }
+          })
+        }).catch(() => {
+
+        })
+      },
       roleFind(id) {
         this.$_HTTP.get(this.$_API.roleFindDept + id, {}, res => {
           this.optionsRole = res.records
@@ -195,63 +263,47 @@
       clickInput() {
         this.dialogFormTree = true
       },
-      selectedDept(val){
-        this.deptId=val
+      selectedDept(val) {
+        this.deptId = val
         this.init()
       },
       // 编辑
-      handleEdit(index,row) {
-        this.form.className=row.userVo.dept.name
-        this.dialogFormVisible=true
-        this.form.realName=row.userVo.username
+      handleEdit(index, row) {
+        this.form.className = row.userVo.dept.name
+        this.dialogFormVisible = true
+        this.form.name = row.userVo.username
+        this.valueId = row.userVo.dept.id
+        this.roleFind(row.userVo.dept.id)
         this.form.role = row.userVo.roles.length !== 0 ? row.userVo.roles[0].id : ''
-        this.roleFind(row.userVo.roles[0].id)
-        console.log(row)
       },
       addUser(form) {
         this.$refs[form].validate((valid) => {
           if (valid) {
             const params = {
-              sex: this.form.status,
-              username: '111',
-              password: '2233eereerr',
-              realname: this.form.realName,
-              phone: this.form.mobile,
-              avatar: this.base64,
               deptId: this.valueId,
               roleIds: [this.form.role],
-              idCard: this.form.idCard
             }
-            if (this.title === '添加用户') {
-              this.$_HTTP.post(this.$_API.addUser, params, res => {
-                if (res.code === 1) {
-                  this.dialogFormVisible = false
-                  this.init()
-                  this.$message({
-                    message: '添加用户成功',
-                    type: 'success'
-                  })
-                }
-              })
-            } else {
-              this.$_HTTP.put(this.$_API.editUser + this.form.userName, params, res => {
-                if (res.code === 1) {
-                  this.dialogFormVisible = false
-                  this.init()
-                  this.$message({
-                    message: '修改用户成功',
-                    type: 'success'
-                  })
-                }
-              })
-            }
+            this.$_HTTP.put(this.$_API.editUser + this.form.name, params, res => {
+              if (res.code === 1) {
+                this.dialogFormVisible = false
+                this.init()
+                this.$message({
+                  message: '修改管理员成功',
+                  type: 'success'
+                })
+              }
+            })
           }
         })
       },
       // 初始化分页
       init() {
         this.loading = true
-        this.$_HTTP.get(this.$_API.registryRecordList, {deptId:this.deptId,size: this.size, current: this.currentPage}, res => {
+        this.$_HTTP.get(this.$_API.registryRecordList, {
+          deptId: this.deptId,
+          size: this.size,
+          current: this.currentPage
+        }, res => {
           this.tableData = res.records
           this.total = res.total
           this.loading = false
@@ -263,6 +315,7 @@
       },
       handleNodeClick(data) {
         this.form.className = data.name
+        this.valueId = data.id
         this.dialogFormTree = false
         this.roleFind(data.id)
       },
